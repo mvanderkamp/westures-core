@@ -77,7 +77,7 @@ class State {
    * @param {Number} identifier - The identifier of the input to update.
    */
   updateInput(event, identifier) {
-    if (util.normalizeEvent[ event.type ] === 'start') {
+    if (event.westuresPhase === 'start') {
       this._inputs_obj[identifier] = new Input(event, identifier);
     } else if (this._inputs_obj[identifier]) {
       this._inputs_obj[identifier].update(event);
@@ -112,6 +112,20 @@ class State {
 
     update_fns[event.constructor.name].call(this, event);
   }
+}
+
+/**
+ * @return {Array} Identifiers of the mouse buttons used.
+ */
+function getMouseButtons(event) {
+  const btns = [];
+  if (event && event.buttons) {
+    for (let mask = 1; mask < 32; mask <<= 1) {
+      const btn = event.buttons & mask;
+      if (btn > 0) btns.push(btn);
+    }
+  }
+  return btns;
 }
 
 module.exports = State;

@@ -45,7 +45,7 @@ class PointerData {
      *
      * @type {String | null}
      */
-    this.type = util.normalizeEvent[ event.type ];
+    this.type = event.westuresPhase;
 
     /**
      * The timestamp of the event in milliseconds elapsed since January 1, 1970,
@@ -142,9 +142,31 @@ function getInitialElementsInPath(event) {
   // A WeakSet is used so that references will be garbage collected when the
   // element they point to is removed from the page.
   const set = new WeakSet();
-  const path = util.getPropagationPath(event);
+  const path = getPropagationPath(event);
   path.forEach( node => set.add(node) );
   return set;
+}
+
+/**
+ * In case event.composedPath() is not available.
+ *
+ * @param {Event} event
+ *
+ * @return {Array}
+ */
+function getPropagationPath(event) {
+  if (typeof event.composedPath === 'function') {
+    return event.composedPath();
+  } 
+
+  const path = [];
+  for (let node = event.target; node !== document; node = node.parentNode) {
+    path.push(node);
+  }
+  path.push(document);
+  path.push(window);
+
+  return path;
 }
 
 module.exports = PointerData;

@@ -117,9 +117,10 @@ class Region {
   arbitrate(event) {
     if (this.preventDefault) event.preventDefault();
 
+    event.westuresPhase = normalizeEvent[ event.type ];
     this.state.updateAllInputs(event, this.element);
 
-    const hook = util.normalizeEvent[ event.type ];
+    const hook = event.westuresPhase;
     const events = this.state.getCurrentEvents();
 
     this.retrieveBindingsByInitialPos().forEach( binding => {
@@ -193,6 +194,29 @@ class Region {
   }
   /* unbind*/
 }
+
+/**
+ * Normalizes window events to be either of type start, move, or end.
+ *
+ * @param {String} type - The event type emitted by the browser
+ *
+ * @return {null|String} - The normalized event, or null if it is an event not
+ *    predetermined.
+ */
+const normalizeEvent = Object.freeze({
+  mousedown:   'start',
+  touchstart:  'start',
+  pointerdown: 'start',
+
+  mousemove:   'move',
+  touchmove:   'move',
+  pointermove: 'move',
+
+  mouseup:   'end',
+  touchend:  'end',
+  pointerup: 'end',
+});
+/* normalizeEvent*/
 
 module.exports = Region;
 
