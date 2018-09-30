@@ -3,8 +3,8 @@
  * Contains logic for PointerDatas
  */
 
-const util    = require('./util.js');
 const Point2D = require('./Point2D.js');
+const phase   = require('./phase.js');
 
 /**
  * Low-level storage of pointer data based on incoming data from an interaction
@@ -45,7 +45,7 @@ class PointerData {
      *
      * @type {String | null}
      */
-    this.type = event.westuresPhase;
+    this.type = phase[ event.type ];
 
     /**
      * The timestamp of the event in milliseconds elapsed since January 1, 1970,

@@ -4,8 +4,8 @@
 
 const Binding = require('./Binding.js');
 const Gesture = require('./Gesture.js');
-const util    = require('./util.js');
 const State   = require('./State.js');
+const phase   = require('./phase.js');
 
 const POINTER_EVENTS = [
   'pointerdown',
@@ -117,10 +117,9 @@ class Region {
   arbitrate(event) {
     if (this.preventDefault) event.preventDefault();
 
-    event.westuresPhase = normalizeEvent[ event.type ];
     this.state.updateAllInputs(event, this.element);
 
-    const hook = event.westuresPhase;
+    const hook = phase[ event.type ];
     const events = this.state.getCurrentEvents();
 
     this.retrieveBindingsByInitialPos().forEach( binding => {
@@ -194,29 +193,6 @@ class Region {
   }
   /* unbind*/
 }
-
-/**
- * Normalizes window events to be either of type start, move, or end.
- *
- * @param {String} type - The event type emitted by the browser
- *
- * @return {null|String} - The normalized event, or null if it is an event not
- *    predetermined.
- */
-const normalizeEvent = Object.freeze({
-  mousedown:   'start',
-  touchstart:  'start',
-  pointerdown: 'start',
-
-  mousemove:   'move',
-  touchmove:   'move',
-  pointermove: 'move',
-
-  mouseup:   'end',
-  touchend:  'end',
-  pointerup: 'end',
-});
-/* normalizeEvent*/
 
 module.exports = Region;
 

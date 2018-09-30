@@ -5,7 +5,7 @@
 const Gesture = require('./Gesture.js');
 const Binding = require('./Binding.js');
 const Input   = require('./Input.js');
-const util    = require('./util.js');
+const phase   = require('./phase.js');
 
 const DEFAULT_MOUSE_ID = 0;
 
@@ -77,7 +77,7 @@ class State {
    * @param {Number} identifier - The identifier of the input to update.
    */
   updateInput(event, identifier) {
-    if (event.westuresPhase === 'start') {
+    if (phase[ event.type ] === 'start') {
       this._inputs_obj[identifier] = new Input(event, identifier);
     } else if (this._inputs_obj[identifier]) {
       this._inputs_obj[identifier].update(event);

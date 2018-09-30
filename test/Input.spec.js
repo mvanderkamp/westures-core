@@ -64,7 +64,6 @@ describe('getters', () => {
     });
 
   });
-
 });
 
 /** @test {Input.update} */

@@ -3,8 +3,6 @@
  * Contains the Gesture class
  */
 
-const util = require('./util.js');
-
 let nextGestureNum = 0;
 
 /**
