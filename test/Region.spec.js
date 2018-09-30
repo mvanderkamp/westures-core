@@ -4,7 +4,7 @@
  * @file Region.spec..js
  * Tests Region class
  */
-const Region = require('../../src/core/Region.js');
+const Region = require('../src/Region.js');
 
 /** @test {Region} */
 describe('Region', function() {

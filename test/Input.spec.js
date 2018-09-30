@@ -4,8 +4,8 @@
  * @file Binding.js
  * Tests Binding class
  */
-const Input     = require('../../src/core/Input.js');
-const PointerData = require('../../src/core/PointerData.js');
+const Input     = require('../src/Input.js');
+const PointerData = require('../src/PointerData.js');
 
 describe('Module exists', () => {
   expect(Input).toBeDefined();

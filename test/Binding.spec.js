@@ -4,8 +4,8 @@
  * @file Binding.js
  * Tests Binding class
  */
-const Binding = require('../../src/core/Binding.js');
-const Gesture = require('../../src/core/Gesture.js');
+const Binding = require('../src/Binding.js');
+const Gesture = require('../src/Gesture.js');
 
 describe('Module exists', () => {
   expect(Binding).toBeDefined();
