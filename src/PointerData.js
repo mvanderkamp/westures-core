@@ -4,7 +4,7 @@
  */
 
 const Point2D = require('./Point2D.js');
-const phase   = require('./phase.js');
+const PHASE   = require('./PHASE.js');
 
 /**
  * Low-level storage of pointer data based on incoming data from an interaction
@@ -30,7 +30,7 @@ class PointerData {
      *
      * @type {WeakSet}
      */
-    this.initialElements = getInitialElementsInPath(event);
+    this.initialElements = getElementsInPath(event);
 
     /**
      * The original event object.
@@ -45,7 +45,7 @@ class PointerData {
      *
      * @type {String | null}
      */
-    this.type = phase[ event.type ];
+    this.type = PHASE[ event.type ];
 
     /**
      * The timestamp of the event in milliseconds elapsed since January 1, 1970,
@@ -136,15 +136,13 @@ function getEventObject(event, identifier) {
 }
 
 /**
+ * A WeakSet is used so that references will be garbage collected when the
+ * element they point to is removed from the page.
+ *
  * @return {WeakSet} The Elements in the path of the given event.
  */
-function getInitialElementsInPath(event) {
-  // A WeakSet is used so that references will be garbage collected when the
-  // element they point to is removed from the page.
-  const set = new WeakSet();
-  const path = getPropagationPath(event);
-  path.forEach( node => set.add(node) );
-  return set;
+function getElementsInPath(event) {
+  return new WeakSet(getPropagationPath(event));
 }
 
 /**

@@ -1,5 +1,5 @@
 /**
- * @file ZingTouch.js
+ * @file index.js
  * Main object containing API methods and Gesture constructors
  */
 
@@ -12,10 +12,11 @@ const Swipe   = require('./src/gestures/Swipe.js');
 const Tap     = require('./src/gestures/Tap.js');
 
 /**
- * The global API interface for ZingTouch. Contains a constructor for the
- * Region Object, and constructors for each predefined Gesture.
+ * The global API interface for Westures. Contains a constructor for the Region
+ * Object, and constructors for each predefined Gesture.
+ *
  * @type {Object}
- * @namespace ZingTouch
+ * @namespace Westures
  */
 module.exports = {
   Gesture,

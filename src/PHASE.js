@@ -1,5 +1,5 @@
 /**
- * @file phase.js
+ * @file PHASE.js
  */
 
 /**
@@ -10,7 +10,7 @@
  * @return {null|String} - The normalized event, or null if it is an event not
  *    predetermined.
  */
-const phase = Object.freeze({
+const PHASE = Object.freeze({
   mousedown:   'start',
   touchstart:  'start',
   pointerdown: 'start',
@@ -23,7 +23,7 @@ const phase = Object.freeze({
   touchend:  'end',
   pointerup: 'end',
 });
-/* phase*/
+/* PHASE*/
 
-module.exports = phase;
+module.exports = PHASE;
 
