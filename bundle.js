@@ -1,35 +1,26 @@
 (function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.zingtouch = f()}})(function(){var define,module,exports;return (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
 /**
- * @file ZingTouch.js
+ * @file index.js
  * Main object containing API methods and Gesture constructors
  */
 
-const Region  = require('./src/core/Region.js');
-const Gesture = require('./src/core/Gesture.js');
-const Pan     = require('./src/gestures/Pan.js');
-const Pinch   = require('./src/gestures/Pinch.js');
-const Rotate  = require('./src/gestures/Rotate.js');
-const Swipe   = require('./src/gestures/Swipe.js');
-const Tap     = require('./src/gestures/Tap.js');
+const Region  = require('./src/Region.js');
+const Gesture = require('./src/Gesture.js');
 
 /**
- * The global API interface for ZingTouch. Contains a constructor for the
- * Region Object, and constructors for each predefined Gesture.
+ * The global API interface for Westures. Contains a constructor for the Region
+ * Object and the generic Gesture class for user gestures to implement.
+ *
  * @type {Object}
- * @namespace ZingTouch
+ * @namespace Westures
  */
 module.exports = {
   Gesture,
-  Pan,
-  Pinch,
-  Rotate,
-  Swipe,
-  Tap,
   Region,
 };
 
 
-},{"./src/core/Gesture.js":3,"./src/core/Region.js":7,"./src/gestures/Pan.js":10,"./src/gestures/Pinch.js":11,"./src/gestures/Rotate.js":12,"./src/gestures/Swipe.js":13,"./src/gestures/Tap.js":14}],2:[function(require,module,exports){
+},{"./src/Gesture.js":3,"./src/Region.js":8}],2:[function(require,module,exports){
 /**
  * @file Binding.js
  */
@@ -133,8 +124,6 @@ module.exports = Binding;
  * Contains the Gesture class
  */
 
-const util = require('./util.js');
-
 let nextGestureNum = 0;
 
 /**
@@ -201,7 +190,7 @@ class Gesture {
 module.exports = Gesture;
 
 
-},{"./util.js":9}],4:[function(require,module,exports){
+},{}],4:[function(require,module,exports){
 /**
  * @file Input.js
  */
@@ -371,7 +360,38 @@ class Input {
 module.exports = Input;
 
 
-},{"./PointerData.js":6}],5:[function(require,module,exports){
+},{"./PointerData.js":7}],5:[function(require,module,exports){
+/**
+ * @file PHASE.js
+ */
+
+/**
+ * Normalizes window events to be either of type start, move, or end.
+ *
+ * @param {String} type - The event type emitted by the browser
+ *
+ * @return {null|String} - The normalized event, or null if it is an event not
+ *    predetermined.
+ */
+const PHASE = Object.freeze({
+  mousedown:   'start',
+  touchstart:  'start',
+  pointerdown: 'start',
+
+  mousemove:   'move',
+  touchmove:   'move',
+  pointermove: 'move',
+
+  mouseup:   'end',
+  touchend:  'end',
+  pointerup: 'end',
+});
+/* PHASE*/
+
+module.exports = PHASE;
+
+
+},{}],6:[function(require,module,exports){
 /**
  * @File Point2D.js
  *
@@ -565,14 +585,14 @@ Point2D.sum = function(points = []) {
 module.exports = Point2D;
 
 
-},{}],6:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 /**
  * @file PointerData.js
  * Contains logic for PointerDatas
  */
 
-const util    = require('./util.js');
 const Point2D = require('./Point2D.js');
+const PHASE   = require('./PHASE.js');
 
 /**
  * Low-level storage of pointer data based on incoming data from an interaction
@@ -598,7 +618,7 @@ class PointerData {
      *
      * @type {WeakSet}
      */
-    this.initialElements = getInitialElementsInPath(event);
+    this.initialElements = getElementsInPath(event);
 
     /**
      * The original event object.
@@ -613,7 +633,7 @@ class PointerData {
      *
      * @type {String | null}
      */
-    this.type = util.normalizeEvent[ event.type ];
+    this.type = PHASE[ event.type ];
 
     /**
      * The timestamp of the event in milliseconds elapsed since January 1, 1970,
@@ -704,29 +724,48 @@ function getEventObject(event, identifier) {
 }
 
 /**
+ * A WeakSet is used so that references will be garbage collected when the
+ * element they point to is removed from the page.
+ *
  * @return {WeakSet} The Elements in the path of the given event.
  */
-function getInitialElementsInPath(event) {
-  // A WeakSet is used so that references will be garbage collected when the
-  // element they point to is removed from the page.
-  const set = new WeakSet();
-  const path = util.getPropagationPath(event);
-  path.forEach( node => set.add(node) );
-  return set;
+function getElementsInPath(event) {
+  return new WeakSet(getPropagationPath(event));
+}
+
+/**
+ * In case event.composedPath() is not available.
+ *
+ * @param {Event} event
+ *
+ * @return {Array}
+ */
+function getPropagationPath(event) {
+  if (typeof event.composedPath === 'function') {
+    return event.composedPath();
+  } 
+
+  const path = [];
+  for (let node = event.target; node !== document; node = node.parentNode) {
+    path.push(node);
+  }
+  path.push(document);
+  path.push(window);
+
+  return path;
 }
 
 module.exports = PointerData;
 
 
-},{"./Point2D.js":5,"./util.js":9}],7:[function(require,module,exports){
+},{"./PHASE.js":5,"./Point2D.js":6}],8:[function(require,module,exports){
 /**
  * @file Region.js
  */
 
 const Binding = require('./Binding.js');
-const Gesture = require('./Gesture.js');
-const util    = require('./util.js');
 const State   = require('./State.js');
+const PHASE   = require('./PHASE.js');
 
 const POINTER_EVENTS = [
   'pointerdown',
@@ -746,12 +785,9 @@ const TOUCH_EVENTS = [
   'touchend',
 ];
 
-/**
- * Allows the user to specify a region to capture all events to feed ZingTouch
- * into. This can be as narrow as the element itself, or as big as the document
- * itself. The more specific an area, the better performant the overall
- * application will perform. Contains API methods to bind/unbind specific
- * elements to corresponding gestures. 
+/** 
+ * Allows the user to specify the control region which will listen for user
+ * input events.
  *
  * @class Region
  */
@@ -759,8 +795,7 @@ class Region {
   /**
    * Constructor function for the Region class.
    *
-   * @param {Element} element - The element to capture all window events in that
-   *    region to feed into ZingTouch.
+   * @param {Element} element - The element which should listen to input events.
    * @param {boolean} [capture=false] - Whether the region uses the capture or
    *    bubble phase of input events.
    * @param {boolean} [preventDefault=true] - Whether the default browser
@@ -840,7 +875,7 @@ class Region {
 
     this.state.updateAllInputs(event, this.element);
 
-    const hook = util.normalizeEvent[ event.type ];
+    const hook = PHASE[ event.type ];
     const events = this.state.getCurrentEvents();
 
     this.retrieveBindingsByInitialPos().forEach( binding => {
@@ -854,7 +889,7 @@ class Region {
    * Bind an element to a gesture with multiple function signatures.
    *
    * @param {Element} element - The element object.
-   * @param {Gesture} gesture - Gesture object.
+   * @param {Gesture} gesture - Gesture type with which to bind.
    * @param {Function} [handler] - The function to execute when an event is
    *    emitted.
    * @param {Boolean} [capture] - capture/bubble
@@ -918,15 +953,13 @@ class Region {
 module.exports = Region;
 
 
-},{"./Binding.js":2,"./Gesture.js":3,"./State.js":8,"./util.js":9}],8:[function(require,module,exports){
+},{"./Binding.js":2,"./PHASE.js":5,"./State.js":9}],9:[function(require,module,exports){
 /**
  * @file State.js
  */
 
-const Gesture = require('./Gesture.js');
-const Binding = require('./Binding.js');
 const Input   = require('./Input.js');
-const util    = require('./util.js');
+const PHASE   = require('./PHASE.js');
 
 const DEFAULT_MOUSE_ID = 0;
 
@@ -998,7 +1031,7 @@ class State {
    * @param {Number} identifier - The identifier of the input to update.
    */
   updateInput(event, identifier) {
-    if (util.normalizeEvent[ event.type ] === 'start') {
+    if (PHASE[ event.type ] === 'start') {
       this._inputs_obj[identifier] = new Input(event, identifier);
     } else if (this._inputs_obj[identifier]) {
       this._inputs_obj[identifier].update(event);
@@ -1035,38 +1068,6 @@ class State {
   }
 }
 
-module.exports = State;
-
-
-},{"./Binding.js":2,"./Gesture.js":3,"./Input.js":4,"./util.js":9}],9:[function(require,module,exports){
-/**
- * @file util.js
- * Various accessor and mutator functions to handle state and validation.
- */
-
-/**
- * Normalizes window events to be either of type start, move, or end.
- *
- * @param {String} type - The event type emitted by the browser
- *
- * @return {null|String} - The normalized event, or null if it is an event not
- *    predetermined.
- */
-const normalizeEvent = Object.freeze({
-  mousedown:   'start',
-  touchstart:  'start',
-  pointerdown: 'start',
-
-  mousemove:   'move',
-  touchmove:   'move',
-  pointermove: 'move',
-
-  mouseup:   'end',
-  touchend:  'end',
-  pointerup: 'end',
-});
-/* normalizeEvent*/
-
 /**
  * @return {Array} Identifiers of the mouse buttons used.
  */
@@ -1081,626 +1082,8 @@ function getMouseButtons(event) {
   return btns;
 }
 
-/**
- * In case event.composedPath() is not available.
- *
- * @param {Event} event
- *
- * @return {Array}
- */
-function getPropagationPath(event) {
-  if (typeof event.composedPath === 'function') {
-    return event.composedPath();
-  } 
+module.exports = State;
 
-  const path = [];
-  for (let node = event.target; node !== document; node = node.parentNode) {
-    path.push(node);
-  }
-  path.push(document);
-  path.push(window);
 
-  return path;
-}
-
-module.exports = Object.freeze({
-  normalizeEvent,
-  getPropagationPath,
-  getMouseButtons,
-});
-
-
-},{}],10:[function(require,module,exports){
-/**
- * @file Pan.js
- * Contains the Pan class
- */
-
-const Gesture = require('../core/Gesture.js');
-const Point2D = require('../core/Point2D.js');
-const util    = require('../core/util.js');
-
-const DEFAULT_INPUTS = 1;
-const DEFAULT_MIN_THRESHOLD = 1;
-
-/**
- * A Pan is defined as a normal movement in any direction on a screen.  Pan
- * gestures do not track start events and can interact with pinch and expand
- * gestures.
- *
- * @class Pan
- */
-class Pan extends Gesture {
-  /**
-   * Constructor function for the Pan class.
-   *
-   * @param {Object} [options] - The options object.
-   * @param {Number} [options.threshold=1] - The minimum number of pixels the
-   *    input has to move to trigger this gesture.
-   */
-  constructor(options = {}) {
-    super('pan');
-
-    /**
-     * The minimum amount in pixels the pan must move until it is fired.
-     *
-     * @type {Number}
-     */
-    this.threshold = options.threshold || DEFAULT_MIN_THRESHOLD;
-  }
-
-  initialize(state) {
-    const active = state.getInputsNotInPhase('end');
-    if (active.length > 0) {
-      const progress = active[0].getProgressOfGesture(this.id);
-      progress.lastEmitted = active[0].cloneCurrentPoint();
-    }
-  }
-
-  /**
-   * Event hook for the start of a gesture. Marks each input as active, so it
-   * can invalidate any end events.
-   *
-   * @param {State} input status object
-   */
-  start(state) {
-    this.initialize(state);
-  }
-  /* start */
-
-  /**
-   * move() - Event hook for the move of a gesture.  
-   *
-   * @param {State} input status object
-   *
-   * @return {Object} The change in position and the current position.
-   */
-  move(state) {
-    const active = state.getInputsNotInPhase('end');
-    if (active.length !== 1) return null;
-
-    const progress = active[0].getProgressOfGesture(this.id);
-    const point = active[0].current.point;
-    const diff = point.distanceTo(progress.lastEmitted);
-
-    if (diff >= this.threshold) {
-      const change = point.subtract(progress.lastEmitted);
-      progress.lastEmitted = point;
-      return { change, point };
-    } 
-
-    return null;
-  }
-  /* move*/
-
-  /**
-   * end() - Event hook for the end of a gesture. 
-   *
-   * @param {State} input status object
-   *
-   * @return {null} 
-   */
-  end(state) {
-    this.initialize(state);
-  }
-  /* end*/
-}
-
-module.exports = Pan;
-
-
-},{"../core/Gesture.js":3,"../core/Point2D.js":5,"../core/util.js":9}],11:[function(require,module,exports){
-/**
- * @file Pinch.js
- * Contains the abstract Pinch class
- */
-
-const Gesture = require('../core/Gesture.js');
-const Point2D = require('../core/Point2D.js');
-const util    = require('../core/util.js');
-
-const REQUIRED_INPUTS = 2;
-const DEFAULT_MIN_THRESHOLD = 1;
-
-/**
- * A Pinch is defined as two inputs moving either together or apart.
- *
- * @class Pinch
- */
-class Pinch extends Gesture {
-  /**
-   * Constructor function for the Pinch class.
-   *
-   * @param {Object} options
-   */
-  constructor(options = {}) {
-    super('pinch');
-
-    /**
-     * The minimum amount in pixels the inputs must move until it is fired.
-     *
-     * @type {Number}
-     */
-    this.threshold = options.threshold || DEFAULT_MIN_THRESHOLD;
-  }
-
-  /**
-   * Initializes the gesture progress and stores it in the first input for
-   * reference events.
-   *
-   * @param {State} input status object
-   */
-  initializeProgress(state) {
-    const active = state.getInputsNotInPhase('end');
-    if (active.length < REQUIRED_INPUTS) return null;
-
-    const { midpoint, averageDistance } = getMidpointAndAverageDistance(active);
-
-    // Progress is store on the first active input.
-    const progress = active[0].getProgressOfGesture(this.id);
-    progress.previousDistance = averageDistance;
-  }
-
-  /**
-   * Event hook for the start of a gesture. 
-   *
-   * @param {State} input status object
-   */
-  start(state) {
-    this.initializeProgress(state);
-  }
-
-  /**
-   * Event hook for the move of a gesture.  Determines if the two points are
-   * moved in the expected direction relative to the current distance and the
-   * last distance.
-   *
-   * @param {State} input status object
-   *
-   * @return {Object | null} - Returns the distance in pixels between two inputs
-   */
-  move(state) {
-    const active = state.getInputsNotInPhase('end');
-    if (active.length < REQUIRED_INPUTS) return null;
-
-    const { midpoint, averageDistance } = getMidpointAndAverageDistance(active);
-
-    const baseProgress = active[0].getProgressOfGesture(this.id);
-    const change = averageDistance - baseProgress.previousDistance;
-
-    if (Math.abs(change) >= this.threshold) {
-      // Progress is store on the first active input.
-      const progress = active[0].getProgressOfGesture(this.id);
-      progress.previousDistance = averageDistance;
-
-      return {
-        distance: averageDistance,
-        midpoint,
-        change,
-      };
-    }
-  }
-
-  /**
-   * Event hook for the end of a gesture. 
-   *
-   * @param {State} input status object
-   */
-  end(state) {
-    this.initializeProgress(state);
-  }
-}
-
-/**
- * Packs together the midpoint and the average distance to that midpoint of a
- * collection of points, which are gathered from their input objects. These are
- * packed together so that the inputs only have to be mapped to their current
- * points once.
- */
-function getMidpointAndAverageDistance(inputs) {
-  const points = inputs.map( i => i.current.point );
-  const midpoint = Point2D.midpoint(points); 
-  const averageDistance = midpoint.averageDistanceTo(points);
-  return { midpoint, averageDistance };
-}
-
-module.exports = Pinch;
-
-
-},{"../core/Gesture.js":3,"../core/Point2D.js":5,"../core/util.js":9}],12:[function(require,module,exports){
-/**
- * @file Rotate.js
- * Contains the Rotate class
- */
-
-const Gesture = require('../core/Gesture.js');
-const Point2D = require('../core/Point2D.js');
-const util    = require('../core/util.js');
-
-const REQUIRED_INPUTS = 2;
-
-/**
- * A Rotate is defined as two inputs moving about a circle, maintaining a
- * relatively equal radius.
- *
- * @class Rotate
- */
-class Rotate extends Gesture {
-  /**
-   * Constructor function for the Rotate class.
-   */
-  constructor() {
-    super('rotate');
-  }
-
-  /**
-   * Initialize the progress of the gesture.  Only runs if the number of active
-   * inputs is the expected amount.
-   *
-   * @param {State} input status object
-   */
-  initializeProgress(state) {
-    const active = state.getInputsNotInPhase('end');
-    if (active.length !== REQUIRED_INPUTS) return null;
-
-    // Progress is stored on the first active input.
-    const angle = active[0].currentAngleTo(active[1]);
-    const progress = active[0].getProgressOfGesture(this.id);
-    progress.previousAngle = angle;
-    progress.distance = 0;
-    progress.change = 0;
-  }
-
-  /**
-   * Event hook for the start of a gesture.
-   *
-   * @param {State} input status object
-   *
-   * @return {null}
-   */
-  start(state) {
-    this.initializeProgress(state);
-  }
-
-  /**
-   * Event hook for the move of a gesture. Obtains the midpoint of two the two
-   * inputs and calculates the projection of the right most input along a unit
-   * circle to obtain an angle. This angle is compared to the previously
-   * calculated angle to output the change of distance, and is compared to the
-   * initial angle to output the distance from the initial angle to the current
-   * angle.
-   *
-   * @param {State} input status object
-   *
-   * @return {null} - null if this event did not occur
-   * @return {Object} obj.angle - The current angle along the unit circle
-   * @return {Object} obj.distanceFromOrigin - The angular distance travelled
-   *    from the initial right most point.
-   * @return {Object} obj.distanceFromLast - The change of angle between the
-   *    last position and the current position.
-   */
-  move(state) {
-    const active = state.getInputsNotInPhase('end');
-    if (active.length !== REQUIRED_INPUTS) return null;
-
-    const pivot = active[0].currentMidpointTo(active[1]);
-    const angle = active[0].currentAngleTo(active[1]);
-
-    const progress = active[0].getProgressOfGesture(this.id);
-    progress.change = angle - progress.previousAngle;
-    progress.previousAngle = angle;
-
-    return {
-      angle,
-      pivot,
-      delta: progress.change,
-    };
-  }
-  /* move*/
-
-  /**
-   * Event hook for the end of a gesture.
-   *
-   * @param {State} input status object
-   *
-   * @return {null}
-   */
-  end(state) {
-    this.initializeProgress(state);
-  }
-}
-
-module.exports = Rotate;
-
-
-},{"../core/Gesture.js":3,"../core/Point2D.js":5,"../core/util.js":9}],13:[function(require,module,exports){
-/**
- * @file Swipe.js
- * Contains the Swipe class
- */
-
-const Gesture = require('../core/Gesture.js');
-const util    = require('../core/util.js');
-
-const REQUIRED_INPUTS = 1;
-const DEFAULT_MAX_REST_TIME = 100;
-const DEFAULT_ESCAPE_VELOCITY = 0.2;
-const DEFAULT_TIME_DISTORTION = 100;
-const DEFAULT_MAX_PROGRESS_STACK = 10;
-
-/**
- * A swipe is defined as input(s) moving in the same direction in an relatively
- * increasing velocity and leaving the screen at some point before it drops
- * below it's escape velocity.
- *
- * @class Swipe
- */
-class Swipe extends Gesture {
-  /**
-   * Constructor function for the Swipe class.
-   *
-   * @param {Object} [options] - The options object.
-   * @param {Number} [options.maxRestTime] - The maximum resting time a point
-   *    has between it's last
-   * @param {Number} [options.escapeVelocity] - The minimum velocity the input
-   *    has to be at to emit a swipe.
-   * @param {Number} [options.timeDistortion] - (EXPERIMENTAL) A value of time
-   *    in milliseconds to distort between events.
-   * @param {Number} [options.maxProgressStack] - (EXPERIMENTAL)The maximum
-   *    amount of move events to keep track of for a swipe.
-   */
-  constructor(options = {}) {
-    super('swipe');
-
-    /**
-     * The maximum resting time a point has between it's last move and current
-     * move events.
-     *
-     * @type {Number}
-     */
-    this.maxRestTime = options.maxRestTime || DEFAULT_MAX_REST_TIME;
-
-    /**
-     * The minimum velocity the input has to be at to emit a swipe.  This is
-     * useful for determining the difference between a swipe and a pan gesture.
-     *
-     * @type {number}
-     */
-    this.escapeVelocity = options.escapeVelocity || DEFAULT_ESCAPE_VELOCITY;
-
-    /**
-     * (EXPERIMENTAL) A value of time in milliseconds to distort between events.
-     * Browsers do not accurately measure time with the Date constructor in
-     * milliseconds, so consecutive events sometimes display the same timestamp
-     * but different x/y coordinates. This will distort a previous time in such
-     * cases by the timeDistortion's value.
-     *
-     * @type {number}
-     */
-    this.timeDistortion = options.timeDistortion || DEFAULT_TIME_DISTORTION;
-
-    /**
-     * (EXPERIMENTAL) The maximum amount of move events to keep track of for a
-     * swipe. This helps give a more accurate estimate of the user's velocity.
-     *
-     * @type {number}
-     */
-    this.maxProgressStack = options.maxProgressStack || 
-      DEFAULT_MAX_PROGRESS_STACK;
-  }
-
-  /**
-   * Event hook for the move of a gesture. Captures an input's x/y coordinates
-   * and the time of it's event on a stack.
-   *
-   * @param {State} input status object
-   *
-   * @return {null} - Swipe does not emit from a move.
-   */
-  move(state) {
-    const active = state.getInputsNotInPhase('end');
-
-    active.forEach( input => {
-      const progress = input.getProgressOfGesture(this.id);
-      if (!progress.moves) progress.moves = [];
-
-      progress.moves.push({
-        time: Date.now(),
-        point: input.cloneCurrentPoint(),
-      });
-
-      while (progress.moves.length > this.maxProgressStack) {
-        progress.moves.shift();
-      }
-    });
-
-    return null;
-  }
-  /* move*/
-
-  /**
-   * Determines if the input's history validates a swipe motion.  Determines if
-   * it did not come to a complete stop (maxRestTime), and if it had enough of a
-   * velocity to be considered (ESCAPE_VELOCITY).
-   *
-   * @param {State} input status object
-   *
-   * @return {null|Object} - null if the gesture is not to be emitted, Object
-   *    with information otherwise.
-   */
-  end(state) {
-    const ended = state.getInputsInPhase('end');
-
-    if (ended.length !== REQUIRED_INPUTS) return null;
-
-    const progress = ended[0].getProgressOfGesture(this.id);
-    if (!progress.moves || progress.moves.length < 3) return null;
-
-    const len = progress.moves.length;
-    const last = progress.moves[len - 1];
-    const prev = progress.moves[len - 2];
-    const first = progress.moves[len - 3];
-
-    const v1 = velocity(first, prev);
-    const v2 = velocity(prev, last);
-    const acc = Math.abs(v1 - v2) / (last.time - first.time);
-
-    if (acc >= 0.1) {
-      return {
-        acceleration: acc,
-        finalVelocity: v2,
-        finalPoint: last.point,
-      };
-    }
-    return null;
-  }
-
-  /* end*/
-}
-
-function velocity(minit, mend) {
-  const distance = mend.point.distanceTo(minit.point);
-  const time = mend.time - minit.time;
-  return distance / time;
-}
-
-module.exports = Swipe;
-
-
-},{"../core/Gesture.js":3,"../core/util.js":9}],14:[function(require,module,exports){
-/**
- * @file Tap.js
- * Contains the Tap class
- */
-
-const Gesture = require('../core/Gesture.js');
-const util    = require('../core/util.js');
-const Point2D = require('../core/Point2D.js');
-
-const DEFAULT_MIN_DELAY_MS = 0;
-const DEFAULT_MAX_DELAY_MS = 300;
-const DEFAULT_INPUTS = 1;
-const DEFAULT_MOVE_PX_TOLERANCE = 10;
-
-/**
- * A Tap is defined as a touchstart to touchend event in quick succession.
- *
- * @class Tap
- */
-class Tap extends Gesture {
-  /**
-   * Constructor function for the Tap class.
-   *
-   * @param {Object} [options] - The options object.
-   * @param {Number} [options.minDelay=0] - The minimum delay between a
-   *    touchstart and touchend can be configured in milliseconds.
-   * @param {Number} [options.maxDelay=300] - The maximum delay between a
-   *    touchstart and touchend can be configured in milliseconds.
-   * @param {Number} [options.numInputs=1] - Number of inputs for Tap gesture.
-   * @param {Number} [options.tolerance=10] - The tolerance in pixels a user can
-   *    move.
-   */
-  constructor(options = {}) {
-    super('tap');
-
-    /**
-     * The minimum amount between a touchstart and a touchend can be configured
-     * in milliseconds. The minimum delay starts to count down when the expected
-     * number of inputs are on the screen, and ends when ALL inputs are off the
-     * screen.  
-     *
-     * @type {Number}
-     */
-    this.minDelay = options.minDelay || DEFAULT_MIN_DELAY_MS;
-
-    /**
-     * The maximum delay between a touchstart and touchend can be configured in
-     * milliseconds. The maximum delay starts to count down when the expected
-     * number of inputs are on the screen, and ends when ALL inputs are off the
-     * screen.
-     *
-     * @type {Number}
-     */
-    this.maxDelay = options.maxDelay || DEFAULT_MAX_DELAY_MS;
-
-    /**
-     * The number of inputs to trigger a Tap can be variable, and the maximum
-     * number being a factor of the browser.
-     *
-     * @type {Number}
-     */
-    this.numInputs = options.numInputs || DEFAULT_INPUTS;
-
-    /**
-     * A move tolerance in pixels allows some slop between a user's start to end
-     * events. This allows the Tap gesture to be triggered more easily.
-     *
-     * @type {number}
-     */
-    this.tolerance = options.tolerance || DEFAULT_MOVE_PX_TOLERANCE;
-
-    /**
-     * An array of inputs that have ended recently.
-     */
-    this.ended = [];
-  }
-  /* constructor*/
-
-  /**
-   * Event hook for the end of a gesture.  Determines if this the tap event can
-   * be fired if the delay and tolerance constraints are met. Also waits for all
-   * of the inputs to be off the screen before determining if the gesture is
-   * triggered.
-   *
-   * @param {State} input status object
-   *
-   * @return {null|Object} - null if the gesture is not to be emitted, Object
-   *    with information otherwise. Returns the interval time between start and
-   *    end events.
-   */
-  end(state) {
-    const now = Date.now();
-
-    this.ended = this.ended.concat(state.getInputsInPhase('end'))
-      .filter( i => {
-        const tdiff = now - i.startTime;
-        return tdiff <= this.maxDelay && tdiff >= this.minDelay;
-      });
-
-    if (this.ended.length === 0 ||
-        this.ended.length !== this.numInputs || 
-        !this.ended.every( i => i.totalDistanceIsWithin(this.tolerance))) {
-      return null;
-    }
-
-    const {x,y} = Point2D.midpoint( this.ended.map( i => i.current.point ) );
-    return {x,y};
-  }
-  /* end*/
-}
-
-module.exports = Tap;
-
-
-},{"../core/Gesture.js":3,"../core/Point2D.js":5,"../core/util.js":9}]},{},[1])(1)
+},{"./Input.js":4,"./PHASE.js":5}]},{},[1])(1)
 });

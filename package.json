@@ -16,9 +16,9 @@
     "url": "https://github.com/mvanderkamp/westures-core"
   },
   "license": "MIT",
-  "devDependencies": {
+  "devDependencies": {},
+  "dependencies": {
     "browserify": "^16.2.3",
     "jest": "^23.6.0"
-  },
-  "dependencies": {}
+  }
 }
