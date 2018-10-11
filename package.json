@@ -7,7 +7,7 @@
     "test": "test"
   },
   "scripts": {
-    "bundle": "browserify 'index.js' --standalone zingtouch --outfile 'bundle.js'",
+    "bundle": "browserify 'index.js' --standalone westuresCore --outfile 'bundle.js'",
     "test": "jest"
   },
   "author": "Michael van der Kamp <michael.vanderkamp@usask.ca>",
