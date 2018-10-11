@@ -19,7 +19,7 @@ pull request!
 ## Table of Contents
 
 - [Overview](#overview)
-- [Basic Usage]($basic-usage)
+- [Basic Usage](#basic-usage)
 - [Implementing Custom Gestures](#implementing-custom-gestures)
 
 ## Overview
