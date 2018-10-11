@@ -1,10 +1,11 @@
-(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.zingtouch = f()}})(function(){var define,module,exports;return (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
+(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.westuresCore = f()}})(function(){var define,module,exports;return (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
 /**
  * @file index.js
  * Main object containing API methods and Gesture constructors
  */
 
 const Region  = require('./src/Region.js');
+const Point2D = require('./src/Point2D.js');
 const Gesture = require('./src/Gesture.js');
 
 /**
@@ -16,11 +17,12 @@ const Gesture = require('./src/Gesture.js');
  */
 module.exports = {
   Gesture,
+  Point2D,
   Region,
 };
 
 
-},{"./src/Gesture.js":3,"./src/Region.js":8}],2:[function(require,module,exports){
+},{"./src/Gesture.js":3,"./src/Point2D.js":6,"./src/Region.js":8}],2:[function(require,module,exports){
 /**
  * @file Binding.js
  */
@@ -858,7 +860,11 @@ class Region {
     // Bind detected browser events to the region element.
     const arbiter = this.arbitrate.bind(this);
     eventNames.forEach( eventName => {
-      this.element.addEventListener(eventName, arbiter, this.capture);
+      this.element.addEventListener(eventName, arbiter, {
+        capture: this.capture,
+        once: false,
+        passive: false,
+      });
     });
   }
 
