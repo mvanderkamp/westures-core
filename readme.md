@@ -40,12 +40,12 @@ These classes are structured as follows:
 ```text
 Region
   \-Binding
-  | \-Gesture
+  |  \-Gesture
   |
   \-State
-    \-Input
-      \-PointerData
-        \-Point2D
+     \-Input
+        \-PointerData
+           \-Point2D
 ```
 
 ## Implementing Custom Gestures
