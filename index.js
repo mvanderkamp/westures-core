@@ -4,6 +4,7 @@
  */
 
 const Region  = require('./src/Region.js');
+const Point2D = require('./src/Point2D.js');
 const Gesture = require('./src/Gesture.js');
 
 /**
@@ -15,6 +16,7 @@ const Gesture = require('./src/Gesture.js');
  */
 module.exports = {
   Gesture,
+  Point2D,
   Region,
 };
 
