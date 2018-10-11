@@ -97,7 +97,11 @@ class Region {
     // Bind detected browser events to the region element.
     const arbiter = this.arbitrate.bind(this);
     eventNames.forEach( eventName => {
-      this.element.addEventListener(eventName, arbiter, this.capture);
+      this.element.addEventListener(eventName, arbiter, {
+        capture: this.capture,
+        once: false,
+        passive: false,
+      });
     });
   }
 
