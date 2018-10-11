@@ -3,9 +3,8 @@
  */
 
 const Binding = require('./Binding.js');
-const Gesture = require('./Gesture.js');
 const State   = require('./State.js');
-const phase   = require('./phase.js');
+const PHASE   = require('./PHASE.js');
 
 const POINTER_EVENTS = [
   'pointerdown',
@@ -25,12 +24,9 @@ const TOUCH_EVENTS = [
   'touchend',
 ];
 
-/**
- * Allows the user to specify a region to capture all events to feed ZingTouch
- * into. This can be as narrow as the element itself, or as big as the document
- * itself. The more specific an area, the better performant the overall
- * application will perform. Contains API methods to bind/unbind specific
- * elements to corresponding gestures. 
+/** 
+ * Allows the user to specify the control region which will listen for user
+ * input events.
  *
  * @class Region
  */
@@ -38,8 +34,7 @@ class Region {
   /**
    * Constructor function for the Region class.
    *
-   * @param {Element} element - The element to capture all window events in that
-   *    region to feed into ZingTouch.
+   * @param {Element} element - The element which should listen to input events.
    * @param {boolean} [capture=false] - Whether the region uses the capture or
    *    bubble phase of input events.
    * @param {boolean} [preventDefault=true] - Whether the default browser
@@ -102,7 +97,11 @@ class Region {
     // Bind detected browser events to the region element.
     const arbiter = this.arbitrate.bind(this);
     eventNames.forEach( eventName => {
-      this.element.addEventListener(eventName, arbiter, this.capture);
+      this.element.addEventListener(eventName, arbiter, {
+        capture: this.capture,
+        once: false,
+        passive: false,
+      });
     });
   }
 
@@ -119,7 +118,7 @@ class Region {
 
     this.state.updateAllInputs(event, this.element);
 
-    const hook = phase[ event.type ];
+    const hook = PHASE[ event.type ];
     const events = this.state.getCurrentEvents();
 
     this.retrieveBindingsByInitialPos().forEach( binding => {
@@ -133,7 +132,7 @@ class Region {
    * Bind an element to a gesture with multiple function signatures.
    *
    * @param {Element} element - The element object.
-   * @param {Gesture} gesture - Gesture object.
+   * @param {Gesture} gesture - Gesture type with which to bind.
    * @param {Function} [handler] - The function to execute when an event is
    *    emitted.
    * @param {Boolean} [capture] - capture/bubble

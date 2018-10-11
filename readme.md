@@ -1,365 +1,131 @@
-# Westures 
+# westures-core
 
-It's a JavaScript gesture library, and hey, it might even work sometimes!
+This module contains the core functionality of the Westures JavaScript gesture
+library. It is intended for use as a lighter-weight module to use if you do not
+intend on using the base gestures included with the standard `westures` module.
 
-### Two things:
-1. I'm pretty stupid sometimes.
-2. Because of (1), I follow the KISS principle: Keep It Simple Stupid!
-3. Because of (2), I've tried to keep everything in this library quite simple.
-   No fancy features. I've tried to avoid functions that have different
-   semantics depending on which type of object you pass in (beyond basic fail
-   states if you forget to pass something in or pass in something invalid).
-4. If you're wondering why this list of 'Two things' has four items, see (1).
+Westures is a fork of [ZingTouch](https://github.com/zingchart/zingtouch). 
 
-Perhaps more importantly, this is a fork of 
-[ZingTouch](https://github.com/zingchart/zingtouch). Which looks much flashier.
-You should probably go there. They've even got a website! Ooh!
+## Advisory
 
-### Table of Contents
-* [Overview](#overview)
-* [Getting Started](#getting-started)
-* [Usage](#usage)
-* [Browser Compatibility](#browser-compatibility)
-* [Pitfalls](#pitfalls)
-* [Contributing](#contributing)
-* [License](#license)
+This is an alpha release of this library. Browser compatability has not been
+tested except in the newest stable releases of Chrome and Firefox. Likewise, it
+has only been tested on a very small selection of devices. 
 
-# Overview
-
-The main thing Westures offers is a central core for processing input events and
-transforming those events into gestures. I've tried to make the core relatively
-robust, but if you read [(1)](#two-things) above you know I might need some help
-fixing bugs. See [Contributing](#contributing) below if you want to do that.
-
-This core consists of a lifecycle for each input, which moves through three
-phases:
-
-* start
-* move
-* end
-
-At each phase, progress for any given gesture is saved directly on the input
-object. Gestures can be designed to emit data at any point in their lifecycle.
-
-To demonstrate this core functionality, and to provide some use out-of-the-box,
-a few gestures are already implemented:
-
-* Tap
-* Swipe
-* Pinch
-* Pan
-* Rotate
-
-Although I wouldn't trust Swipe if I were you.
-
-# Getting Started
-
-### Include the library
-
-
-***Node / CommonJS***
-
-```js
-const Westures = require('westures');
-```
-
-### Create a Region
-
-```js
-const wes = new Westures.Region(document.body);
-```
-
-### Bind an element to a gesture
-
-```js
-const myElement = document.getElementById('my-div');
-
-wes.bind(myElement, new Westures.Tap(), function(e){
-  //Actions here
-});
-```
-
-# Usage
+That said, please do give it a try, and if something breaks, please let me know!
+Or, even better, figure out why it broke, figure out a solution, and submit a
+pull request!
 
 ## Table of Contents
-**[Constructs](#constructs)**
 
-* [Region](#region)
+- [Overview](#overview)
+- [Basic Usage](#basic-usage)
+- [Implementing Custom Gestures](#implementing-custom-gestures)
 
-**[Gestures](#gestures)**
+## Overview
 
-* [Tap](#tap)
-* [Pan](#pan)
-* [Swipe](#swipe)
-* [Pinch](#pinch)
-* [Rotate](#rotate)
-* [Gesture](#gesture)
+There are seven classes defined in this module:
 
-**[Methods](#methods)**
+- _Binding_: Bind a Gesture to an element within a Region.
+- _Gesture_: Respond to input phase "hooks" to define a gesture.
+- _Input_: Track a single pointer through its lifetime, and store the progress
+    of gestures associated with that input.
+- _Point2D_: Store and act on a 2-dimensional point.
+- _PointerData_: Record data pertaining to a single user input event for a
+    single pointer.
+- _Region_: Listen for user input events and respond appropriately.
+- _State_: Track all active Inputs within a Region.
 
-* [Region.bind](#regionbindelement-gesture-handler-capture)
-* [Region.unbind](#regionunbindelement-gesture)
+These classes are structured as follows:
 
-## Constructs
-
-### Region
-
-```js
-new Westures.Region(element, [capture], [preventDefault])
+```text
+Region
+  \-Binding
+  |  \-Gesture
+  |
+  \-State
+     \-Input
+        \-PointerData
+           \-Point2D
 ```
- * element - The element to set the listener upon
- * capture - Whether the region listens for captures or bubbles.
- * preventDefault - Disables browser functionality such as scrolling and zooming
-   over the region.
+## Basic Usage
 
-Regions specify an area to listen for all window events. Westures need to
-listen to all window events in order to determine if a gesture is recognized.
-Note that you can reuse regions for multiple elements and gesture bindings. They
-simply specify an area where to listen for gestures.
+### Importing the module
 
-Suppose you had an element that you wanted to track gestures on. We set the
-region on that element along with binding it to a gesture.
-
-```js
-const touchArea = document.getElementById('toucharea');
-const myRegion = new Westures.Region(touchArea);
-
-myRegion.bind(touchArea, new Westures.Pan(), function(e){
-  console.log(e.detail);
-});
+```javascript
+const wes = require('westures-core');
 ```
 
-But humans aren't perfect. Suppose the element #toucharea were to listen for the
-`Pan` gesture. The tracking of the window events will stop when the user reaches
-the edges of #toucharea. But what if the user didn't finish until say 10-50px
-***outside*** the element? Regions are here to help.
+### Declaring a Region
 
-Suppose you set the Region to the parent of the #toucharea element instead.
+First, decide what region should listen for events. If you want elements to
+continue to responding to input events from the `move` and `end` phases even if
+the pointer moves outside the element, you should use an region that
+contains the element. This can even be the window object if you want these
+events to fire event if the pointer goes outside the browser window.
 
-```js
-const parentTouchArea = touchArea.parentNode;
-const myParentRegion = new Westures.Region(parentTouchArea);
+For example:
 
-myParentRegion.bind(touchArea, new Westures.Pan(), function(e){
-  console.log(e.detail);
-});
+```javascript
+const region = new wes.Region(window);
 ```
 
-The pan gesture is now tracked inside the `#parent-toucharea` element.  This
-allows some forgiveness when the user tries to pan on the `#toucharea`, but
-lifts their finger somewhere in the `#parent-toucharea`.
+Of course, if you have lots of interactable elements on your page, you may want
+to consider using smaller elements as binding regions, or event the interactable
+element itself.
 
-If you really want to go for broke, you can use the `window` element as the
-Region.
+For example, if you have a canvas element with id `draw-struff` that you want to
+interact with, you could do:
 
-### Multiple Regions
-
-Regions only are aware of themselves and their contents, not across regions.
-This allows for control at a larger scale so you can group similar gestures
-together. On large pages with lots of interactive elements, it may be advisable
-to split up your application into regions for better performance -- the less
-bindings a single region has to iterate through to detect a gesture, the better.
-
-## Gestures
-Gesture classes can be instatiated to generate modified versions.
-
-### Tap
-
-A tap is detected when the user touches the screen and releases in quick
-succession.
-
-#### Options
-
-* `options.maxDelay` *optional* - The maximum delay between a start and end
-  event. This number is measured in milliseconds.
-  * default: 300
-* `options.tolerance` *optional* - A tolerance value which allows the user to
-  move their finger about a radius measured in pixels. This allows the Tap
-  gesture to be triggered more easily since a User might move their finger
-  slightly during a tap event.
-  * default: 10
-
-#### Example
-
-```js
-new Westures.Tap({
-  maxDelay: 200,
-  tolerance: 125
-})
+```javascript
+const region = new wes.Region(document.querySelector('#draw-stuff'));
 ```
 
-#### Emits
+### Binding an element within a Region
 
-... some data
+Suppose you have a div (id 'pannable') within which you want to detect a Pan
+gesture (assume that such a gesture is available). Your handler is called
+`panner`.
 
----
-
-### Swipe
-
-You should probably stay away from Swipes for the time being.
-
----
-
-### Pinch
-
-A pinch is detected when the user has two or more inputs on the screen and moves
-them together or apart.
-
-#### Example
-```js
-new Westures.Pinch();
+```javascript
+region.bind(document.querySelector('#pannable'), new Pan(), panner);
 ```
 
-#### Emits
+The `panner` function will now be called whenever a Pan hook returns non-null
+data. The data returned by the hook will be available inside `panner` as such:
 
-... some data
-
----
-
-### Pan
-
-A pan is detected when the user touches the screen and moves about the area.
-
-#### Options
-* `options.threshold` *optional* - The minimum number of pixels the input has to
-  move to trigger this gesture.
-   * Default: 1
-
-#### Example
-```js
-new Westures.Pan({
-  threshold: 2
-})
+```javascript
+function panner(event) {
+  const hookData = event.detail;
+}
 ```
 
-#### Emits
+## Implementing Custom Gestures
 
-... some data
+The core technique used by Westures (originally conceived for ZingTouch) is to
+process all user inputs and filter them through three key lifecycle phases:
+`start`, `move`, and `end`. Gestures are defined by how they respond to these
+phases.  To respond to the stages, a gesture extends the `Gesture` class
+provided by this module and overrides the method (a.k.a. "hook") corresponding
+to the name of the phase. 
 
----
+The hook, when called, will receive the current State object of the region. To
+maintain responsiveness, the functionality within a hook should be short and as
+efficient as possible.
 
-### Rotate
+For example, a simple way to implement a 'Tap' gesture would be as follows:
 
-A Rotate is detected when the user has two inputs moving about in a circle.
+```javascript
+const { Gesture } = require('westures-core');
 
-#### Example
-```js
-new Westures.Rotate()
+class Tap extends Gesture {
+  end(state) {
+    const {x,y} = state.getInputsInPhase('end')[0].current.point;
+    return {x,y};
+  }
+}
 ```
 
-#### Emits
-
-... some data
-
----
-
-## Methods
-
-### Region.bind(element, gesture, handler)
-Binds a single element to a gesture, executing the handler when the gesture is
-emitted.
-
-**Parameters**
-
-* element - A DOM element
-* gesture - Either the key (string) of a default or registered gesture, or an
-  instance of the `Gesture` class itself.
-* handler - A function to be called every time the gesture is emitted.
-  * The handler function has an Event object emitted from the 
-  [CustomEvent](https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent)
-  interface. Any information relavant to the gesture will be in `event.detail`.
-
-Generally speaking, only reuse a Gesture object for multiple bindings if their
-Regions do not overlap (and preferably have a decent gap in between them).
-
----
-
-### Region.unbind(element, [gesture])
-Unbinds an element from a specific gesture, or all gestures if none is
-specified.
-
-**Parameters**
-
-* `element` - A DOM element
-* `gesture` *optional* - Either a registered gesture's key (String) or the
-  gesture object used to bind the element.
-
-**Returns**
-
-* array - An array of bindings containing the gestures that were unbound.
-
-
-**Examples**
-
-Unbind from a specific gesture
-
-```js
-const myElement = document.getElementById('mydiv');
-myRegion.unbind(myElement, 'tap');
-```
-
-Unbind from all gestures
-
-```js
-const myElement = document.getElementById('mydiv');
-myRegion.unbind(myElement);
-```
-
-Unbind from a gesture instance.
-
-```js
-const myElement = document.getElementById('mydiv');
-const myRegion = new Westures.Region(document.body);
-const myTapGesture = new Westures.Tap({ maxDelay : 100 });
-
-myRegion.bind(myElement, myTapGesture, function(e) {});
-
-myRegion.unbind(myElement, myTapGesture);
-
-```
----
-
-# Westures Life Cycle
-
-Utilizing the Westures life cycle (start, move, end) allows you to create new
-gestures and to interface with the mobile event cycle in a much finer detail. It
-will allow you to hook into events and to apply external functions during
-events. 
-
-While you could try to extend the gestures that have been provided, it might be
-advisable to implement your own gestures if the provided ones are
-unsatisfactory.
-
-Details on how to do so will be forthcoming...
-
----
-
-# Pitfalls
-
-**Binding an event and DOM mutation to an element**
-Westures treats a gesture as a non-mutable event, meaning that the element is
-bound to is not expected to change between the start and end. Binding a
-transformation of an element's bounding box to the middle of a gesture event
-could provide unwanted results. 
-
-Example: Binding a pan event directly to an element that you want to move around
-every time the callback is fired. The initial state of when the gesture was
-registered changes throughout the event, and the initial reference point is no
-longer valid. 
-
-Solution: Attach the gesture listener to a non-mutating element such as a parent
-container, and modify your target element in the callback. This will provide a
-more predictable state that zingtouch can recognize.  ---
-
-# Contributing
-
-Something something blah blah be responsible.
-
-## Browser Compatibility
-
----
-
-# License
-
-MIT License
+The default hooks for all Gestures simple return null. Data will only be
+forwarded to bound handlers when a non-null value is returned by a hook.
 

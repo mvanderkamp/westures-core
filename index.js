@@ -1,29 +1,22 @@
 /**
- * @file ZingTouch.js
+ * @file index.js
  * Main object containing API methods and Gesture constructors
  */
 
-const Region  = require('./src/core/Region.js');
-const Gesture = require('./src/core/Gesture.js');
-const Pan     = require('./src/gestures/Pan.js');
-const Pinch   = require('./src/gestures/Pinch.js');
-const Rotate  = require('./src/gestures/Rotate.js');
-const Swipe   = require('./src/gestures/Swipe.js');
-const Tap     = require('./src/gestures/Tap.js');
+const Region  = require('./src/Region.js');
+const Point2D = require('./src/Point2D.js');
+const Gesture = require('./src/Gesture.js');
 
 /**
- * The global API interface for ZingTouch. Contains a constructor for the
- * Region Object, and constructors for each predefined Gesture.
+ * The global API interface for Westures. Contains a constructor for the Region
+ * Object and the generic Gesture class for user gestures to implement.
+ *
  * @type {Object}
- * @namespace ZingTouch
+ * @namespace Westures
  */
 module.exports = {
   Gesture,
-  Pan,
-  Pinch,
-  Rotate,
-  Swipe,
-  Tap,
+  Point2D,
   Region,
 };
 
