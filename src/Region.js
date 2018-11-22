@@ -87,6 +87,10 @@ class Region {
    * events to the region's element.
    */
   activate() {
+    /*
+     * Try to select a device-appropriate event type. Touch events are preferred
+     * on touch devices, and will respond better.
+     */
     let eventNames = [];
     if (window.TouchEvent) {
       eventNames = TOUCH_EVENTS;
