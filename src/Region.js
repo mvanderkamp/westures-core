@@ -88,11 +88,24 @@ class Region {
    */
   activate() {
     let eventNames = [];
-    if (window.PointerEvent && !window.TouchEvent) {
-      eventNames = POINTER_EVENTS;
+    if (window.TouchEvent) {
+      eventNames = TOUCH_EVENTS;
+    } else if (window.MouseEvent) {
+      eventNames = MOUSE_EVENTS;
     } else {
-      eventNames = MOUSE_EVENTS.concat(TOUCH_EVENTS);
+      eventNames = POINTER_EVENTS;
     }
+    /* 
+     * Below is the original decision process for event type that was used by
+     * ZingTouch. I'm not sure why it was used, but I'll leave it here,
+     * commented out, in case it turns out there was a very good / important
+     * reason for using it.
+     */
+    // if (window.PointerEvent && !window.TouchEvent) {
+    //   eventNames = POINTER_EVENTS;
+    // } else {
+    //   eventNames = MOUSE_EVENTS.concat(TOUCH_EVENTS);
+    // }
 
     // Bind detected browser events to the region element.
     const arbiter = this.arbitrate.bind(this);
