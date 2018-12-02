@@ -850,11 +850,34 @@ class Region {
    * events to the region's element.
    */
   activate() {
+    /*
+     * I will now indulge myself in some mild venting about web standards.
+     *
+     * What. The. Ever. Loving. Shit.
+     *
+     * Why oh why is this necessary. PointerEvent would have been so nice!
+     * Except they screwed up the standard by not implementing the full range of
+     * properties as were present in the mouse events! Where's my "ctrlKey" and
+     * "altKey" properties!!!! Now I have to limit PointerEvent to a fallback
+     * which will probably never be hit.
+     *
+     * Not to mention the jankyness of having to listen to _both_ touch and
+     * mouse events to make sure that you get the correct behaviour! And _then_
+     * having to call preventDefault() to make sure you don't get double
+     * occurrence of any events!! But that kills default page behaviour!!
+     *
+     * Now I have to recommend to users that they keep regions small! Grr.
+     *
+     * See:
+     *  https://www.html5rocks.com/en/mobile/touchandmouse/
+     *  https://developer.mozilla.org/en-US/docs/Web/API/Touch_events
+     *  https://developer.mozilla.org/en-US/docs/Web/API/Pointer_events
+     */
     let eventNames = [];
-    if (window.PointerEvent && !window.TouchEvent) {
-      eventNames = POINTER_EVENTS;
-    } else {
+    if (window.TouchEvent || window.MouseEvent) {
       eventNames = MOUSE_EVENTS.concat(TOUCH_EVENTS);
+    } else {
+      eventNames = POINTER_EVENTS;
     }
 
     // Bind detected browser events to the region element.
