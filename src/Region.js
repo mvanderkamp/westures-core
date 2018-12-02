@@ -88,28 +88,34 @@ class Region {
    */
   activate() {
     /*
-     * Try to select a device-appropriate event type. Touch events are preferred
-     * on touch devices, and will respond better.
+     * I will now indulge myself in some mild venting about web standards.
+     *
+     * What. The. Ever. Loving. Shit.
+     *
+     * Why oh why is this necessary. PointerEvent would have been so nice!
+     * Except they screwed up the standard by not implementing the full range of
+     * properties as were present in the mouse events! Where's my "ctrlKey" and
+     * "altKey" properties!!!! Now I have to limit PointerEvent to a fallback
+     * which will probably never be hit.
+     *
+     * Not to mention the jankyness of having to listen to _both_ touch and
+     * mouse events to make sure that you get the correct behaviour! And _then_
+     * having to call preventDefault() to make sure you don't get double
+     * occurrence of any events!! But that kills default page behaviour!!
+     *
+     * Now I have to recommend to users that they keep regions small! Grr.
+     *
+     * See:
+     *  https://www.html5rocks.com/en/mobile/touchandmouse/
+     *  https://developer.mozilla.org/en-US/docs/Web/API/Touch_events
+     *  https://developer.mozilla.org/en-US/docs/Web/API/Pointer_events
      */
     let eventNames = [];
-    if (window.TouchEvent) {
-      eventNames = TOUCH_EVENTS;
-    } else if (window.MouseEvent) {
-      eventNames = MOUSE_EVENTS;
+    if (window.TouchEvent || window.MouseEvent) {
+      eventNames = MOUSE_EVENTS.concat(TOUCH_EVENTS);
     } else {
       eventNames = POINTER_EVENTS;
     }
-    /* 
-     * Below is the original decision process for event type that was used by
-     * ZingTouch. I'm not sure why it was used, but I'll leave it here,
-     * commented out, in case it turns out there was a very good / important
-     * reason for using it.
-     */
-    // if (window.PointerEvent && !window.TouchEvent) {
-    //   eventNames = POINTER_EVENTS;
-    // } else {
-    //   eventNames = MOUSE_EVENTS.concat(TOUCH_EVENTS);
-    // }
 
     // Bind detected browser events to the region element.
     const arbiter = this.arbitrate.bind(this);
