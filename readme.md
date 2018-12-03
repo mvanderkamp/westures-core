@@ -95,8 +95,10 @@ The `panner` function will now be called whenever a Pan hook returns non-null
 data. The data returned by the hook will be available inside `panner` as such:
 
 ```javascript
-function panner(event) {
-  const hookData = event.detail;
+function panner(data) {
+  // data.x ...
+  // data.y ...
+  // and so on, depending on the Gesture
 }
 ```
 
