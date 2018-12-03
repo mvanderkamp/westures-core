@@ -1,8 +1,15 @@
 {
   "name": "westures-core",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "The core logic of the Westures JavaScript gesture library.",
-  "keywords": ["gesture", "javascript", "tap", "pinch", "pan", "rotate"],
+  "keywords": [
+    "gesture",
+    "javascript",
+    "tap",
+    "pinch",
+    "pan",
+    "rotate"
+  ],
   "main": "index.js",
   "directories": {
     "test": "test"
