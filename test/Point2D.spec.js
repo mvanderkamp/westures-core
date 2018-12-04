@@ -33,17 +33,6 @@ describe('Prototype methods', () => {
     origin = new Point2D(0,0);
   });
 
-  describe('add(point)', () => {
-    test('returns the addition of two points', () => {
-      const pt = new Point2D(42,5);
-      const res = origin.add(pt);
-      expect(res).toMatchObject(pt);
-
-      const dbl = res.add(pt);
-      expect(dbl).toMatchObject({x: 84, y: 10});
-    });
-  });
-
   describe('angleTo(point)', () => {
     test('gives the correct angle', () => {
       const pt = new Point2D(3,3);
@@ -116,6 +105,17 @@ describe('Prototype methods', () => {
       const right = new Point2D(84,90);
       const result = new Point2D(42,45);
       expect(origin.midpointTo(right)).toMatchObject(result);
+    });
+  });
+
+  describe('plus(point)', () => {
+    test('returns the addition of two points', () => {
+      const pt = new Point2D(42,5);
+      const res = origin.plus(pt);
+      expect(res).toMatchObject(pt);
+
+      const dbl = res.plus(pt);
+      expect(dbl).toMatchObject({x: 84, y: 10});
     });
   });
 

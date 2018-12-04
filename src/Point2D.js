@@ -31,20 +31,6 @@ class Point2D {
   }
 
   /**
-   * Add this point to the given point.
-   *
-   * @param {Point2D} point
-   *
-   * @return {Point2D} A new Point2D, which is the addition of the two points.
-   */
-  add(point) {
-    return new Point2D(
-      this.x + point.x,
-      this.y + point.y,
-    );
-  }
-
-  /**
    * Calculates the angle between this point and the given point.
    *   |                (projectionX,projectionY)
    *   |             /°
@@ -130,6 +116,20 @@ class Point2D {
   }
 
   /**
+   * Return the summation of this point to the given point.
+   *
+   * @param {Point2D} point
+   *
+   * @return {Point2D} A new Point2D, which is the addition of the two points.
+   */
+  plus(point) {
+    return new Point2D(
+      this.x + point.x,
+      this.y + point.y,
+    );
+  }
+
+  /**
    * Subtract the given point from this point.
    *
    * @param {Point2D} point
@@ -181,11 +181,7 @@ Point2D.midpoint = function(points = []) {
  * @return {Point2D} A new Point2D representing the sum of the given points.
  */
 Point2D.sum = function(points = []) {
-  return points.reduce( (total, current) => {
-    total.x += current.x;
-    total.y += current.y;
-    return total;
-  }, new Point2D(0,0) );
+  return points.reduce( (total, pt) => total.plus(pt), new Point2D(0,0) );
 }
 
 module.exports = Point2D;
