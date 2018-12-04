@@ -205,7 +205,6 @@ class Region {
 
     bindings.forEach( b => {
       if (gesture == undefined || b.gesture === gesture) {
-        b.stop();
         this.bindings.splice(this.bindings.indexOf(b), 1);
         unbound.push(b);
       }
