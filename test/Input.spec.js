@@ -1,8 +1,8 @@
 'use strict';
 
 /**
- * @file Binding.js
- * Tests Binding class
+ * @file Input.spec.js
+ * Tests Input class
  */
 const Input     = require('../src/Input.js');
 const PointerData = require('../src/PointerData.js');
