@@ -84,24 +84,6 @@ class Point2D {
   }
 
   /**
-   * Determines if this point is within the given HTML element.
-   *
-   * @param {Element} target
-   *
-   * @return {Boolean} true if the given point is within element, false
-   *    otherwise. 
-   */
-  isInside(element) {
-    const rect = element.getBoundingClientRect();
-    return (
-      this.x >= rect.left &&
-      this.x <= (rect.left + rect.width) &&
-      this.y >= rect.top &&
-      this.y <= (rect.top + rect.height)
-    );
-  }
-
-  /**
    * Calculates the midpoint coordinates between two points.
    *
    * @param {Point2D} point
@@ -116,6 +98,20 @@ class Point2D {
   }
 
   /**
+   * Subtract the given point from this point.
+   *
+   * @param {Point2D} point
+   *
+   * @return {Point2D} A new Point2D, which is the result of (this - point).
+   */
+  minus(point) {
+    return new Point2D(
+      this.x - point.x,
+      this.y - point.y
+    );
+  }
+
+  /**
    * Return the summation of this point to the given point.
    *
    * @param {Point2D} point
@@ -126,20 +122,6 @@ class Point2D {
     return new Point2D(
       this.x + point.x,
       this.y + point.y,
-    );
-  }
-
-  /**
-   * Subtract the given point from this point.
-   *
-   * @param {Point2D} point
-   *
-   * @return {Point2D} A new Point2D, which is the result of (this - point).
-   */
-  subtract(point) {
-    return new Point2D(
-      this.x - point.x,
-      this.y - point.y
     );
   }
 

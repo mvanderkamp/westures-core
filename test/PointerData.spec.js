@@ -17,23 +17,11 @@ describe('PointerData', () => {
       parentNode: document,
       getBoundingClientRect: jest.fn(),
     };
-    element.getBoundingClientRect.mockReturnValue({
-      left: 50,
-      top:  50,
-      width:  50,
-      height: 50,
-    });
 
     childElement = {
       parentNode: element,
       getBoundingClientRect: jest.fn(),
     };
-    childElement.getBoundingClientRect.mockReturnValue({
-      left: 100,
-      top:  100,
-      width:  400,
-      height: 400,
-    });
 
     mouseevent = {
       type: 'mousemove',
@@ -116,19 +104,6 @@ describe('PointerData', () => {
   });
 
   describe('distanceTo(pdata)', () => {
-  });
-
-  describe('isInside(element)', () => {
-    test('Returns true if the pointer is inside the element', () => {
-      expect(mdata.isInside(element)).toBe(true);
-      expect(tdata.isInside(childElement)).toBe(true);
-    });
-
-    test('Returns false if the pointer is outside the element', () => {
-      expect(mdata.isInside(childElement)).toBe(false);
-      expect(tdata.isInside(element)).toBe(false);
-    });
-
   });
 
   describe('midpointTo(pdata)', () => {

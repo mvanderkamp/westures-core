@@ -87,17 +87,6 @@ class PointerData {
   }
 
   /**
-   * Determines if this PointerData is within the given HTML element.
-   *
-   * @param {Element} target
-   *
-   * @return {Boolean}
-   */
-  isInside(element) {
-    return this.point.isInside(element);
-  }
-
-  /**
    * Calculates the midpoint coordinates between two PointerData objects.
    *
    * @param {PointerData} pdata
