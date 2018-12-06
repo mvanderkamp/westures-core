@@ -10,27 +10,41 @@ const PointerData = require('../src/PointerData.js');
 const Point2D     = require('../src/Point2D.js');
 
 describe('PointerData', () => {
-  let pdata, mdata, mouseevent, touchevent, id, element, childElement;
+  let mdata, tdata, mouseevent, touchevent, id, element, childElement;
   
   beforeAll(() => {
-    element = document.createElement("DIV");
-    document.body.appendChild(element);
+    element = {
+      parentNode: document,
+      getBoundingClientRect: jest.fn(),
+    };
+    element.getBoundingClientRect.mockReturnValue({
+      left: 50,
+      top:  50,
+      width:  50,
+      height: 50,
+    });
 
-    childElement = document.createElement("P");
-    element.appendChild(childElement);
+    childElement = {
+      parentNode: element,
+      getBoundingClientRect: jest.fn(),
+    };
+    childElement.getBoundingClientRect.mockReturnValue({
+      left: 100,
+      top:  100,
+      width:  400,
+      height: 400,
+    });
 
     mouseevent = {
       type: 'mousemove',
       target: element,
-      parentNode: document,
       clientX: 89,
-      clientY: -3,
+      clientY: 53,
     };
 
     touchevent = {
       type: 'touchstart',
       target: childElement,
-      parentNode: document,
       changedTouches: [ 
         {
           identifier: 17,
@@ -50,60 +64,51 @@ describe('PointerData', () => {
   
   describe('constructor(event, identifier)', () => {
     test('Requires an event object', () => {
-      expect(() => pdata = new PointerData()).toThrow();
+      expect(() => mdata = new PointerData()).toThrow();
     });
   
     test('Instanties a PointerData when passed valid data', () => {
-      expect(() => pdata = new PointerData(mouseevent, id)).not.toThrow();
-      expect(pdata).toBeInstanceOf(PointerData);
-      expect(() => pdata = new PointerData(touchevent, id)).not.toThrow();
-      expect(pdata).toBeInstanceOf(PointerData);
+      expect(() => mdata = new PointerData(mouseevent, id)).not.toThrow();
+      expect(mdata).toBeInstanceOf(PointerData);
+      expect(() => tdata = new PointerData(touchevent, id)).not.toThrow();
+      expect(tdata).toBeInstanceOf(PointerData);
     });
   
     test('Correctly populates the initial elements container', () => {
-      pdata = new PointerData(mouseevent, id);
-      expect(pdata.initialElements.has(window)).toBe(true);
-      expect(pdata.initialElements.has(document)).toBe(true);
-      expect(pdata.initialElements.has(element)).toBe(true);
-      expect(pdata.initialElements.has(childElement)).toBe(false);
+      expect(mdata.initialElements.has(window)).toBe(true);
+      expect(mdata.initialElements.has(document)).toBe(true);
+      expect(mdata.initialElements.has(element)).toBe(true);
+      expect(mdata.initialElements.has(childElement)).toBe(false);
 
-      pdata = new PointerData(touchevent, id);
-      expect(pdata.initialElements.has(window)).toBe(true);
-      expect(pdata.initialElements.has(document)).toBe(true);
-      expect(pdata.initialElements.has(element)).toBe(true);
-      expect(pdata.initialElements.has(childElement)).toBe(true);
+      expect(tdata.initialElements.has(window)).toBe(true);
+      expect(tdata.initialElements.has(document)).toBe(true);
+      expect(tdata.initialElements.has(element)).toBe(true);
+      expect(tdata.initialElements.has(childElement)).toBe(true);
     });
 
     test('Records the original event', () => {
-      pdata = new PointerData(mouseevent, id);
-      expect(pdata.originalEvent).toBe(mouseevent);
-      pdata = new PointerData(touchevent, id);
-      expect(pdata.originalEvent).toBe(touchevent);
+      expect(mdata.originalEvent).toBe(mouseevent);
+      expect(tdata.originalEvent).toBe(touchevent);
     });
 
     test('Translates the event type into the correct phase', () => {
-      pdata = new PointerData(mouseevent, id);
-      expect(pdata.type).toBe('move');
-      pdata = new PointerData(touchevent, id);
-      expect(pdata.type).toBe('start');
+      expect(mdata.type).toBe('move');
+      expect(tdata.type).toBe('start');
     });
 
     test('Records an epoch timestamp', () => {
-      pdata = new PointerData(mouseevent, id);
-      expect(pdata.time).toBeDefined();
-      expect(pdata.time / 1000).toBeCloseTo(Date.now() / 1000, 1);
+      expect(mdata.time).toBeDefined();
+      expect(mdata.time / 1000).toBeCloseTo(Date.now() / 1000, 1);
     });
 
     test('Saves the correct clientX and clientY as a Point2D', () => {
-      pdata = new PointerData(mouseevent, id);
-      expect(pdata.point).toBeInstanceOf(Point2D);
-      expect(pdata.point.x).toBe(mouseevent.clientX);
-      expect(pdata.point.y).toBe(mouseevent.clientY);
+      expect(mdata.point).toBeInstanceOf(Point2D);
+      expect(mdata.point.x).toBe(mouseevent.clientX);
+      expect(mdata.point.y).toBe(mouseevent.clientY);
 
-      pdata = new PointerData(touchevent, id);
-      expect(pdata.point).toBeInstanceOf(Point2D);
-      expect(pdata.point.x).toBe(touchevent.changedTouches[1].clientX);
-      expect(pdata.point.y).toBe(touchevent.changedTouches[1].clientY);
+      expect(tdata.point).toBeInstanceOf(Point2D);
+      expect(tdata.point.x).toBe(touchevent.changedTouches[1].clientX);
+      expect(tdata.point.y).toBe(touchevent.changedTouches[1].clientY);
     });
   });
 
@@ -114,6 +119,16 @@ describe('PointerData', () => {
   });
 
   describe('isInside(element)', () => {
+    test('Returns true if the pointer is inside the element', () => {
+      expect(mdata.isInside(element)).toBe(true);
+      expect(tdata.isInside(childElement)).toBe(true);
+    });
+
+    test('Returns false if the pointer is outside the element', () => {
+      expect(mdata.isInside(childElement)).toBe(false);
+      expect(tdata.isInside(element)).toBe(false);
+    });
+
   });
 
   describe('midpointTo(pdata)', () => {
