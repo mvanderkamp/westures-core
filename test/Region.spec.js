@@ -19,11 +19,5 @@ describe('Region.bind(element)', function() {
   test('should exist', function() {
     expect(region.bind).toBeDefined();
   });
-
-  test('should throw an error if the element parameter is invalid', function() {
-    expect(function() {
-      region.bind({});
-    }).toThrow();
-  });
 });
 
