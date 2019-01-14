@@ -88,22 +88,18 @@ class Region {
    */
   activate() {
     /*
-     * I will now indulge myself in some mild venting about web standards.
+     * Having to listen to both mouse and touch events is annoying, but
+     * necessary due to conflicting standards and browser implementations.
+     * Pointer is a fallback instead of the primary because it lacks useful
+     * properties such as 'ctrlKey' and 'altKey'.
      *
-     * What. The. Ever. Loving. Shit.
+     * Listening to both mouse and touch comes with the difficulty that
+     * preventDefault() must be called to prevent both events from iterating
+     * through the system. However I have left it as an option to the end user,
+     * which defaults to calling preventDefault(), in case there's a use-case I
+     * haven't considered or am not aware of.
      *
-     * Why oh why is this necessary. PointerEvent would have been so nice!
-     * Except they screwed up the standard by not implementing the full range of
-     * properties as were present in the mouse events! Where's my "ctrlKey" and
-     * "altKey" properties!!!! Now I have to limit PointerEvent to a fallback
-     * which will probably never be hit.
-     *
-     * Not to mention the jankyness of having to listen to _both_ touch and
-     * mouse events to make sure that you get the correct behaviour! And _then_
-     * having to call preventDefault() to make sure you don't get double
-     * occurrence of any events!! But that kills default page behaviour!!
-     *
-     * Now I have to recommend to users that they keep regions small! Grr.
+     * It is also a good idea to keep regions small in large pages.
      *
      * See:
      *  https://www.html5rocks.com/en/mobile/touchandmouse/
@@ -205,7 +201,6 @@ class Region {
 
     bindings.forEach( b => {
       if (gesture == undefined || b.gesture === gesture) {
-        b.stop();
         this.bindings.splice(this.bindings.indexOf(b), 1);
         unbound.push(b);
       }

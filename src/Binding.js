@@ -22,7 +22,6 @@ class Binding {
      *
      * @type {Element}
      */
-    if (!(element instanceof Element)) throw 'Invalid Element';
     this.element = element;
 
     /**

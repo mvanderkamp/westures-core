@@ -31,20 +31,6 @@ class Point2D {
   }
 
   /**
-   * Add this point to the given point.
-   *
-   * @param {Point2D} point
-   *
-   * @return {Point2D} A new Point2D, which is the addition of the two points.
-   */
-  add(point) {
-    return new Point2D(
-      this.x + point.x,
-      this.y + point.y,
-    );
-  }
-
-  /**
    * Calculates the angle between this point and the given point.
    *   |                (projectionX,projectionY)
    *   |             /°
@@ -98,24 +84,6 @@ class Point2D {
   }
 
   /**
-   * Determines if this point is within the given HTML element.
-   *
-   * @param {Element} target
-   *
-   * @return {Boolean} true if the given point is within element, false
-   *    otherwise. 
-   */
-  isInside(element) {
-    const rect = element.getBoundingClientRect();
-    return (
-      this.x >= rect.left &&
-      this.x <= (rect.left + rect.width) &&
-      this.y >= rect.top &&
-      this.y <= (rect.top + rect.height)
-    );
-  }
-
-  /**
    * Calculates the midpoint coordinates between two points.
    *
    * @param {Point2D} point
@@ -136,10 +104,24 @@ class Point2D {
    *
    * @return {Point2D} A new Point2D, which is the result of (this - point).
    */
-  subtract(point) {
+  minus(point) {
     return new Point2D(
       this.x - point.x,
       this.y - point.y
+    );
+  }
+
+  /**
+   * Return the summation of this point to the given point.
+   *
+   * @param {Point2D} point
+   *
+   * @return {Point2D} A new Point2D, which is the addition of the two points.
+   */
+  plus(point) {
+    return new Point2D(
+      this.x + point.x,
+      this.y + point.y,
     );
   }
 
@@ -181,11 +163,7 @@ Point2D.midpoint = function(points = []) {
  * @return {Point2D} A new Point2D representing the sum of the given points.
  */
 Point2D.sum = function(points = []) {
-  return points.reduce( (total, current) => {
-    total.x += current.x;
-    total.y += current.y;
-    return total;
-  }, new Point2D(0,0) );
+  return points.reduce( (total, pt) => total.plus(pt), new Point2D(0,0) );
 }
 
 module.exports = Point2D;
