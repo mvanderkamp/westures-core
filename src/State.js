@@ -104,7 +104,11 @@ class State {
       },
 
       MouseEvent: (event) => {
-        this.updateInput(event, DEFAULT_MOUSE_ID);
+        this.updateInput(event, event.button);
+        // getMouseButtons(event).forEach( button => {
+          // this.updateInput(event, button);
+        // });
+        // this.updateInput(event, DEFAULT_MOUSE_ID);
       },
     };
 
@@ -116,14 +120,22 @@ class State {
  * @return {Array} Identifiers of the mouse buttons used.
  */
 function getMouseButtons(event) {
-  const btns = [];
-  if (event && event.buttons) {
-    for (let mask = 1; mask < 32; mask <<= 1) {
-      const btn = event.buttons & mask;
-      if (btn > 0) btns.push(btn);
-    }
+  switch(PHASE[ event.type ]) {
+    case 'start':
+    case 'end':
+      return [ event.button ];
+    case 'move':
+      const btns = [];
+      if (event && event.buttons) {
+        for (let mask = 1; mask < 32; mask <<= 1) {
+          const btn = event.buttons & mask;
+          if (btn > 0) btns.push(Math.log2(btn));
+        }
+      }
+      return btns;
+    default:
+      throw 'invalid button arrangement occurred!';
   }
-  return btns;
 }
 
 module.exports = State;
