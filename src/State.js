@@ -4,6 +4,7 @@
 
 const Input   = require('./Input.js');
 const PHASE   = require('./PHASE.js');
+const Point2D = require('./Point2D.js');
 
 const DEFAULT_MOUSE_ID = 0;
 
@@ -19,11 +20,35 @@ class State {
    */
   constructor() {
     /**
-     * An array of current Input objects related to a gesture.
+     * Keeps track of the current Input objects.
      *
      * @type {Input}
      */
     this._inputs_obj = {};
+
+    /**
+     * The array of currently active inputs, sourced from the current Input
+     * objects.
+     *
+     * "Active" is defined as not being in the 'end' phase.
+     */
+    this.active = [];
+
+    /**
+     * The array of latest point data for the currently active inputs, sourced
+     * from this.active.
+     */
+    this.activePoints = [];
+
+    /**
+     * The centroid of the currently active points. Will be a Point2D.
+     */
+    this.centroid = {};
+
+    /**
+     * The latest event that the state processed.
+     */
+    this.event = null;
   }
 
   /**
@@ -105,14 +130,16 @@ class State {
 
       MouseEvent: (event) => {
         this.updateInput(event, event.button);
-        // getMouseButtons(event).forEach( button => {
-          // this.updateInput(event, button);
-        // });
-        // this.updateInput(event, DEFAULT_MOUSE_ID);
       },
     };
 
     update_fns[event.constructor.name].call(this, event);
+    this.active = this.getInputsNotInPhase('end');
+    if (this.active.length > 0) {
+      this.activePoints = this.active.map( i => i.current.point );
+      this.centroid = Point2D.midpoint( this.activePoints );
+    }
+    this.event = event;
   }
 }
 
