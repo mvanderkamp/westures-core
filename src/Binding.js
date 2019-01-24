@@ -46,8 +46,9 @@ class Binding {
   evaluateHook(hook, state, events) {
     const data = this.gesture[hook](state);
     if (data) {
-      if (!data.phase) data.phase = hook;
+      data.phase = hook;
       data.events = events;
+      data.type = this.gesture.type;
       this.handler(data);
     }
   }
