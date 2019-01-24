@@ -67,11 +67,6 @@ class Input {
   get phase()       { return this.current.type; }
 
   /**
-   * @return {Number} The timestamp of the most current event for this input.
-   */
-  get currentTime() { return this.current.time; }
-
-  /**
    * @return {Number} The timestamp of the initiating event for this input.
    */
   get startTime()   { return this.initial.time; }
@@ -84,29 +79,6 @@ class Input {
   }
 
   /**
-   * @return {Number} The angle in radians between the inputs' current events.
-   */
-  currentAngleTo(input) {
-    return this.current.angleTo(input.current);
-  }
-
-  /**
-   * Determines the distance between the current events for two inputs.
-   *
-   * @return {Number} The distance between the inputs' current events.
-   */
-  currentDistanceTo(input) {
-    return this.current.distanceTo(input.current);
-  }
-
-  /**
-   * @return {Number} The midpoint between the inputs' current events.
-   */
-  currentMidpointTo(input) {
-    return this.current.midpointTo(input.current);
-  }
-
-  /**
    * @param {String} id - The identifier for each unique Gesture's progress.
    *
    * @return {Object} - The progress of the gesture.
@@ -116,14 +88,6 @@ class Input {
       this.progress[id] = {};
     }
     return this.progress[id];
-  }
-
-  /**
-   * @return {Number} The angle, in radians, between the initiating event for
-   * this input and its current event.
-   */
-  totalAngle() {
-    return this.initial.angleTo(this.current);
   }
 
   /**
