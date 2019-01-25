@@ -17,11 +17,7 @@ class PointerData {
    * @constructor
    *
    * @param {Event} event - The event object being wrapped.
-   * @param {Array} event.touches - The number of touches on a screen (mobile
-   *    only).
-   * @param {Object} event.changedTouches - The TouchList representing points
-   *    that participated in the event.
-   * @param {Number} touchIdentifier - The index of touch if applicable
+   * @param {Number} identifier - The index of touch if applicable
    */
   constructor(event, identifier) {
     /**
@@ -84,17 +80,6 @@ class PointerData {
    */
   distanceTo(pdata) {
     return this.point.distanceTo(pdata.point);
-  }
-
-  /**
-   * Calculates the midpoint coordinates between two PointerData objects.
-   *
-   * @param {PointerData} pdata
-   *
-   * @return {Point2D} The coordinates of the midpoint.
-   */
-  midpointTo(pdata) {
-    return this.point.midpointTo(pdata.point);
   }
 
   /**

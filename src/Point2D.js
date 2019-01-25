@@ -84,20 +84,6 @@ class Point2D {
   }
 
   /**
-   * Calculates the midpoint coordinates between two points.
-   *
-   * @param {Point2D} point
-   *
-   * @return {Point2D} The coordinates of the midpoint.
-   */
-  midpointTo(point) {
-    return new Point2D(
-      (this.x + point.x) / 2,
-      (this.y + point.y) / 2,
-    );
-  }
-
-  /**
    * Subtract the given point from this point.
    *
    * @param {Point2D} point

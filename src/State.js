@@ -27,6 +27,11 @@ class State {
     this._inputs_obj = {};
 
     /**
+     * All currently valid inputs, including those that have ended.
+     */
+    this.inputs = [];
+
+    /**
      * The array of currently active inputs, sourced from the current Input
      * objects.
      *
@@ -50,11 +55,6 @@ class State {
      */
     this.event = null;
   }
-
-  /**
-   * @return {Array} The currently valid inputs.
-   */
-  get inputs() { return Object.values(this._inputs_obj); }
 
   /**
    * Deletes all inputs that are in the 'end' phase.
@@ -134,34 +134,13 @@ class State {
     };
 
     update_fns[event.constructor.name].call(this, event);
+    this.inputs = Object.values(this._inputs_obj);
     this.active = this.getInputsNotInPhase('end');
     if (this.active.length > 0) {
       this.activePoints = this.active.map( i => i.current.point );
       this.centroid = Point2D.midpoint( this.activePoints );
     }
     this.event = event;
-  }
-}
-
-/**
- * @return {Array} Identifiers of the mouse buttons used.
- */
-function getMouseButtons(event) {
-  switch(PHASE[ event.type ]) {
-    case 'start':
-    case 'end':
-      return [ event.button ];
-    case 'move':
-      const btns = [];
-      if (event && event.buttons) {
-        for (let mask = 1; mask < 32; mask <<= 1) {
-          const btn = event.buttons & mask;
-          if (btn > 0) btns.push(Math.log2(btn));
-        }
-      }
-      return btns;
-    default:
-      throw 'invalid button arrangement occurred!';
   }
 }
 
