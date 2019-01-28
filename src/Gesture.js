@@ -42,7 +42,7 @@ class Gesture {
    * @return {null|Object}  - Default of null
    */
   start(state) {
-    return null;
+    return void state;
   }
 
   /**
@@ -53,7 +53,7 @@ class Gesture {
    * @return {null|Object} - Default of null
    */
   move(state) {
-    return null;
+    return void state;
   }
 
   /**
@@ -64,7 +64,7 @@ class Gesture {
    * @return {null|Object}  - Default of null
    */
   end(state) {
-    return null;
+    return void state;
   }
 }
 

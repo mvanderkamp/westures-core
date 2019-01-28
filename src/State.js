@@ -8,8 +8,6 @@ const Input   = require('./Input.js');
 const PHASE   = require('./PHASE.js');
 const Point2D = require('./Point2D.js');
 
-const DEFAULT_MOUSE_ID = 0;
-
 /**
  * Creates an object related to a Region's state, and contains helper methods to
  * update and clean up different states.
