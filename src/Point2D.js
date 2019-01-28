@@ -133,7 +133,8 @@ class Point2D {
  * @return {Point2D} The midpoint of the provided points.
  */
 Point2D.midpoint = function(points = []) {
-  if (points.length === 0) throw 'Need points to exist to calculate midpoint!';
+  if (points.length === 0) return null;
+
   const total = Point2D.sum(points);
   return new Point2D (
     total.x / points.length,
