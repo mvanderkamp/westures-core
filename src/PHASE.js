@@ -2,6 +2,8 @@
  * @file PHASE.js
  */
 
+'use strict';
+
 /**
  * Normalizes window events to be either of type start, move, or end.
  *

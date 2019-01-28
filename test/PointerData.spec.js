@@ -1,10 +1,10 @@
-'use strict';
-
 /**
  * @file PointerData.js
  *
  * Test suite for the PointerData class.
  */
+
+'use strict';
 
 const PointerData = require('../src/PointerData.js');
 const Point2D     = require('../src/Point2D.js');

@@ -1,9 +1,10 @@
-'use strict';
-
 /**
  * @file Gesture.js
  * Tests Gesture class
  */
+
+'use strict';
+
 const Gesture = require('../src/Gesture.js');
 
 /** @test {Gesture} */

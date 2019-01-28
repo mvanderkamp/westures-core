@@ -3,6 +3,8 @@
  * Contains logic for PointerDatas
  */
 
+'use strict';
+
 const Point2D = require('./Point2D.js');
 const PHASE   = require('./PHASE.js');
 

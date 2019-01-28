@@ -1,9 +1,10 @@
-'use strict';
-
 /**
- * @file Region.spec..js
+ * @file Region.spec.js
  * Tests Region class
  */
+
+'use strict';
+
 const Region = require('../src/Region.js');
 
 /** @test {Region} */

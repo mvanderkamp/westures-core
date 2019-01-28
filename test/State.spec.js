@@ -1,3 +1,7 @@
+/*
+ * Test the State class.
+ */
+
 'use strict';
 
 const State   = require('../src/State.js');

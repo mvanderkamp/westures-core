@@ -2,6 +2,8 @@
  * @file Input.js
  */
 
+'use strict';
+
 const PointerData = require('./PointerData.js');
 
 /**

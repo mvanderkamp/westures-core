@@ -2,6 +2,8 @@
  * @file State.js
  */
 
+'use strict';
+
 const Input   = require('./Input.js');
 const PHASE   = require('./PHASE.js');
 const Point2D = require('./Point2D.js');

@@ -1,9 +1,10 @@
-'use strict';
-
 /**
  * @file Binding.js
  * Tests Binding class
  */
+
+'use strict';
+
 const Binding = require('../src/Binding.js');
 const Gesture = require('../src/Gesture.js');
 

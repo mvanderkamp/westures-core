@@ -2,6 +2,8 @@
  * @file Region.js
  */
 
+'use strict';
+
 const Binding = require('./Binding.js');
 const State   = require('./State.js');
 const PHASE   = require('./PHASE.js');

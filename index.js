@@ -3,6 +3,8 @@
  * Main object containing API methods and Gesture constructors
  */
 
+'use strict';
+
 const Region  = require('./src/Region.js');
 const Point2D = require('./src/Point2D.js');
 const Gesture = require('./src/Gesture.js');

@@ -4,6 +4,8 @@
  * Defines a 2D point class.
  */
 
+'use strict';
+
 /**
  * The Point2D class stores and operates on 2-dimensional points, represented as
  * x and y coordinates.

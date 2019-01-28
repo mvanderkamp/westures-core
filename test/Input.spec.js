@@ -1,9 +1,10 @@
-'use strict';
-
 /**
  * @file Input.spec.js
  * Tests Input class
  */
+
+'use strict';
+
 const Input     = require('../src/Input.js');
 const PointerData = require('../src/PointerData.js');
 

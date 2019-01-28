@@ -3,6 +3,8 @@
  * Contains the Gesture class
  */
 
+'use strict';
+
 let nextGestureNum = 0;
 
 /**

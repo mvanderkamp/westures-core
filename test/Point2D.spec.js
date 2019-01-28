@@ -1,10 +1,10 @@
-'use strict';
-
 /**
  * @files Point2D.js
  *
  * Tests the Point2D class.
  */
+
+'use strict';
 
 const Point2D = require('../src/Point2D.js');
 
