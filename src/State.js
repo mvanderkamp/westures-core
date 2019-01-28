@@ -117,32 +117,34 @@ class State {
    *    event is invalid.
    */
   updateAllInputs(event) {
-    const update_fns = {
-      TouchEvent: (event) => {
-        Array.from(event.changedTouches).forEach( touch => {
-          this.updateInput(event, touch.identifier);
-        });
-      },
-
-      PointerEvent: (event) => {
-        this.updateInput(event, event.pointerId);
-      },
-
-      MouseEvent: (event) => {
-        this.updateInput(event, event.button);
-      },
-    };
-
     update_fns[event.constructor.name].call(this, event);
     this.inputs = Object.values(this._inputs_obj);
     this.active = this.getInputsNotInPhase('end');
-    if (this.active.length > 0) {
-      this.activePoints = this.active.map( i => i.current.point );
-      this.centroid = Point2D.midpoint( this.activePoints );
-    }
+    this.activePoints = this.active.map( i => i.current.point );
+    this.centroid = Point2D.midpoint( this.activePoints );
     this.event = event;
   }
 }
+
+/*
+ * Set of helper functions for updating inputs based on type of input.
+ * Must be called with a bound 'this', via bind(), or call(), or apply().
+ */
+const update_fns = {
+  TouchEvent: function(event) {
+    Array.from(event.changedTouches).forEach( touch => {
+      this.updateInput(event, touch.identifier);
+    });
+  },
+
+  PointerEvent: function(event) {
+    this.updateInput(event, event.pointerId);
+  },
+
+  MouseEvent: function(event) {
+    this.updateInput(event, event.button);
+  },
+};
 
 module.exports = State;
 
