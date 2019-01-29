@@ -69,7 +69,7 @@ class State {
    * @return {Array} Current event for all inputs.
    */
   getCurrentEvents() {
-    return this.inputs.map( i => i.current );
+    return this.inputs.map( i => i.current.originalEvent );
   }
 
   /**

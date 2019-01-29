@@ -44,12 +44,15 @@ class Binding {
 
   /**
    * Evalutes the given gesture hook, and dispatches any data that is produced.
+   *
+   * @param {String} hook - which gesture hook to call, ('start', 'move', etc).
+   * @param {State} state - The current State instance.
    */
-  evaluateHook(hook, state, events) {
+  evaluateHook(hook, state) {
     const data = this.gesture[hook](state);
     if (data) {
       data.phase = hook;
-      data.events = events;
+      data.event = state.event;
       data.type = this.gesture.type;
       this.handler(data);
     }
