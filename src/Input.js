@@ -67,21 +67,14 @@ class Input {
    *
    * @type {String} 
    */
-  get phase()       { return this.current.type; }
+  get phase() { return this.current.type; }
 
   /**
    * The timestamp of the initiating event for this input.
    *
    * @type {Number}
    */
-  get startTime()   { return this.initial.time; }
-
-  /**
-   * @return {Point2D} A clone of the current point.
-   */
-  cloneCurrentPoint() {
-    return this.current.point.clone();
-  }
+  get startTime() { return this.initial.time; }
 
   /**
    * @param {String} id - The ID of the gesture whose progress is sought.
@@ -100,14 +93,6 @@ class Input {
    */
   totalDistance() {
     return this.initial.distanceTo(this.current);
-  }
-
-  /**
-   * @return {Boolean} true if the total distance is less than or equal to the
-   *    tolerance.
-   */
-  totalDistanceIsWithin(tolerance) {
-    return this.totalDistance() <= tolerance;
   }
 
   /**
