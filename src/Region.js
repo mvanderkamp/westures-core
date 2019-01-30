@@ -167,6 +167,7 @@ class Region {
   /**
    * Retrieves Bindings by their associated element.
    *
+   * @private
    * @param {Element} element - The element for which to find bindings.
    * @return {Binding[]} - Bindings to which the element is bound.
    */
@@ -179,6 +180,7 @@ class Region {
    * e.g. if gesture started on the correct target element, but diverted away
    * into the correct region, this would still be valid.
    *
+   * @private
    * @return {Binding[]} - Bindings in which an active input began.
    */
   retrieveBindingsByInitialPos() {

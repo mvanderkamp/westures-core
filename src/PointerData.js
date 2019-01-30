@@ -50,10 +50,12 @@ class PointerData {
      */
     this.time = Date.now();
 
+    const eventObj = getEventObject(event, identifier);
     /**
      * The (x,y) coordinate of the event, wrapped in a Point2D.
+     *
+     * @member {Point2D}
      */
-    const eventObj = getEventObject(event, identifier);
     this.point = new Point2D(eventObj.clientX, eventObj.clientY);
   }
 
