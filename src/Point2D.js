@@ -104,8 +104,8 @@ class Point2D {
   /**
    * Calculates the total distance from this point to an array of points.
    *
-   * @param {Point2D[]} points - The array of Point2D objects to calculate the total
-   *    distance to.
+   * @param {Point2D[]} points - The array of Point2D objects to calculate the
+   *    total distance to.
    * @return {Number} The total distance from this point to the provided points.
    */
   totalDistanceTo(points = []) {
@@ -115,8 +115,8 @@ class Point2D {
   /**
    * Calculates the midpoint of a list of points.
    *
-   * @param {Point2D[]} points - The array of Point2D objects for which to calculate
-   *    the midpoint
+   * @param {Point2D[]} points - The array of Point2D objects for which to
+   *    calculate the midpoint
    * @return {Point2D} The midpoint of the provided points.
    */
   static midpoint(points = []) {
