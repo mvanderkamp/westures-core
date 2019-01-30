@@ -75,13 +75,6 @@ class State {
   }
 
   /**
-   * @return {Event[]} Current event for all inputs.
-   */
-  getCurrentEvents() {
-    return this.inputs.map( i => i.current.originalEvent );
-  }
-
-  /**
    * @param {String} phase - One of 'start', 'move', or 'end'
    * @return {Input[]} Inputs in the given phase.
    */
