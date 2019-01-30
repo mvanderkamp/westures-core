@@ -1,6 +1,4 @@
 /**
- * @file PointerData.js
- *
  * Test suite for the PointerData class.
  */
 

@@ -1,5 +1,5 @@
 /**
- * @file Input.js
+ * @file Contains the {@link Input} class
  */
 
 'use strict';
@@ -8,41 +8,40 @@ const PointerData = require('./PointerData.js');
 
 /**
  * Tracks a single input and contains information about the current, previous,
- * and initial events.  Contains the progress of each Input and it's associated
+ * and initial events. Contains the progress of each Input and its associated
  * gestures.
- *
- * @class Input
  */
 class Input {
   /**
    * Constructor function for the Input class.
    *
-   * @param {Event} event - The Event object from the window
-   * @param {Number} [identifier=0] - The identifier for this input (taken
-   *    from event.changedTouches or this input's button number)
+   * @param {(PointerEvent | MouseEvent | TouchEvent)} event - The input event
+   *    which will initialize this Input object.
+   * @param {Number} identifier - The identifier for this input, so that it can
+   *    be located in subsequent Event objects.
    */
-  constructor(event, identifier = 0) {
+  constructor(event, identifier) {
     const currentData = new PointerData(event, identifier);
 
     /**
      * Holds the initial data from the mousedown / touchstart / pointerdown that
      * began this input.
      *
-     * @type {PointerData}
+     * @member {PointerData}
      */
     this.initial = currentData;
 
     /**
      * Holds the most current pointer data for this Input.
      *
-     * @type {PointerData}
+     * @member {PointerData}
      */
     this.current = currentData;
 
     /**
      * Holds the previous pointer data for this Input.
      *
-     * @type {PointerData}
+     * @member {PointerData}
      */
     this.previous = currentData;
 
@@ -50,7 +49,7 @@ class Input {
      * The identifier for the pointer / touch / mouse button associated with
      * this input.
      *
-     * @type {Number}
+     * @member {Number}
      */
     this.identifier = identifier;
 
@@ -58,18 +57,22 @@ class Input {
      * Stores internal state between events for each gesture based off of the
      * gesture's id.
      *
-     * @type {Object}
+     * @member {Object}
      */
     this.progress = {};
   }
 
   /**
-   * @return {String} The phase of the input: 'start' or 'move' or 'end'
+   * The phase of the input: 'start' or 'move' or 'end'
+   *
+   * @type {String} 
    */
   get phase()       { return this.current.type; }
 
   /**
-   * @return {Number} The timestamp of the initiating event for this input.
+   * The timestamp of the initiating event for this input.
+   *
+   * @type {Number}
    */
   get startTime()   { return this.initial.time; }
 
@@ -81,9 +84,8 @@ class Input {
   }
 
   /**
-   * @param {String} id - The identifier for each unique Gesture's progress.
-   *
-   * @return {Object} - The progress of the gesture.
+   * @param {String} id - The ID of the gesture whose progress is sought.
+   * @return {Object} The progress of the gesture.
    */
   getProgressOfGesture(id) {
     if (!this.progress[id]) {
@@ -94,7 +96,7 @@ class Input {
 
   /**
    * @return {Number} The distance between the initiating event for this input
-   * and its current event.
+   *    and its current event.
    */
   totalDistance() {
     return this.initial.distanceTo(this.current);
@@ -102,7 +104,7 @@ class Input {
 
   /**
    * @return {Boolean} true if the total distance is less than or equal to the
-   * tolerance.
+   *    tolerance.
    */
   totalDistanceIsWithin(tolerance) {
     return this.totalDistance() <= tolerance;
@@ -114,7 +116,7 @@ class Input {
    * out the old previous data.
    *
    * @param {Event} event - The event object to wrap with a PointerData.
-   * @param {Number} touchIdentifier - The index of inputs, from event.touches
+   * @return {undefined}
    */
   update(event) {
     this.previous = this.current;
@@ -123,7 +125,7 @@ class Input {
 
   /**
    * @return {Boolean} true if the given element existed along the propagation
-   * path of this input's initiating event.
+   *    path of this input's initiating event.
    */
   wasInitiallyInside(element) {
     return this.initial.wasInside(element);

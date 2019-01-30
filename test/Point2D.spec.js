@@ -1,7 +1,5 @@
 /**
- * @files Point2D.js
- *
- * Tests the Point2D class.
+ * Test suite for the Point2D class.
  */
 
 'use strict';

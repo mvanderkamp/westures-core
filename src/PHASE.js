@@ -1,5 +1,6 @@
 /**
- * @file PHASE.js
+ * @file Contains the PHASE object, which translates event names to phases
+ * (a.k.a. hooks).
  */
 
 'use strict';
@@ -7,10 +8,7 @@
 /**
  * Normalizes window events to be either of type start, move, or end.
  *
- * @param {String} type - The event type emitted by the browser
- *
- * @return {null|String} - The normalized event, or null if it is an event not
- *    predetermined.
+ * @private
  */
 const PHASE = Object.freeze({
   mousedown:   'start',
@@ -25,7 +23,6 @@ const PHASE = Object.freeze({
   touchend:  'end',
   pointerup: 'end',
 });
-/* PHASE*/
 
 module.exports = PHASE;
 

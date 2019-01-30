@@ -1,13 +1,11 @@
 /**
- * @file Gesture.js
- * Tests Gesture class
+ * Test suite for the Gesture class.
  */
 
 'use strict';
 
 const Gesture = require('../src/Gesture.js');
 
-/** @test {Gesture} */
 describe('Module exists', function() {
   expect(Gesture).toBeDefined();
 });

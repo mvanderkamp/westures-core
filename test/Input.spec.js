@@ -1,6 +1,5 @@
 /**
- * @file Input.spec.js
- * Tests Input class
+ * Test suite for the Input class.
  */
 
 'use strict';
@@ -22,7 +21,6 @@ let event = {
 // let event = new MouseEvent('mousedown');
 // document.dispatchEvent(event);
 
-/** @test {Input} */
 describe('constructor', function() {
   let input;
   test('Can be instantiated', () => {
@@ -67,7 +65,6 @@ describe('getters', () => {
   });
 });
 
-/** @test {Input.update} */
 describe('update', function() {
   let input = new Input(event, 1234);
   test('updates the current event', function() {
@@ -82,7 +79,6 @@ describe('update', function() {
   });
 });
 
-/** @test {getProgressOfGesture} */
 describe('getProgressOfGesture', function() {
   let input = new Input(event, 1234);
 

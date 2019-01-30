@@ -1,6 +1,5 @@
 /**
- * @file Binding.js
- * Tests Binding class
+ * Test suite for the Binding class.
  */
 
 'use strict';
@@ -78,7 +77,4 @@ describe('Binding', () => {
     });
   });
 });
-
-
-/** @test {Binding} */
 

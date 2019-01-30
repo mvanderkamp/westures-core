@@ -1,5 +1,5 @@
 /*
- * Test the State class.
+ * Test suite for the State class.
  */
 
 'use strict';

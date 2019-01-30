@@ -1,5 +1,5 @@
 /**
- * @file Region.js
+ * @file Contains the {@link Region} class
  */
 
 'use strict';
@@ -29,54 +29,52 @@ const TOUCH_EVENTS = [
 /** 
  * Allows the user to specify the control region which will listen for user
  * input events.
- *
- * @class Region
  */
 class Region {
   /**
    * Constructor function for the Region class.
    *
    * @param {Element} element - The element which should listen to input events.
-   * @param {boolean} [capture=false] - Whether the region uses the capture or
-   *    bubble phase of input events.
-   * @param {boolean} [preventDefault=true] - Whether the default browser
-   *    functionality should be disabled;
+   * @param {Boolean} capture - Whether the region uses the capture phase of
+   *    input events. If false, uses the bubbling phase.
+   * @param {Boolean} preventDefault - Whether the default browser functionality
+   *    should be disabled. This option should most likely be ignored. Here
+   *    there by dragons if set to false.
    */
   constructor(element, capture = false, preventDefault = true) {
     /**
      * The list of relations between elements, their gestures, and the handlers.
      *
-     * @type {Binding}
+     * @member {Binding[]}
      */
     this.bindings = [];
 
     /**
      * The element being bound to.
      *
-     * @type {Element}
+     * @member {Element}
      */
     this.element = element;
 
     /**
      * Whether the region listens for captures or bubbles.
      *
-     * @type {boolean}
+     * @member {Boolean}
      */
     this.capture = capture;
 
     /**
-     * Boolean to disable browser functionality such as scrolling and zooming
-     * over the region
-     *
-     * @type {boolean}
+     * Whether the default browser functionality should be disabled. This option
+     * should most likely be ignored. Here there by dragons if set to false.
+     *   
+     * @member {Boolean}
      */
     this.preventDefault = preventDefault;
 
     /**
-     * The internal state object for a Region.  Keeps track of inputs and
-     * bindings.
+     * The internal state object for a Region.  Keeps track of inputs.
      *
-     * @type {State}
+     * @member {State}
      */
     this.state = new State();
 
@@ -87,6 +85,9 @@ class Region {
   /**
    * Activates the region by adding event listeners for all appropriate input
    * events to the region's element.
+   *
+   * @private
+   * @return {undefined}
    */
   activate() {
     /*
@@ -132,7 +133,9 @@ class Region {
    * initial position of the inputs, calls the relevant gesture hooks, and
    * dispatches gesture data.
    *
+   * @private
    * @param {Event} event - The event emitted from the window object.
+   * @return {undefined}
    */
   arbitrate(event) {
     if (this.preventDefault) event.preventDefault();
@@ -153,22 +156,19 @@ class Region {
    *
    * @param {Element} element - The element object.
    * @param {Gesture} gesture - Gesture type with which to bind.
-   * @param {Function} [handler] - The function to execute when an event is
-   *    emitted.
-   * @param {Boolean} [capture] - capture/bubble
-   *
-   * @return {Object} - a chainable object that has the same function as bind.
+   * @param {Function} handler - The function to execute when a gesture is
+   *    recognized.
+   * @return {undefined}
    */
   bind(element, gesture, handler) {
     this.bindings.push( new Binding(element, gesture, handler) );
   }
 
   /**
-   * Retrieves the Binding by which an element is associated to.
+   * Retrieves Bindings by their associated element.
    *
-   * @param {Element} element - The element to find bindings to.
-   *
-   * @return {Array} - An array of Bindings to which that element is bound
+   * @param {Element} element - The element for which to find bindings.
+   * @return {Binding[]} - Bindings to which the element is bound.
    */
   retrieveBindingsByElement(element) {
     return this.bindings.filter( b => b.element === element );
@@ -179,7 +179,7 @@ class Region {
    * e.g. if gesture started on the correct target element, but diverted away
    * into the correct region, this would still be valid.
    *
-   * @return {Array} - An array of Bindings to which that element is bound
+   * @return {Binding[]} - Bindings in which an active input began.
    */
   retrieveBindingsByInitialPos() {
     return this.bindings.filter( 
@@ -192,9 +192,9 @@ class Region {
    * is specified.
    *
    * @param {Element} element - The element to unbind.
-   * @param {Gesture} gesture - The gesture to unbind.
-   *
-   * @return {Array} - An array of Bindings that were unbound to the element;
+   * @param {Gesture} [ gesture ] - The gesture to unbind. If undefined, will
+   *    unbind all Bindings associated with the given element.
+   * @return {Binding[]} - Bindings that were unbound to the element.
    */
   unbind(element, gesture) {
     let bindings = this.retrieveBindingsByElement(element);
@@ -209,7 +209,6 @@ class Region {
 
     return unbound;
   }
-  /* unbind*/
 }
 
 module.exports = Region;

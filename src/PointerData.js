@@ -1,6 +1,5 @@
 /**
- * @file PointerData.js
- * Contains logic for PointerDatas
+ * @file Contains the {@link PointerData} class
  */
 
 'use strict';
@@ -11,8 +10,6 @@ const PHASE   = require('./PHASE.js');
 /**
  * Low-level storage of pointer data based on incoming data from an interaction
  * event.
- *
- * @class PointerData
  */
 class PointerData {
   /**
@@ -26,14 +23,14 @@ class PointerData {
      * The set of elements along the original event's propagation path at the
      * time it was dispatched.
      *
-     * @type {WeakSet}
+     * @member {WeakSet.<Element>}
      */
     this.initialElements = getElementsInPath(event);
 
     /**
      * The original event object.
      *
-     * @type {Event}
+     * @member {Event}
      */
     this.originalEvent = event;
 
@@ -41,7 +38,7 @@ class PointerData {
      * The type or 'phase' of this batch of pointer data. 'start' or 'move' or
      * 'end'.
      *
-     * @type {String | null}
+     * @member {( String | null )}
      */
     this.type = PHASE[ event.type ];
 
@@ -49,7 +46,7 @@ class PointerData {
      * The timestamp of the event in milliseconds elapsed since January 1, 1970,
      * 00:00:00 UTC.
      * 
-     * @type {Number}
+     * @member {Number}
      */
     this.time = Date.now();
 
@@ -64,7 +61,6 @@ class PointerData {
    * Calculates the angle between this event and the given event.
    *
    * @param {PointerData} pdata
-   *
    * @return {Number} - Radians measurement between this event and the given
    *    event's points.
    */
@@ -76,7 +72,6 @@ class PointerData {
    * Calculates the distance between two PointerDatas.
    *
    * @param {PointerData} pdata
-   *
    * @return {Number} The distance between the two points, a.k.a. the
    *    hypoteneuse. 
    */
@@ -89,7 +84,6 @@ class PointerData {
    * was dispatched.
    *
    * @param {Element} element
-   *
    * @return {Boolean} true if the PointerData occurred inside the element,
    *    false otherwise.
    */
@@ -99,6 +93,7 @@ class PointerData {
 }
 
 /**
+ * @private
  * @return {Event} The Event object which corresponds to the given identifier.
  *    Contains clientX, clientY values.
  */
@@ -115,7 +110,8 @@ function getEventObject(event, identifier) {
  * A WeakSet is used so that references will be garbage collected when the
  * element they point to is removed from the page.
  *
- * @return {WeakSet} The Elements in the path of the given event.
+ * @private
+ * @return {WeakSet.<Element>} The Elements in the path of the given event.
  */
 function getElementsInPath(event) {
   return new WeakSet(getPropagationPath(event));
@@ -124,9 +120,9 @@ function getElementsInPath(event) {
 /**
  * In case event.composedPath() is not available.
  *
+ * @private
  * @param {Event} event
- *
- * @return {Array}
+ * @return {Element[]}
  */
 function getPropagationPath(event) {
   if (typeof event.composedPath === 'function') {
