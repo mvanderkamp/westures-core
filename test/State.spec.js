@@ -4,174 +4,290 @@
 
 'use strict';
 
-const State   = require('../src/State.js');
+const State = require('../src/State.js');
+const Input = require('../src/Input.js');
 
-describe('constructor()', () => {
-  test('Requires no arguments', () => {
-    expect(() => new State()).not.toThrow();
-  });
+class MouseEvent {
+  constructor(id, target, type, x, y) {
+    this.button = id;
+    this.target = target;
+    this.type = type;
+    this.clientX = x;
+    this.clientY = y;
+  }
+}
 
-  test('Instantiates the correct type of object', () => {
-    expect(new State()).toBeInstanceOf(State);
-  });
-});
-
-describe('prototype methods', () => {
+describe('State', () => {
   let state;
-  beforeEach(() => {
-    state = new State();
-    [ 
-      { phase: 'start', id: 0 },
-      { phase: 'end', id: 1 },
-      { phase: 'move', id: 2 },
-      { phase: 'move', id: 3 },
-      { will: 'be empty', id: 4 },
-      { phase: 'start', id: 5 },
-      { phase: 'start', id: 6 },
-    ].forEach( i => state._inputs_obj[i.id] = i );
-    delete state._inputs_obj[4];
+  let startevents;
+  let testevents;
+  let outerdiv, parentdiv, targetdiv;
+
+  beforeAll(() => {
+    outerdiv = document.createElement('div');
+    parentdiv = document.createElement('div');
+    targetdiv = document.createElement('div');
+
+    document.body.appendChild(outerdiv);
+    document.body.appendChild(parentdiv);
+    parentdiv.appendChild(targetdiv);
+
+    startevents = [
+      new MouseEvent(0, targetdiv, 'mousedown', 42, 43),
+      new MouseEvent(1, targetdiv, 'mousedown', 42, 43),
+      new MouseEvent(2, targetdiv, 'mousedown', 42, 43),
+      new MouseEvent(3, targetdiv, 'mousedown', 42, 43),
+      new MouseEvent(4, targetdiv, 'mousedown', 42, 43),
+      new MouseEvent(5, targetdiv, 'mousedown', 42, 43),
+      new MouseEvent(6, targetdiv, 'mousedown', 42, 43),
+    ];
+
+    testevents = [
+      new MouseEvent(1, targetdiv, 'mouseup',   43, 40),
+      new MouseEvent(2, targetdiv, 'mousemove', 46, 41),
+      new MouseEvent(3, targetdiv, 'mousemove', 36, 51),
+      new MouseEvent(6, targetdiv, 'mouseup',   32, 47),
+    ];
   });
 
-  describe('getInputsInPhase(phase)', () => {
-    describe('start', () => {
-      let starts;
-      beforeEach(() => {
-        starts = state.getInputsInPhase('start');
-      });
-
-      test('Retrieves the right number of inputs', () => {
-        expect(starts.length).toBe(3);
-      });
-
-      test('All retrieved inputs are starts', () => {
-        starts.forEach( s => {
-          expect(s.phase).toBe('start');
-        });
-      });
-
-      test('Ids and order persisted', () => {
-        expect(starts[0].id).toBe(0);
-        expect(starts[1].id).toBe(5);
-        expect(starts[2].id).toBe(6);
-      });
+  describe('constructor()', () => {
+    test('Requires no arguments', () => {
+      expect(() => new State()).not.toThrow();
     });
 
-    describe('phase: move', () => {
-      let moves;
-      beforeEach(() => {
-        moves = state.getInputsInPhase('move');
-      });
-
-      test('Retrieves the right number of inputs', () => {
-        expect(moves.length).toBe(2);
-      });
-
-      test('All retrieved inputs are moves', () => {
-        moves.forEach( m => {
-          expect(m.phase).toBe('move');
-        });
-      });
-
-      test('Ids and order persisted', () => {
-        expect(moves[0].id).toBe(2);
-        expect(moves[1].id).toBe(3);
-      });
-    });
-
-    describe('phase: end', () => {
-      let ends;
-      beforeEach(() => {
-        ends = state.getInputsInPhase('end');
-      });
-
-      test('Retrieves the right number of inputs', () => {
-        expect(ends.length).toBe(1);
-      });
-
-      test('All retrieved inputs are ends', () => {
-        ends.forEach( m => {
-          expect(m.phase).toBe('end');
-        });
-      });
-
-      test('Ids and order persisted', () => {
-        expect(ends[0].id).toBe(1);
-      });
+    test('Instantiates the correct type of object', () => {
+      expect(new State()).toBeInstanceOf(State);
     });
   });
 
-  describe('getInputsNotInPhase(phase)', () => {
-    describe('phase: start', () => {
-      let starts;
-      beforeEach(() => {
-        starts = state.getInputsNotInPhase('start');
+  describe('prototype methods', () => {
+    beforeAll(() => {
+      state = new State();
+    });
+
+    describe('updateInput', () => {
+      test('Instantiates a new input for "start" phase events', () => {
+        expect(state._inputs_obj[0]).toBeFalsy();
+        expect(() => state.updateInput(startevents[0], 0)).not.toThrow();
+        expect(state._inputs_obj[0]).toBeInstanceOf(Input);
       });
 
-      test('Retrieves the right number of inputs', () => {
-        expect(starts.length).toBe(3);
-      });
-
-      test('All retrieved inputs are not starts', () => {
-        starts.forEach( s => {
-          expect(s.phase).not.toBe('start');
-        });
-      });
-
-      test('Ids and order persisted', () => {
-        expect(starts[0].id).toBe(1);
-        expect(starts[1].id).toBe(2);
-        expect(starts[2].id).toBe(3);
+      test('Updates an old input for "move" or "end" phase events', () => {
+        expect(() => state.updateInput(startevents[1], 1)).not.toThrow();
+        expect(state._inputs_obj[1].phase).toBe('start');
+        expect(() => state.updateInput(testevents[0], 1)).not.toThrow();
+        expect(state._inputs_obj[1].phase).toBe('end');
       });
     });
 
-    describe('phase: move', () => {
-      let moves;
-      beforeEach(() => {
-        moves = state.getInputsNotInPhase('move');
+    describe('updateAllInputs', () => {
+      test('Instantiates new inputs for "start" phase events', () => {
+        for (let i = 2; i < startevents.length; i++) {
+          expect(state._inputs_obj[i]).toBeFalsy();
+          expect(() => state.updateAllInputs(startevents[i])).not.toThrow();
+          expect(state._inputs_obj[i]).toBeInstanceOf(Input);
+        }
       });
 
-      test('Retrieves the right number of inputs', () => {
-        expect(moves.length).toBe(4);
+      test('Updates old inputs for "move" or "end" phase events', () => {
+        for (let i = 1; i < testevents.length; i++) {
+          expect(() => state.updateAllInputs(testevents[i])).not.toThrow();
+        }
+        expect(state._inputs_obj[2].phase).toBe('move');
+        expect(state._inputs_obj[3].phase).toBe('move');
+        expect(state._inputs_obj[6].phase).toBe('end');
       });
 
-      test('All retrieved inputs are not moves', () => {
-        moves.forEach( m => {
-          expect(m.phase).not.toBe('move');
-        });
-      });
-
-      test('Ids and order persisted', () => {
-        expect(moves[0].id).toBe(0);
-        expect(moves[1].id).toBe(1);
-        expect(moves[2].id).toBe(5);
-        expect(moves[3].id).toBe(6);
+      test('Records additional information about state after update', () => {
+        expect(state.inputs).toBeDefined();
+        expect(state.active).toBeDefined();
+        expect(state.activePoints).toBeDefined();
+        expect(state.centroid).toBeDefined();
+        expect(state.event).toBeDefined();
       });
     });
 
-    describe('phase: end', () => {
-      let ends;
-      beforeEach(() => {
-        ends = state.getInputsNotInPhase('end');
-      });
+    describe('getInputsInPhase(phase)', () => {
+      describe('start', () => {
+        test('Retrieves the right number of inputs', () => {
+          expect(state.getInputsInPhase('start').length).toBe(3);
+        });
 
-      test('Retrieves the right number of inputs', () => {
-        expect(ends.length).toBe(5);
-      });
+        test('All retrieved inputs are starts', () => {
+          state.getInputsInPhase('start').forEach( s => {
+            expect(s.phase).toBe('start');
+          });
+        });
 
-      test('All retrieved inputs are not ends', () => {
-        ends.forEach( m => {
-          expect(m.phase).not.toBe('end');
+        test('Ids and order persisted', () => {
+          const starts = state.getInputsInPhase('start');
+          expect(starts[0].identifier).toBe(0);
+          expect(starts[1].identifier).toBe(4);
+          expect(starts[2].identifier).toBe(5);
         });
       });
 
-      test('Ids and order persisted', () => {
-        expect(ends[0].id).toBe(0);
-        expect(ends[1].id).toBe(2);
-        expect(ends[2].id).toBe(3);
-        expect(ends[3].id).toBe(5);
-        expect(ends[4].id).toBe(6);
+      describe('move', () => {
+        let moves;
+        beforeEach(() => {
+          moves = state.getInputsInPhase('move');
+        });
+
+        test('Retrieves the right number of inputs', () => {
+          expect(moves.length).toBe(2);
+        });
+
+        test('All retrieved inputs are moves', () => {
+          moves.forEach( m => {
+            expect(m.phase).toBe('move');
+          });
+        });
+
+        test('Ids and order persisted', () => {
+          expect(moves[0].identifier).toBe(2);
+          expect(moves[1].identifier).toBe(3);
+        });
+      });
+
+      describe('end', () => {
+        let ends;
+        beforeEach(() => {
+          ends = state.getInputsInPhase('end');
+        });
+
+        test('Retrieves the right number of inputs', () => {
+          expect(ends.length).toBe(2);
+        });
+
+        test('All retrieved inputs are ends', () => {
+          ends.forEach( m => {
+            expect(m.phase).toBe('end');
+          });
+        });
+
+        test('Ids and order persisted', () => {
+          expect(ends[0].identifier).toBe(1);
+          expect(ends[1].identifier).toBe(6);
+        });
+      });
+    });
+
+    describe('getInputsNotInPhase(phase)', () => {
+      describe('start', () => {
+        let starts;
+        beforeEach(() => {
+          starts = state.getInputsNotInPhase('start');
+        });
+
+        test('Retrieves the right number of inputs', () => {
+          expect(starts.length).toBe(4);
+        });
+
+        test('All retrieved inputs are not starts', () => {
+          starts.forEach( s => {
+            expect(s.phase).not.toBe('start');
+          });
+        });
+
+        test('Ids and order persisted', () => {
+          expect(starts[0].identifier).toBe(1);
+          expect(starts[1].identifier).toBe(2);
+          expect(starts[2].identifier).toBe(3);
+          expect(starts[3].identifier).toBe(6);
+        });
+      });
+
+      describe('move', () => {
+        let moves;
+        beforeEach(() => {
+          moves = state.getInputsNotInPhase('move');
+        });
+
+        test('Retrieves the right number of inputs', () => {
+          expect(moves.length).toBe(5);
+        });
+
+        test('All retrieved inputs are not moves', () => {
+          moves.forEach( m => {
+            expect(m.phase).not.toBe('move');
+          });
+        });
+
+        test('Ids and order persisted', () => {
+          expect(moves[0].identifier).toBe(0);
+          expect(moves[1].identifier).toBe(1);
+          expect(moves[2].identifier).toBe(4);
+          expect(moves[3].identifier).toBe(5);
+          expect(moves[4].identifier).toBe(6);
+        });
+      });
+
+      describe('end', () => {
+        let ends;
+        beforeEach(() => {
+          ends = state.getInputsNotInPhase('end');
+        });
+
+        test('Retrieves the right number of inputs', () => {
+          expect(ends.length).toBe(5);
+        });
+
+        test('All retrieved inputs are not ends', () => {
+          ends.forEach( m => {
+            expect(m.phase).not.toBe('end');
+          });
+        });
+
+        test('Ids and order persisted', () => {
+          expect(ends[0].identifier).toBe(0);
+          expect(ends[1].identifier).toBe(2);
+          expect(ends[2].identifier).toBe(3);
+          expect(ends[3].identifier).toBe(4);
+          expect(ends[4].identifier).toBe(5);
+        });
+      });
+    });
+
+    describe('someInputWasInitiallyInside', () => {
+      test('Returns true for initial target element', () => {
+        expect(state.someInputWasInitiallyInside(targetdiv)).toBe(true);
+      });
+  
+      test('Returns true for elements on initial path', () => {
+        expect(state.someInputWasInitiallyInside(parentdiv)).toBe(true);
+      });
+  
+      test('Returns true for document and window', () => {
+        expect(state.someInputWasInitiallyInside(document)).toBe(true);
+        expect(state.someInputWasInitiallyInside(window)).toBe(true);
+      });
+  
+      test('Returns false for elements outside the initial path', () => {
+        expect(state.someInputWasInitiallyInside(outerdiv)).toBe(false);
+      });
+    });
+
+    describe('clearEndedInputs', () => {
+      test('Does not throw an exception', () => {
+        expect(() => state.clearEndedInputs()).not.toThrow();
+      });
+
+      test('Removes inputs in "end" phase from state', () => {
+        Object.values(state._inputs_obj).forEach( i => {
+          expect(i.phase).not.toBe('end');
+        });
+      });
+
+      test('Ids and order of remaining inputs persisted', () => {
+        const inputs = Object.values(state._inputs_obj);
+        expect(inputs[0].identifier).toBe(0);
+        expect(inputs[1].identifier).toBe(2);
+        expect(inputs[2].identifier).toBe(3);
+        expect(inputs[3].identifier).toBe(4);
+        expect(inputs[4].identifier).toBe(5);
       });
     });
   });
 });
+
 

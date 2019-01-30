@@ -11,15 +11,11 @@ describe('PointerData', () => {
   let mdata, tdata, mouseevent, touchevent, id, element, childElement;
   
   beforeAll(() => {
-    element = {
-      parentNode: document,
-      getBoundingClientRect: jest.fn(),
-    };
+    element = document.createElement('div');
+    childElement = document.createElement('div');
 
-    childElement = {
-      parentNode: element,
-      getBoundingClientRect: jest.fn(),
-    };
+    document.body.appendChild(element);
+    element.appendChild(childElement);
 
     mouseevent = {
       type: 'mousemove',
@@ -98,16 +94,16 @@ describe('PointerData', () => {
     });
   });
 
-  describe('angleTo(pdata)', () => {
-  });
-
-  describe('distanceTo(pdata)', () => {
-  });
-
-  describe('midpointTo(pdata)', () => {
-  });
-
   describe('wasInside(element)', () => {
+    test('Returns true for elements in initial path', () => {
+      const tdata = new PointerData(touchevent, id);
+      expect(tdata.wasInside(childElement)).toBe(true);
+    });
+
+    test('Returns false for elements outside the path', () => {
+      const mdata = new PointerData(mouseevent, id);
+      expect(mdata.wasInside(childElement)).toBe(false);
+    });
   });
 });
 

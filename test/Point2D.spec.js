@@ -69,11 +69,12 @@ describe('Prototype methods', () => {
     });
   });
 
-  describe('midpointTo(point)', () => {
-    test('Returns the midpoint of two points', () => {
-      const right = new Point2D(84,90);
-      const result = new Point2D(42,45);
-      expect(origin.midpointTo(right)).toMatchObject(result);
+  describe('minus(point)', () => {
+    test('Returns the subtraction of two points', () => {
+      const left = new Point2D(42,45);
+      const right = new Point2D(84,100);
+      const result = new Point2D(42, 55);
+      expect(right.minus(left)).toMatchObject(result);
     });
   });
 
@@ -85,15 +86,6 @@ describe('Prototype methods', () => {
 
       const dbl = res.plus(pt);
       expect(dbl).toMatchObject({x: 84, y: 10});
-    });
-  });
-
-  describe('minus(point)', () => {
-    test('Returns the subtraction of two points', () => {
-      const left = new Point2D(42,45);
-      const right = new Point2D(84,100);
-      const result = new Point2D(42, 55);
-      expect(right.minus(left)).toMatchObject(result);
     });
   });
 
@@ -133,14 +125,14 @@ describe('Static methods', () => {
   });
 
   describe('midpoint(points)', () => {
-    test('Throws an error if given no arguments', () => {
-      expect(() => Point2D.midpoint()).toThrow();
+    test('Returns null if given no arguments', () => {
+      expect(Point2D.midpoint()).toBe(null);
     });
 
-    test('Throws an error if given an empty array', () => {
-      expect(() => Point2D.midpoint([])).toThrow();
+    test('Returns null if given an empty array', () => {
+      expect(Point2D.midpoint([])).toBe(null);
     });
-
+    
     test('Returns the point if given an array of one point', () => {
       const p = new Point2D(42,43);
       expect(Point2D.midpoint([p])).toEqual(p);

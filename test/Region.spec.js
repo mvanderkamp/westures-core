@@ -6,15 +6,15 @@
 
 const Region = require('../src/Region.js');
 
-describe('Region', function() {
-  test('should be instantiated', function() {
+describe('Region', () => {
+  test('should be instantiated', () => {
     expect(Region).toBeTruthy();
   });
 });
 
-describe('Region.bind(element)', function() {
+describe('Region.bind(element)', () => {
   let region = new Region(document.body);
-  test('should exist', function() {
+  test('should exist', () => {
     expect(region.bind).toBeDefined();
   });
 });

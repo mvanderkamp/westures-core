@@ -7,90 +7,168 @@
 const Input     = require('../src/Input.js');
 const PointerData = require('../src/PointerData.js');
 
-describe('Module exists', () => {
-  expect(Input).toBeDefined();
-});
+describe('Input', () => {
+  let activediv;
+  let parentdiv;
+  let outerdiv;
+  let mousedown;
+  let mousemove;
 
-let event = {
-  type: 'mousedown',
-  clientX: 42,
-  clientY: 43,
-  target: document
-};
+  beforeAll(() => {
+    parentdiv = document.createElement('div');
+    document.body.appendChild(parentdiv);
 
-// let event = new MouseEvent('mousedown');
-// document.dispatchEvent(event);
+    activediv = document.createElement('div');
+    parentdiv.appendChild(activediv);
 
-describe('constructor', function() {
-  let input;
-  test('Can be instantiated', () => {
-    expect(() => input = new Input(event, 1234)).not.toThrow();
-  });
+    outerdiv = document.createElement('div');
+    document.body.appendChild(outerdiv);
 
-  test('has an initial event', function() {
-    expect(input.initial).toBeInstanceOf(PointerData);
-  });
+    mousedown = {
+      type: 'mousedown',
+      clientX: 42,
+      clientY: 43,
+      target: activediv,
+    };
 
-  test('has a current event', function() {
-    expect(input.current).toBeInstanceOf(PointerData);
-    expect(input.current).toEqual(input.current);
-  });
-
-  test('has a previous event', function() {
-    expect(input.previous).toBeInstanceOf(PointerData);
-    expect(input.previous).toEqual(input.current);
-  });
-});
-
-describe('getters', () => {
-  let input = new Input(event, 1234);
-
-  describe('phase', () => {
-    test('Returns the current phase of the Input', () => {
-      expect(input.phase).toBe('start');
-    });
-  });
-
-  describe('currentTime', () => {
-    test('Returns the time of the current event', () => {
-      expect(input.currentTime).toBe(input.current.time);
-    });
-  });
-
-  describe('startTime', () => {
-    test('Returns the time of the initial event', () => {
-      expect(input.startTime).toBe(input.initial.time);
-    });
-
-  });
-});
-
-describe('update', function() {
-  let input = new Input(event, 1234);
-  test('updates the current event', function() {
-    let newEvent = {
+    mousemove = {
       type: 'mousemove',
       clientX: 45,
       clientY: 41,
       target: document
     };
-    input.update(newEvent, 4321);
-    expect(input.previous).not.toBe(input.current);
+  });
+
+  describe('constructor', () => {
+    let input;
+    test('Can be instantiated', () => {
+      expect(() => input = new Input(mousedown, 1234)).not.toThrow();
+    });
+
+    test('stores initial pointer data', () => {
+      expect(input.initial).toBeInstanceOf(PointerData);
+    });
+
+    test('copies initial data to current data', () => {
+      expect(input.current).toBeInstanceOf(PointerData);
+      expect(input.current).toEqual(input.current);
+    });
+  });
+
+  describe('getters', () => {
+    let input;
+    beforeEach(() => {
+      input = new Input(mousedown, 1234);
+    });
+
+    describe('phase', () => {
+      test('Returns the current phase of the Input', () => {
+        expect(input.phase).toBe('start');
+      });
+    });
+
+    describe('startTime', () => {
+      test('Returns the time of the initial event', () => {
+        expect(input.startTime).toBe(input.initial.time);
+      });
+    });
+  });
+
+  describe('getProgressOfGesture', () => {
+    let input;
+    beforeEach(() => {
+      input = new Input(mousedown, 1234);
+    });
+
+    test('initial call generates empty progress object', () => {
+      expect(input.getProgressOfGesture('tap')).toEqual({});
+    });
+
+    test('persistent data can be stored in the progress object', () => {
+      expect(input.getProgressOfGesture('tap')).toEqual({});
+      input.getProgressOfGesture('tap').foo = 8;
+      expect(input.getProgressOfGesture('tap').foo).toEqual(8);
+    });
+  
+    test('can store progress objects for many gestures', () => {
+      const nums = {
+        tap: 42,
+        pinch: 812,
+        rotate: 9157,
+      };
+      const gestures = ['tap', 'pinch', 'rotate'];
+
+      gestures.forEach( id => {
+        expect(input.getProgressOfGesture(id)).toEqual({});
+        input.getProgressOfGesture(id).num = nums[id];
+        expect(input.getProgressOfGesture(id).num).toEqual(nums[id]);
+      });
+
+      gestures.forEach( id => {
+        expect(input.getProgressOfGesture(id).num).toEqual(nums[id]);
+      });
+    });
+  });
+
+  describe('update', () => {
+    let input;
+    beforeEach(() => {
+      input = new Input(mousedown, 1234);
+    });
+
+    test('updates the current event', () => {
+      input.update(mousemove);
+      expect(input.previous).not.toBe(input.current);
+      expect(input.current).toBeInstanceOf(PointerData);
+    });
+  });
+
+  describe('totalDistance', () => {
+    let input;
+    beforeEach(() => {
+      input = new Input(mousedown, 1234);
+    });
+  
+    test('Measures the point distance from initial to current', () => {
+      input.update(mousemove);
+      expect(input.totalDistance()).toBeCloseTo(Math.sqrt(13));
+    });
+  
+    test('Continues measuring from initial after more updates', () => {
+      let mousenext = {
+        type: 'mousedown',
+        clientX: 46,
+        clientY: 40,
+        target: document
+      };
+      input.update(mousenext);
+      expect(input.totalDistance()).toBeCloseTo(Math.sqrt(25));
+    });
+  });
+  
+  describe('wasInitiallyInside', () => {
+    let input;
+    beforeEach(() => {
+      input = new Input(mousedown, 1234);
+    });
+
+    test('Returns true for initial target', () => {
+      expect(input.wasInitiallyInside(activediv)).toBe(true);
+    });
+  
+    test('Returns true for elements in the initial path', () => {
+      expect(input.wasInitiallyInside(parentdiv)).toBe(true);
+    });
+  
+    test('Returns true for document and window', () => {
+      expect(input.wasInitiallyInside(document)).toBe(true);
+      expect(input.wasInitiallyInside(window)).toBe(true);
+    });
+
+    test('Returns false for elements outside the initial path', () => {
+      expect(input.wasInitiallyInside(outerdiv)).toBe(false);
+    });
   });
 });
 
-describe('getProgressOfGesture', function() {
-  let input = new Input(event, 1234);
-
-  test('should have no progress initially', function() {
-    expect(input.getProgressOfGesture('tap')).toEqual({});
-  });
-
-  test(`should have be able to store metadata in the progress object.`,
-    function() {
-    expect(input.getProgressOfGesture('tap')).toEqual({});
-    input.getProgressOfGesture('tap').foo = 8;
-    expect(input.getProgressOfGesture('tap').foo).toEqual(8);
-  });
-});
 
