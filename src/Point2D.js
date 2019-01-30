@@ -124,35 +124,35 @@ class Point2D {
   totalDistanceTo(points = []) {
     return points.reduce( (d, p) => d + this.distanceTo(p), 0);
   }
-}
 
-/**
- * Calculates the midpoint of a list of points.
- *
- * @param {Array} points - The array of Point2D objects for which to calculate
- *    the midpoint
- *
- * @return {Point2D} The midpoint of the provided points.
- */
-Point2D.midpoint = function(points = []) {
-  if (points.length === 0) return null;
+  /**
+   * Calculates the midpoint of a list of points.
+   *
+   * @param {Array} points - The array of Point2D objects for which to calculate
+   *    the midpoint
+   *
+   * @return {Point2D} The midpoint of the provided points.
+   */
+  static midpoint(points = []) {
+    if (points.length === 0) return null;
 
-  const total = Point2D.sum(points);
-  return new Point2D (
-    total.x / points.length,
-    total.y / points.length,
-  );
-}
+    const total = Point2D.sum(points);
+    return new Point2D (
+      total.x / points.length,
+      total.y / points.length,
+    );
+  }
 
-/**
- * Calculates the sum of the given points.
- *
- * @param {Array} points - The Point2D objects to sum up.
- *
- * @return {Point2D} A new Point2D representing the sum of the given points.
- */
-Point2D.sum = function(points = []) {
-  return points.reduce( (total, pt) => total.plus(pt), new Point2D(0,0) );
+  /**
+   * Calculates the sum of the given points.
+   *
+   * @param {Array} points - The Point2D objects to sum up.
+   *
+   * @return {Point2D} A new Point2D representing the sum of the given points.
+   */
+  static sum(points = []) {
+    return points.reduce( (total, pt) => total.plus(pt), new Point2D(0,0) );
+  }
 }
 
 module.exports = Point2D;
