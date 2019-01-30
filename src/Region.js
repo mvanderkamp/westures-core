@@ -142,10 +142,8 @@ class Region {
 
     this.state.updateAllInputs(event, this.element);
 
-    const hook = PHASE[ event.type ];
-
     this.retrieveBindingsByInitialPos().forEach( binding => {
-      binding.evaluateHook(hook, this.state);
+      binding.evaluateHook(PHASE[ event.type ], this.state);
     });
 
     this.state.clearEndedInputs();
