@@ -1,6 +1,6 @@
 {
   "name": "westures-core",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "The core logic of the Westures JavaScript gesture library.",
   "keywords": [
     "gesture",
@@ -16,6 +16,7 @@
   },
   "scripts": {
     "bundle": "browserify 'index.js' --standalone westuresCore --outfile 'bundle.js'",
+    "docs": "jsdoc src index.js -c .jsdocrc.json",
     "test": "jest"
   },
   "author": "Michael van der Kamp <michael.vanderkamp@usask.ca>",
@@ -26,7 +27,9 @@
   "license": "MIT",
   "devDependencies": {
     "browserify": "^16.2.3",
-    "jest": "^23.6.0"
+    "eslint": "^5.12.1",
+    "jest": "^23.6.0",
+    "jsdoc": "^3.5.5"
   },
   "dependencies": {}
 }

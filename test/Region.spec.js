@@ -1,22 +1,20 @@
+/**
+ * Test suite for the Region class.
+ */
+
 'use strict';
 
-/**
- * @file Region.spec..js
- * Tests Region class
- */
 const Region = require('../src/Region.js');
 
-/** @test {Region} */
-describe('Region', function() {
-  test('should be instantiated', function() {
+describe('Region', () => {
+  test('should be instantiated', () => {
     expect(Region).toBeTruthy();
   });
 });
 
-/** @test {Region.bind} */
-describe('Region.bind(element)', function() {
+describe('Region.bind(element)', () => {
   let region = new Region(document.body);
-  test('should exist', function() {
+  test('should exist', () => {
     expect(region.bind).toBeDefined();
   });
 });

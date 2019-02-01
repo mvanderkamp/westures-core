@@ -1,46 +1,55 @@
 /**
- * @file Input.js
+ * @file Contains the {@link Input} class
  */
+
+'use strict';
 
 const PointerData = require('./PointerData.js');
 
 /**
  * Tracks a single input and contains information about the current, previous,
- * and initial events.  Contains the progress of each Input and it's associated
+ * and initial events. Contains the progress of each Input and its associated
  * gestures.
- *
- * @class Input
  */
 class Input {
   /**
    * Constructor function for the Input class.
    *
-   * @param {Event} event - The Event object from the window
-   * @param {Number} [identifier=0] - The identifier for this input (taken
-   *    from event.changedTouches or this input's button number)
+   * @param {(PointerEvent | MouseEvent | TouchEvent)} event - The input event
+   *    which will initialize this Input object.
+   * @param {Number} identifier - The identifier for this input, so that it can
+   *    be located in subsequent Event objects.
    */
-  constructor(event, identifier = 0) {
+  constructor(event, identifier) {
     const currentData = new PointerData(event, identifier);
+
+    /**
+     * The set of elements along the original event's propagation path at the
+     * time it was dispatched.
+     *
+     * @member {WeakSet.<Element>}
+     */
+    this.initialElements = getElementsInPath(event);
 
     /**
      * Holds the initial data from the mousedown / touchstart / pointerdown that
      * began this input.
      *
-     * @type {PointerData}
+     * @member {PointerData}
      */
     this.initial = currentData;
 
     /**
      * Holds the most current pointer data for this Input.
      *
-     * @type {PointerData}
+     * @member {PointerData}
      */
     this.current = currentData;
 
     /**
      * Holds the previous pointer data for this Input.
      *
-     * @type {PointerData}
+     * @member {PointerData}
      */
     this.previous = currentData;
 
@@ -48,7 +57,7 @@ class Input {
      * The identifier for the pointer / touch / mouse button associated with
      * this input.
      *
-     * @type {Number}
+     * @member {Number}
      */
     this.identifier = identifier;
 
@@ -56,60 +65,28 @@ class Input {
      * Stores internal state between events for each gesture based off of the
      * gesture's id.
      *
-     * @type {Object}
+     * @member {Object}
      */
     this.progress = {};
   }
 
   /**
-   * @return {String} The phase of the input: 'start' or 'move' or 'end'
-   */
-  get phase()       { return this.current.type; }
-
-  /**
-   * @return {Number} The timestamp of the most current event for this input.
-   */
-  get currentTime() { return this.current.time; }
-
-  /**
-   * @return {Number} The timestamp of the initiating event for this input.
-   */
-  get startTime()   { return this.initial.time; }
-
-  /**
-   * @return {Point2D} A clone of the current point.
-   */
-  cloneCurrentPoint() {
-    return this.current.point.clone();
-  }
-
-  /**
-   * @return {Number} The angle in radians between the inputs' current events.
-   */
-  currentAngleTo(input) {
-    return this.current.angleTo(input.current);
-  }
-
-  /**
-   * Determines the distance between the current events for two inputs.
+   * The phase of the input: 'start' or 'move' or 'end'
    *
-   * @return {Number} The distance between the inputs' current events.
+   * @type {String} 
    */
-  currentDistanceTo(input) {
-    return this.current.distanceTo(input.current);
-  }
+  get phase() { return this.current.type; }
 
   /**
-   * @return {Number} The midpoint between the inputs' current events.
-   */
-  currentMidpointTo(input) {
-    return this.current.midpointTo(input.current);
-  }
-
-  /**
-   * @param {String} id - The identifier for each unique Gesture's progress.
+   * The timestamp of the initiating event for this input.
    *
-   * @return {Object} - The progress of the gesture.
+   * @type {Number}
+   */
+  get startTime() { return this.initial.time; }
+
+  /**
+   * @param {String} id - The ID of the gesture whose progress is sought.
+   * @return {Object} The progress of the gesture.
    */
   getProgressOfGesture(id) {
     if (!this.progress[id]) {
@@ -119,27 +96,11 @@ class Input {
   }
 
   /**
-   * @return {Number} The angle, in radians, between the initiating event for
-   * this input and its current event.
-   */
-  totalAngle() {
-    return this.initial.angleTo(this.current);
-  }
-
-  /**
    * @return {Number} The distance between the initiating event for this input
-   * and its current event.
+   *    and its current event.
    */
   totalDistance() {
     return this.initial.distanceTo(this.current);
-  }
-
-  /**
-   * @return {Boolean} true if the total distance is less than or equal to the
-   * tolerance.
-   */
-  totalDistanceIsWithin(tolerance) {
-    return this.totalDistance() <= tolerance;
   }
 
   /**
@@ -148,7 +109,7 @@ class Input {
    * out the old previous data.
    *
    * @param {Event} event - The event object to wrap with a PointerData.
-   * @param {Number} touchIdentifier - The index of inputs, from event.touches
+   * @return {undefined}
    */
   update(event) {
     this.previous = this.current;
@@ -156,12 +117,49 @@ class Input {
   }
 
   /**
-   * @return {Boolean} true if the given element existed along the propagation
-   * path of this input's initiating event.
+   * Determines if this PointerData was inside the given element at the time it
+   * was dispatched.
+   *
+   * @param {Element} element
+   * @return {Boolean} true if the PointerData occurred inside the element,
+   *    false otherwise.
    */
   wasInitiallyInside(element) {
-    return this.initial.wasInside(element);
+    return this.initialElements.has(element);
   }
+}
+
+/**
+ * A WeakSet is used so that references will be garbage collected when the
+ * element they point to is removed from the page.
+ *
+ * @private
+ * @return {WeakSet.<Element>} The Elements in the path of the given event.
+ */
+function getElementsInPath(event) {
+  return new WeakSet(getPropagationPath(event));
+}
+
+/**
+ * In case event.composedPath() is not available.
+ *
+ * @private
+ * @param {Event} event
+ * @return {Element[]}
+ */
+function getPropagationPath(event) {
+  if (typeof event.composedPath === 'function') {
+    return event.composedPath();
+  } 
+
+  const path = [];
+  for (let node = event.target; node !== document; node = node.parentNode) {
+    path.push(node);
+  }
+  path.push(document);
+  path.push(window);
+
+  return path;
 }
 
 module.exports = Input;
