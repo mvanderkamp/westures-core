@@ -1,16 +1,20 @@
 {
   "name": "westures-core",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "description": "The core logic of the Westures JavaScript gesture library.",
   "keywords": [
     "gesture",
-    "javascript",
     "tap",
     "pinch",
     "pan",
-    "rotate"
+    "rotate",
+    "swipe",
+    "swivel",
+    "track",
+    "simultaenous",
+    "multitouch"
   ],
-  "main": "index.js",
+  "browser": "index.js",
   "directories": {
     "test": "test"
   },
@@ -24,6 +28,7 @@
     "type": "git",
     "url": "https://github.com/mvanderkamp/westures-core"
   },
+  "homepage": "https://mvanderkamp.github.io/westures-core/index.html",
   "license": "MIT",
   "devDependencies": {
     "browserify": "^16.2.3",
