@@ -56,18 +56,6 @@ describe('PointerData', () => {
       expect(tdata).toBeInstanceOf(PointerData);
     });
   
-    test('Correctly populates the initial elements container', () => {
-      expect(mdata.initialElements.has(window)).toBe(true);
-      expect(mdata.initialElements.has(document)).toBe(true);
-      expect(mdata.initialElements.has(element)).toBe(true);
-      expect(mdata.initialElements.has(childElement)).toBe(false);
-
-      expect(tdata.initialElements.has(window)).toBe(true);
-      expect(tdata.initialElements.has(document)).toBe(true);
-      expect(tdata.initialElements.has(element)).toBe(true);
-      expect(tdata.initialElements.has(childElement)).toBe(true);
-    });
-
     test('Records the original event', () => {
       expect(mdata.originalEvent).toBe(mouseevent);
       expect(tdata.originalEvent).toBe(touchevent);
@@ -91,18 +79,6 @@ describe('PointerData', () => {
       expect(tdata.point).toBeInstanceOf(Point2D);
       expect(tdata.point.x).toBe(touchevent.changedTouches[1].clientX);
       expect(tdata.point.y).toBe(touchevent.changedTouches[1].clientY);
-    });
-  });
-
-  describe('wasInside(element)', () => {
-    test('Returns true for elements in initial path', () => {
-      const tdata = new PointerData(touchevent, id);
-      expect(tdata.wasInside(childElement)).toBe(true);
-    });
-
-    test('Returns false for elements outside the path', () => {
-      const mdata = new PointerData(mouseevent, id);
-      expect(mdata.wasInside(childElement)).toBe(false);
     });
   });
 });

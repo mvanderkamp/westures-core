@@ -24,6 +24,14 @@ class Input {
     const currentData = new PointerData(event, identifier);
 
     /**
+     * The set of elements along the original event's propagation path at the
+     * time it was dispatched.
+     *
+     * @member {WeakSet.<Element>}
+     */
+    this.initialElements = getElementsInPath(event);
+
+    /**
      * Holds the initial data from the mousedown / touchstart / pointerdown that
      * began this input.
      *
@@ -109,13 +117,49 @@ class Input {
   }
 
   /**
-   * @param {Element} element - Element to test.
-   * @return {Boolean} true if the given element existed along the propagation
-   *    path of this input's initiating event.
+   * Determines if this PointerData was inside the given element at the time it
+   * was dispatched.
+   *
+   * @param {Element} element
+   * @return {Boolean} true if the PointerData occurred inside the element,
+   *    false otherwise.
    */
   wasInitiallyInside(element) {
-    return this.initial.wasInside(element);
+    return this.initialElements.has(element);
   }
+}
+
+/**
+ * A WeakSet is used so that references will be garbage collected when the
+ * element they point to is removed from the page.
+ *
+ * @private
+ * @return {WeakSet.<Element>} The Elements in the path of the given event.
+ */
+function getElementsInPath(event) {
+  return new WeakSet(getPropagationPath(event));
+}
+
+/**
+ * In case event.composedPath() is not available.
+ *
+ * @private
+ * @param {Event} event
+ * @return {Element[]}
+ */
+function getPropagationPath(event) {
+  if (typeof event.composedPath === 'function') {
+    return event.composedPath();
+  } 
+
+  const path = [];
+  for (let node = event.target; node !== document; node = node.parentNode) {
+    path.push(node);
+  }
+  path.push(document);
+  path.push(window);
+
+  return path;
 }
 
 module.exports = Input;
