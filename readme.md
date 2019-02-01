@@ -60,10 +60,10 @@ const wes = require('westures-core');
 ### Declaring a Region
 
 First, decide what region should listen for events. If you want elements to
-continue to responding to input events from the `move` and `end` phases even if
-the pointer moves outside the element, you should use an region that
-contains the element. This can even be the window object if you want these
-events to fire event if the pointer goes outside the browser window.
+continue to respond to input events from the `move` and `end` phases even if the
+pointer moves outside the element, you should use a region that contains the
+element. This can even be the window object if you want these events to fire
+event if the pointer goes outside the browser window.
 
 For example:
 
@@ -84,9 +84,15 @@ const region = new wes.Region(document.querySelector('#draw-stuff'));
 
 ### Binding an element within a Region
 
-Suppose you have a div (id 'pannable') within which you want to detect a Pan
-gesture (assume that such a gesture is available). Your handler is called
-`panner`.
+When you bind a gesture to a region, you need to provide a handler as well as an
+Element for the binding. The gesture will only be recognized if at least one of
+the input points originated inside the given Element for a binding. Therefore
+unless you want to try something fancy the binding element should probably be
+contained inside the region element. It could even be the region element.
+
+Now for an example. Suppose you have a div (id 'pannable') within which you want
+to detect a Pan gesture (assume that such a gesture is available). Your handler
+is called `panner`.
 
 ```javascript
 region.bind(document.querySelector('#pannable'), new Pan(), panner);
@@ -108,7 +114,7 @@ function panner(data) {
 The core technique used by Westures (originally conceived for ZingTouch) is to
 process all user inputs and filter them through three key lifecycle phases:
 `start`, `move`, and `end`. Gestures are defined by how they respond to these
-phases.  To respond to the stages, a gesture extends the `Gesture` class
+phases.  To respond to the phases, a gesture extends the `Gesture` class
 provided by this module and overrides the method (a.k.a. "hook") corresponding
 to the name of the phase. 
 
@@ -129,14 +135,36 @@ class Tap extends Gesture {
 }
 ```
 
-The default hooks for all Gestures simple return null. Data will only be
+There are problems with this example, so I don't recommend using it as an actual
+Tap gesture, but it gives you the basic idea.
+
+The default hooks for all Gestures simply return null. Data will only be
 forwarded to bound handlers when a non-null value is returned by a hook.
 
+For information about what data is accessible via the State object, see the full
+documentation [here](https://mvanderkamp.github.io/westures-core/index.html).
+Note that his documentation was generated with `jsdoc`.
+
+### Data Passed to Handlers
+
+As you can see from above, it is the gesture which decides when data gets passed
+to handlers, and for the most part what that data will be. Note though that a
+few propertiess will get added to the outgoing data object before the handler is
+called. Those properties are:
+
+Name  | Type   | Value
+------|--------|-------
+event | Event  | The input event which caused the gesture to be recognized
+phase | String | 'start', 'move', or 'end'
+type  | String | The name of the gesture as specified by its designer.
+
 ## Changes From ZingTouch
+
 The fundamental idea of ZingTouch, the three-phase hook structure, remains more
 or less the same. Most of the changes have to do with streamlining and
 simplifying the code such that it is easier to use and has a wider range of
-capabilities. Specifically:
+capabilities. The most significant of these is full simultaneous multi-touch
+gesture support. Beyond that, here are some spefic changes:
 
 - Reorganized and simplified code structure.
   - The arbiter-interpreter-dispatcher scheme has been significantly simplified.
