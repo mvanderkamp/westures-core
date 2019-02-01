@@ -109,6 +109,7 @@ class Input {
   }
 
   /**
+   * @param {Element} element - Element to test.
    * @return {Boolean} true if the given element existed along the propagation
    *    path of this input's initiating event.
    */
