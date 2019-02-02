@@ -1,5 +1,5 @@
 /**
- * @file Contains the {@link Gesture} class
+ * Contains the {@link Gesture} class
  */
 
 'use strict';
@@ -17,7 +17,7 @@ class Gesture {
     /**
      * The type or name of the gesture. (e.g. 'pan' or 'tap' or 'pinch').
      *
-     * @member {String}
+     * @type {string}
      */
     if (typeof type === 'undefined') throw 'Gestures require a type!';
     this.type = type;
@@ -27,7 +27,7 @@ class Gesture {
      * across instances of Gestures that are created on the fly (e.g.
      * gesture-tap-1, gesture-tap-2).
      *
-     * @member {String}
+     * @type {string}
      */
     this.id = `gesture-${this.type}-${nextGestureNum++}`;
   }
@@ -36,8 +36,8 @@ class Gesture {
    * Event hook for the start of a gesture.
    *
    * @param {State} state - The input state object of the current region.
-   * @return {(null|undefined|Object)} - Default is undefined. Gesture is
-   *    considered recognized if an Object is returned.
+   * @return {?Object} Gesture is considered recognized if an Object is
+   *    returned.
    */
   start(state) {
     return void state;
@@ -47,8 +47,8 @@ class Gesture {
    * Event hook for the move of a gesture.
    *
    * @param {State} state - The input state object of the current region.
-   * @return {(null|undefined|Object)} - Default is undefined. Gesture is
-   *    considered recognized if an Object is returned.
+   * @return {?Object} Gesture is considered recognized if an Object is
+   *    returned.
    */
   move(state) {
     return void state;
@@ -58,8 +58,8 @@ class Gesture {
    * Event hook for the move of a gesture.
    *
    * @param {State} state - The input state object of the current region.
-   * @return {(null|undefined|Object)} - Default is undefined. Gesture is
-   *    considered recognized if an Object is returned.
+   * @return {?Object} Gesture is considered recognized if an Object is
+   *    returned.
    */
   end(state) {
     return void state;

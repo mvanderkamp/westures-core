@@ -1,5 +1,5 @@
 /**
- * @file Contains the {@link Binding} class.
+ * Contains the Binding class.
  */
 
 'use strict';
@@ -21,14 +21,16 @@ class Binding {
     /**
      * The element to which to associate the gesture.
      *
-     * @member {Element}
+     * @private
+     * @type {Element}
      */
     this.element = element;
 
     /**
      * The gesture to associate with the given element.
      *
-     * @member {Gesture}
+     * @private
+     * @type {Gesture}
      */
     this.gesture = gesture;
 
@@ -36,7 +38,8 @@ class Binding {
      * The function handler to execute when the gesture is recognized on the
      * associated element.
      *
-     * @member {Function}
+     * @private
+     * @type {Function}
      */
     this.handler = handler;
   }
@@ -44,7 +47,8 @@ class Binding {
   /**
    * Evalutes the given gesture hook, and dispatches any data that is produced.
    *
-   * @param {String} hook - which gesture hook to call, must be one of 'start', 
+   * @private
+   * @param {string} hook - which gesture hook to call, must be one of 'start', 
    *    'move', or 'end'.
    * @param {State} state - The current State instance.
    * @return {undefined}

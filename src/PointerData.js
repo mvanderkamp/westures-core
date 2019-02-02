@@ -1,5 +1,5 @@
 /**
- * @file Contains the {@link PointerData} class
+ * Contains the {@link PointerData} class
  */
 
 'use strict';
@@ -16,13 +16,13 @@ class PointerData {
    * @constructor
    *
    * @param {Event} event - The event object being wrapped.
-   * @param {Number} identifier - The index of touch if applicable
+   * @param {number} identifier - The index of touch if applicable
    */
   constructor(event, identifier) {
     /**
      * The original event object.
      *
-     * @member {Event}
+     * @type {Event}
      */
     this.originalEvent = event;
 
@@ -30,7 +30,7 @@ class PointerData {
      * The type or 'phase' of this batch of pointer data. 'start' or 'move' or
      * 'end'.
      *
-     * @member {( String | null )}
+     * @type {( String | null )}
      */
     this.type = PHASE[ event.type ];
 
@@ -38,7 +38,7 @@ class PointerData {
      * The timestamp of the event in milliseconds elapsed since January 1, 1970,
      * 00:00:00 UTC.
      * 
-     * @member {Number}
+     * @type {number}
      */
     this.time = Date.now();
 
@@ -46,7 +46,7 @@ class PointerData {
     /**
      * The (x,y) coordinate of the event, wrapped in a Point2D.
      *
-     * @member {Point2D}
+     * @type {Point2D}
      */
     this.point = new Point2D(eventObj.clientX, eventObj.clientY);
   }
@@ -55,7 +55,7 @@ class PointerData {
    * Calculates the angle between this event and the given event.
    *
    * @param {PointerData} pdata
-   * @return {Number} - Radians measurement between this event and the given
+   * @return {number} Radians measurement between this event and the given
    *    event's points.
    */
   angleTo(pdata) {
@@ -66,7 +66,7 @@ class PointerData {
    * Calculates the distance between two PointerDatas.
    *
    * @param {PointerData} pdata
-   * @return {Number} The distance between the two points, a.k.a. the
+   * @return {number} The distance between the two points, a.k.a. the
    *    hypoteneuse. 
    */
   distanceTo(pdata) {
