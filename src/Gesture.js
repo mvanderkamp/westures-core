@@ -1,4 +1,4 @@
-/**
+/*
  * Contains the {@link Gesture} class
  */
 
