@@ -1,23 +1,21 @@
 (function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.westuresCore = f()}})(function(){var define,module,exports;return (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
 /**
- * @file The global API interface for Westures. Exposes a constructor for the
+ * The global API interface for Westures. Exposes a constructor for the
  * {@link Region} and the generic {@link Gesture} class for user gestures to
  * implement, as well as the {@link Point2D} class, which may be useful.
  *
  * @module westures-core
- * @type {Object}
- * @property {Class} Region - The "entry point" class for Westures. Gets the
- *    ball rolling, so to speak, when it is instantiated.
- * @property {Class} Gesture - This class is the one all Gestures using this
- *    library should extend.
- * @property {Class} Point2D - This class is available for convenience. It
- *    defines some basic operations on a point in a two dimensional space.
  */
 
 'use strict';
 
+/** {@link Region} */
 const Region  = require('./src/Region.js');
+
+/** {@link Point2D} */
 const Point2D = require('./src/Point2D.js');
+
+/** {@link Gesture} */
 const Gesture = require('./src/Gesture.js');
 
 module.exports = {
@@ -29,7 +27,7 @@ module.exports = {
 
 },{"./src/Gesture.js":3,"./src/Point2D.js":6,"./src/Region.js":8}],2:[function(require,module,exports){
 /**
- * @file Contains the {@link Binding} class.
+ * Contains the Binding class.
  */
 
 'use strict';
@@ -51,14 +49,16 @@ class Binding {
     /**
      * The element to which to associate the gesture.
      *
-     * @member {Element}
+     * @private
+     * @type {Element}
      */
     this.element = element;
 
     /**
      * The gesture to associate with the given element.
      *
-     * @member {Gesture}
+     * @private
+     * @type {Gesture}
      */
     this.gesture = gesture;
 
@@ -66,7 +66,8 @@ class Binding {
      * The function handler to execute when the gesture is recognized on the
      * associated element.
      *
-     * @member {Function}
+     * @private
+     * @type {Function}
      */
     this.handler = handler;
   }
@@ -74,7 +75,8 @@ class Binding {
   /**
    * Evalutes the given gesture hook, and dispatches any data that is produced.
    *
-   * @param {String} hook - which gesture hook to call, must be one of 'start', 
+   * @private
+   * @param {string} hook - which gesture hook to call, must be one of 'start', 
    *    'move', or 'end'.
    * @param {State} state - The current State instance.
    * @return {undefined}
@@ -94,8 +96,8 @@ module.exports = Binding;
 
 
 },{}],3:[function(require,module,exports){
-/**
- * @file Contains the {@link Gesture} class
+/*
+ * Contains the {@link Gesture} class
  */
 
 'use strict';
@@ -113,7 +115,7 @@ class Gesture {
     /**
      * The type or name of the gesture. (e.g. 'pan' or 'tap' or 'pinch').
      *
-     * @member {String}
+     * @type {string}
      */
     if (typeof type === 'undefined') throw 'Gestures require a type!';
     this.type = type;
@@ -123,7 +125,7 @@ class Gesture {
      * across instances of Gestures that are created on the fly (e.g.
      * gesture-tap-1, gesture-tap-2).
      *
-     * @member {String}
+     * @type {string}
      */
     this.id = `gesture-${this.type}-${nextGestureNum++}`;
   }
@@ -132,8 +134,8 @@ class Gesture {
    * Event hook for the start of a gesture.
    *
    * @param {State} state - The input state object of the current region.
-   * @return {(null|undefined|Object)} - Default is undefined. Gesture is
-   *    considered recognized if an Object is returned.
+   * @return {?Object} Gesture is considered recognized if an Object is
+   *    returned.
    */
   start(state) {
     return void state;
@@ -143,8 +145,8 @@ class Gesture {
    * Event hook for the move of a gesture.
    *
    * @param {State} state - The input state object of the current region.
-   * @return {(null|undefined|Object)} - Default is undefined. Gesture is
-   *    considered recognized if an Object is returned.
+   * @return {?Object} Gesture is considered recognized if an Object is
+   *    returned.
    */
   move(state) {
     return void state;
@@ -154,8 +156,8 @@ class Gesture {
    * Event hook for the move of a gesture.
    *
    * @param {State} state - The input state object of the current region.
-   * @return {(null|undefined|Object)} - Default is undefined. Gesture is
-   *    considered recognized if an Object is returned.
+   * @return {?Object} Gesture is considered recognized if an Object is
+   *    returned.
    */
   end(state) {
     return void state;
@@ -166,8 +168,8 @@ module.exports = Gesture;
 
 
 },{}],4:[function(require,module,exports){
-/**
- * @file Contains the {@link Input} class
+/*
+ * Contains the {@link Input} class
  */
 
 'use strict';
@@ -185,7 +187,7 @@ class Input {
    *
    * @param {(PointerEvent | MouseEvent | TouchEvent)} event - The input event
    *    which will initialize this Input object.
-   * @param {Number} identifier - The identifier for this input, so that it can
+   * @param {number} identifier - The identifier for this input, so that it can
    *    be located in subsequent Event objects.
    */
   constructor(event, identifier) {
@@ -195,7 +197,8 @@ class Input {
      * The set of elements along the original event's propagation path at the
      * time it was dispatched.
      *
-     * @member {WeakSet.<Element>}
+     * @private
+     * @type {WeakSet.<Element>}
      */
     this.initialElements = getElementsInPath(event);
 
@@ -203,21 +206,21 @@ class Input {
      * Holds the initial data from the mousedown / touchstart / pointerdown that
      * began this input.
      *
-     * @member {PointerData}
+     * @type {PointerData}
      */
     this.initial = currentData;
 
     /**
      * Holds the most current pointer data for this Input.
      *
-     * @member {PointerData}
+     * @type {PointerData}
      */
     this.current = currentData;
 
     /**
      * Holds the previous pointer data for this Input.
      *
-     * @member {PointerData}
+     * @type {PointerData}
      */
     this.previous = currentData;
 
@@ -225,7 +228,7 @@ class Input {
      * The identifier for the pointer / touch / mouse button associated with
      * this input.
      *
-     * @member {Number}
+     * @type {number}
      */
     this.identifier = identifier;
 
@@ -233,7 +236,8 @@ class Input {
      * Stores internal state between events for each gesture based off of the
      * gesture's id.
      *
-     * @member {Object}
+     * @private
+     * @type {Object}
      */
     this.progress = {};
   }
@@ -241,19 +245,19 @@ class Input {
   /**
    * The phase of the input: 'start' or 'move' or 'end'
    *
-   * @type {String} 
+   * @type {string} 
    */
   get phase() { return this.current.type; }
 
   /**
    * The timestamp of the initiating event for this input.
    *
-   * @type {Number}
+   * @type {number}
    */
   get startTime() { return this.initial.time; }
 
   /**
-   * @param {String} id - The ID of the gesture whose progress is sought.
+   * @param {string} id - The ID of the gesture whose progress is sought.
    * @return {Object} The progress of the gesture.
    */
   getProgressOfGesture(id) {
@@ -264,7 +268,7 @@ class Input {
   }
 
   /**
-   * @return {Number} The distance between the initiating event for this input
+   * @return {number} The distance between the initiating event for this input
    *    and its current event.
    */
   totalDistance() {
@@ -276,6 +280,7 @@ class Input {
    * input, pushing the old current data into the previous slot, and tossing
    * out the old previous data.
    *
+   * @private
    * @param {Event} event - The event object to wrap with a PointerData.
    * @return {undefined}
    */
@@ -288,8 +293,9 @@ class Input {
    * Determines if this PointerData was inside the given element at the time it
    * was dispatched.
    *
+   * @private
    * @param {Element} element
-   * @return {Boolean} true if the PointerData occurred inside the element,
+   * @return {boolean} true if the PointerData occurred inside the element,
    *    false otherwise.
    */
   wasInitiallyInside(element) {
@@ -313,7 +319,7 @@ function getElementsInPath(event) {
  *
  * @private
  * @param {Event} event
- * @return {Element[]}
+ * @return {Element[]} The elements along the composed path of the event.
  */
 function getPropagationPath(event) {
   if (typeof event.composedPath === 'function') {
@@ -334,8 +340,8 @@ module.exports = Input;
 
 
 },{"./PointerData.js":7}],5:[function(require,module,exports){
-/**
- * @file Contains the PHASE object, which translates event names to phases
+/*
+ * Contains the PHASE object, which translates event names to phases
  * (a.k.a. hooks).
  */
 
@@ -364,8 +370,8 @@ module.exports = PHASE;
 
 
 },{}],6:[function(require,module,exports){
-/**
- * @file Contains the {@link Point2D} class.
+/*
+ * Contains the {@link Point2D} class.
  */
 
 'use strict';
@@ -378,21 +384,21 @@ class Point2D {
   /**
    * Constructor function for the Point2D class.
    *
-   * @param {Number} x - The x coordinate of the point.
-   * @param {Number} y - The y coordinate of the point.
+   * @param {number} x - The x coordinate of the point.
+   * @param {number} y - The y coordinate of the point.
    */
   constructor(x = 0, y = 0) {
     /**
      * The x coordinate of the point.
      *
-     * @member {Number}
+     * @type {number}
      */
     this.x = x;
 
     /**
      * The y coordinate of the point.
      *
-     * @member {Number}
+     * @type {number}
      */
     this.y = y;
   }
@@ -401,7 +407,7 @@ class Point2D {
    * Calculates the angle between this point and the given point.
    *
    * @param {Point2D} point - Projected point for calculating the angle.
-   * @return {Number} Radians along the unit circle where the projected point
+   * @return {number} Radians along the unit circle where the projected point
    *    lies.
    */
   angleTo(point) {
@@ -414,7 +420,7 @@ class Point2D {
    *
    * @param {Point2D[]} points - the Point2D objects to calculate the average
    *    distance to.
-   * @return {Number} The average distance from this point to the provided
+   * @return {number} The average distance from this point to the provided
    *    points.
    */
   averageDistanceTo(points = []) {
@@ -434,7 +440,7 @@ class Point2D {
    * Calculates the distance between two points.
    *
    * @param {Point2D} point - Point to which the distance is calculated.
-   * @return {Number} The distance between the two points, a.k.a. the
+   * @return {number} The distance between the two points, a.k.a. the
    *    hypoteneuse. 
    */
   distanceTo(point) {
@@ -472,7 +478,7 @@ class Point2D {
    *
    * @param {Point2D[]} points - The array of Point2D objects to calculate the
    *    total distance to.
-   * @return {Number} The total distance from this point to the provided points.
+   * @return {number} The total distance from this point to the provided points.
    */
   totalDistanceTo(points = []) {
     return points.reduce( (d, p) => d + this.distanceTo(p), 0);
@@ -510,8 +516,8 @@ module.exports = Point2D;
 
 
 },{}],7:[function(require,module,exports){
-/**
- * @file Contains the {@link PointerData} class
+/*
+ * Contains the {@link PointerData} class
  */
 
 'use strict';
@@ -528,13 +534,13 @@ class PointerData {
    * @constructor
    *
    * @param {Event} event - The event object being wrapped.
-   * @param {Number} identifier - The index of touch if applicable
+   * @param {number} identifier - The index of touch if applicable
    */
   constructor(event, identifier) {
     /**
      * The original event object.
      *
-     * @member {Event}
+     * @type {Event}
      */
     this.originalEvent = event;
 
@@ -542,7 +548,7 @@ class PointerData {
      * The type or 'phase' of this batch of pointer data. 'start' or 'move' or
      * 'end'.
      *
-     * @member {( String | null )}
+     * @type {( String | null )}
      */
     this.type = PHASE[ event.type ];
 
@@ -550,7 +556,7 @@ class PointerData {
      * The timestamp of the event in milliseconds elapsed since January 1, 1970,
      * 00:00:00 UTC.
      * 
-     * @member {Number}
+     * @type {number}
      */
     this.time = Date.now();
 
@@ -558,7 +564,7 @@ class PointerData {
     /**
      * The (x,y) coordinate of the event, wrapped in a Point2D.
      *
-     * @member {Point2D}
+     * @type {Point2D}
      */
     this.point = new Point2D(eventObj.clientX, eventObj.clientY);
   }
@@ -567,7 +573,7 @@ class PointerData {
    * Calculates the angle between this event and the given event.
    *
    * @param {PointerData} pdata
-   * @return {Number} - Radians measurement between this event and the given
+   * @return {number} Radians measurement between this event and the given
    *    event's points.
    */
   angleTo(pdata) {
@@ -578,7 +584,7 @@ class PointerData {
    * Calculates the distance between two PointerDatas.
    *
    * @param {PointerData} pdata
-   * @return {Number} The distance between the two points, a.k.a. the
+   * @return {number} The distance between the two points, a.k.a. the
    *    hypoteneuse. 
    */
   distanceTo(pdata) {
@@ -604,8 +610,8 @@ module.exports = PointerData;
 
 
 },{"./PHASE.js":5,"./Point2D.js":6}],8:[function(require,module,exports){
-/**
- * @file Contains the {@link Region} class
+/*
+ * Contains the {@link Region} class
  */
 
 'use strict';
@@ -641,9 +647,9 @@ class Region {
    * Constructor function for the Region class.
    *
    * @param {Element} element - The element which should listen to input events.
-   * @param {Boolean} capture - Whether the region uses the capture phase of
+   * @param {boolean} capture - Whether the region uses the capture phase of
    *    input events. If false, uses the bubbling phase.
-   * @param {Boolean} preventDefault - Whether the default browser functionality
+   * @param {boolean} preventDefault - Whether the default browser functionality
    *    should be disabled. This option should most likely be ignored. Here
    *    there by dragons if set to false.
    */
@@ -651,21 +657,24 @@ class Region {
     /**
      * The list of relations between elements, their gestures, and the handlers.
      *
-     * @member {Binding[]}
+     * @private
+     * @type {Binding[]}
      */
     this.bindings = [];
 
     /**
      * The element being bound to.
      *
-     * @member {Element}
+     * @private
+     * @type {Element}
      */
     this.element = element;
 
     /**
      * Whether the region listens for captures or bubbles.
      *
-     * @member {Boolean}
+     * @private
+     * @type {boolean}
      */
     this.capture = capture;
 
@@ -673,14 +682,16 @@ class Region {
      * Whether the default browser functionality should be disabled. This option
      * should most likely be ignored. Here there by dragons if set to false.
      *   
-     * @member {Boolean}
+     * @private
+     * @type {boolean}
      */
     this.preventDefault = preventDefault;
 
     /**
      * The internal state object for a Region.  Keeps track of inputs.
      *
-     * @member {State}
+     * @private
+     * @type {State}
      */
     this.state = new State();
 
@@ -773,7 +784,7 @@ class Region {
    *
    * @private
    * @param {Element} element - The element for which to find bindings.
-   * @return {Binding[]} - Bindings to which the element is bound.
+   * @return {Binding[]} Bindings to which the element is bound.
    */
   retrieveBindingsByElement(element) {
     return this.bindings.filter( b => b.element === element );
@@ -785,7 +796,7 @@ class Region {
    * into the correct region, this would still be valid.
    *
    * @private
-   * @return {Binding[]} - Bindings in which an active input began.
+   * @return {Binding[]} Bindings in which an active input began.
    */
   retrieveBindingsByInitialPos() {
     return this.bindings.filter( 
@@ -800,7 +811,7 @@ class Region {
    * @param {Element} element - The element to unbind.
    * @param {Gesture} [ gesture ] - The gesture to unbind. If undefined, will
    *    unbind all Bindings associated with the given element.
-   * @return {Binding[]} - Bindings that were unbound to the element.
+   * @return {Binding[]} Bindings that were unbound to the element.
    */
   unbind(element, gesture) {
     let bindings = this.retrieveBindingsByElement(element);
@@ -821,8 +832,8 @@ module.exports = Region;
 
 
 },{"./Binding.js":2,"./PHASE.js":5,"./State.js":9}],9:[function(require,module,exports){
-/**
- * @file Contains the {@link State} class
+/*
+ * Contains the {@link State} class
  */
 
 'use strict';
@@ -844,14 +855,14 @@ class State {
      * Keeps track of the current Input objects.
      *
      * @private
-     * @member {Object}
+     * @type {Object}
      */
     this._inputs_obj = {};
 
     /**
      * All currently valid inputs, including those that have ended.
      * 
-     * @member {Input[]}
+     * @type {Input[]}
      */
     this.inputs = [];
 
@@ -859,7 +870,7 @@ class State {
      * The array of currently active inputs, sourced from the current Input
      * objects. "Active" is defined as not being in the 'end' phase.
      *
-     * @member {Input[]}
+     * @type {Input[]}
      */
     this.active = [];
 
@@ -867,21 +878,21 @@ class State {
      * The array of latest point data for the currently active inputs, sourced
      * from this.active.
      *
-     * @member {Point2D[]}
+     * @type {Point2D[]}
      */
     this.activePoints = [];
 
     /**
      * The centroid of the currently active points.
      *
-     * @member {Point2D}
+     * @type {Point2D}
      */
     this.centroid = {};
 
     /**
      * The latest event that the state processed.
      *
-     * @member {Event}
+     * @type {Event}
      */
     this.event = null;
   }
@@ -889,6 +900,7 @@ class State {
   /**
    * Deletes all inputs that are in the 'end' phase.
    *
+   * @private
    * @return {undefined}
    */
   clearEndedInputs() {
@@ -898,7 +910,7 @@ class State {
   }
 
   /**
-   * @param {String} phase - One of 'start', 'move', or 'end'
+   * @param {string} phase - One of 'start', 'move', or 'end'.
    * @return {Input[]} Inputs in the given phase.
    */
   getInputsInPhase(phase) {
@@ -906,16 +918,17 @@ class State {
   }
 
   /**
-   * @param {String} phase - One of 'start', 'move', or 'end'
-   * @return {Input[]} Inputs _not_ in the given phase.
+   * @param {string} phase - One of 'start', 'move', or 'end'.
+   * @return {Input[]} Inputs <b>not</b> in the given phase.
    */
   getInputsNotInPhase(phase) {
     return this.inputs.filter( i => i.phase !== phase );
   }
 
   /**
+   * @private
    * @param {Element} element - The Element to test.
-   * @return {Boolean} True if some input was initially inside the element.
+   * @return {boolean} True if some input was initially inside the element.
    */
   someInputWasInitiallyInside(element) {
     return this.inputs.some( i => i.wasInitiallyInside(element) );
@@ -924,8 +937,9 @@ class State {
   /**
    * Update the input with the given identifier using the given event.
    *
+   * @private
    * @param {Event} event - The event being captured.
-   * @param {Number} identifier - The identifier of the input to update.
+   * @param {number} identifier - The identifier of the input to update.
    * @return {undefined}
    */
   updateInput(event, identifier) {
@@ -939,6 +953,7 @@ class State {
   /**
    * Updates the inputs with new information based upon a new event being fired.
    *
+   * @private
    * @param {Event} event - The event being captured. 
    * @return {undefined}
    */
