@@ -1,5 +1,5 @@
 /**
- * @file Contains the {@link State} class
+ * Contains the {@link State} class
  */
 
 'use strict';
@@ -21,14 +21,14 @@ class State {
      * Keeps track of the current Input objects.
      *
      * @private
-     * @member {Object}
+     * @type {Object}
      */
     this._inputs_obj = {};
 
     /**
      * All currently valid inputs, including those that have ended.
      * 
-     * @member {Input[]}
+     * @type {Input[]}
      */
     this.inputs = [];
 
@@ -36,7 +36,7 @@ class State {
      * The array of currently active inputs, sourced from the current Input
      * objects. "Active" is defined as not being in the 'end' phase.
      *
-     * @member {Input[]}
+     * @type {Input[]}
      */
     this.active = [];
 
@@ -44,21 +44,21 @@ class State {
      * The array of latest point data for the currently active inputs, sourced
      * from this.active.
      *
-     * @member {Point2D[]}
+     * @type {Point2D[]}
      */
     this.activePoints = [];
 
     /**
      * The centroid of the currently active points.
      *
-     * @member {Point2D}
+     * @type {Point2D}
      */
     this.centroid = {};
 
     /**
      * The latest event that the state processed.
      *
-     * @member {Event}
+     * @type {Event}
      */
     this.event = null;
   }
@@ -66,6 +66,7 @@ class State {
   /**
    * Deletes all inputs that are in the 'end' phase.
    *
+   * @private
    * @return {undefined}
    */
   clearEndedInputs() {
@@ -75,7 +76,7 @@ class State {
   }
 
   /**
-   * @param {String} phase - One of 'start', 'move', or 'end'
+   * @param {string} phase - One of 'start', 'move', or 'end'.
    * @return {Input[]} Inputs in the given phase.
    */
   getInputsInPhase(phase) {
@@ -83,16 +84,17 @@ class State {
   }
 
   /**
-   * @param {String} phase - One of 'start', 'move', or 'end'
-   * @return {Input[]} Inputs _not_ in the given phase.
+   * @param {string} phase - One of 'start', 'move', or 'end'.
+   * @return {Input[]} Inputs <b>not</b> in the given phase.
    */
   getInputsNotInPhase(phase) {
     return this.inputs.filter( i => i.phase !== phase );
   }
 
   /**
+   * @private
    * @param {Element} element - The Element to test.
-   * @return {Boolean} True if some input was initially inside the element.
+   * @return {boolean} True if some input was initially inside the element.
    */
   someInputWasInitiallyInside(element) {
     return this.inputs.some( i => i.wasInitiallyInside(element) );
@@ -101,8 +103,9 @@ class State {
   /**
    * Update the input with the given identifier using the given event.
    *
+   * @private
    * @param {Event} event - The event being captured.
-   * @param {Number} identifier - The identifier of the input to update.
+   * @param {number} identifier - The identifier of the input to update.
    * @return {undefined}
    */
   updateInput(event, identifier) {
@@ -116,6 +119,7 @@ class State {
   /**
    * Updates the inputs with new information based upon a new event being fired.
    *
+   * @private
    * @param {Event} event - The event being captured. 
    * @return {undefined}
    */

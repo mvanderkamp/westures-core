@@ -1,5 +1,5 @@
 /**
- * @file Contains the {@link Point2D} class.
+ * Contains the {@link Point2D} class.
  */
 
 'use strict';
@@ -12,21 +12,21 @@ class Point2D {
   /**
    * Constructor function for the Point2D class.
    *
-   * @param {Number} x - The x coordinate of the point.
-   * @param {Number} y - The y coordinate of the point.
+   * @param {number} x - The x coordinate of the point.
+   * @param {number} y - The y coordinate of the point.
    */
   constructor(x = 0, y = 0) {
     /**
      * The x coordinate of the point.
      *
-     * @member {Number}
+     * @type {number}
      */
     this.x = x;
 
     /**
      * The y coordinate of the point.
      *
-     * @member {Number}
+     * @type {number}
      */
     this.y = y;
   }
@@ -35,7 +35,7 @@ class Point2D {
    * Calculates the angle between this point and the given point.
    *
    * @param {Point2D} point - Projected point for calculating the angle.
-   * @return {Number} Radians along the unit circle where the projected point
+   * @return {number} Radians along the unit circle where the projected point
    *    lies.
    */
   angleTo(point) {
@@ -48,7 +48,7 @@ class Point2D {
    *
    * @param {Point2D[]} points - the Point2D objects to calculate the average
    *    distance to.
-   * @return {Number} The average distance from this point to the provided
+   * @return {number} The average distance from this point to the provided
    *    points.
    */
   averageDistanceTo(points = []) {
@@ -68,7 +68,7 @@ class Point2D {
    * Calculates the distance between two points.
    *
    * @param {Point2D} point - Point to which the distance is calculated.
-   * @return {Number} The distance between the two points, a.k.a. the
+   * @return {number} The distance between the two points, a.k.a. the
    *    hypoteneuse. 
    */
   distanceTo(point) {
@@ -106,7 +106,7 @@ class Point2D {
    *
    * @param {Point2D[]} points - The array of Point2D objects to calculate the
    *    total distance to.
-   * @return {Number} The total distance from this point to the provided points.
+   * @return {number} The total distance from this point to the provided points.
    */
   totalDistanceTo(points = []) {
     return points.reduce( (d, p) => d + this.distanceTo(p), 0);

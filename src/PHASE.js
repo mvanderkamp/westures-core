@@ -1,5 +1,5 @@
 /**
- * @file Contains the PHASE object, which translates event names to phases
+ * Contains the PHASE object, which translates event names to phases
  * (a.k.a. hooks).
  */
 

@@ -20,7 +20,7 @@
   },
   "scripts": {
     "bundle": "browserify 'index.js' --standalone westuresCore --outfile 'bundle.js'",
-    "docs": "jsdoc src index.js -c .jsdocrc.json",
+    "docs": "jsdoc -c .jsdocrc.json",
     "test": "jest"
   },
   "author": "Michael van der Kamp <michael.vanderkamp@usask.ca>",
@@ -32,6 +32,7 @@
   "license": "MIT",
   "devDependencies": {
     "browserify": "^16.2.3",
+    "docdash": "^1.0.2",
     "eslint": "^5.12.1",
     "jest": "^23.6.0",
     "jsdoc": "^3.5.5"

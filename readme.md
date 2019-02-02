@@ -128,6 +128,10 @@ For example, a simple way to implement a 'Tap' gesture would be as follows:
 const { Gesture } = require('westures-core');
 
 class Tap extends Gesture {
+  constructor() {
+    super('tap');
+  }
+
   end(state) {
     const {x,y} = state.getInputsInPhase('end')[0].current.point;
     return {x,y};
@@ -144,6 +148,49 @@ forwarded to bound handlers when a non-null value is returned by a hook.
 For information about what data is accessible via the State object, see the full
 documentation [here](https://mvanderkamp.github.io/westures-core/index.html).
 Note that his documentation was generated with `jsdoc`.
+
+### Storing the "progress" of a Gesture
+
+One of the key facilities made available via the `state` object that a hook
+receives is the ability to store intermediate progress on a per-gesture and
+per-input basis. This is done via the `getProgressOfGesture` method on any given
+input. 
+
+Here is a simple Pan example, where we keep track of what data was last emitted
+using this progress capability.
+
+```javascript
+const { Gesture } = require('westures-core');
+
+class Pan extends Gesture {
+  constructor() {
+    super('pan');
+  }
+
+  start(state) {
+    const progress = state.active[0].getProgressOfGesture(this.id);
+    progress.lastEmit = state.centroid;
+  }
+
+  move(state) {
+    const progress = state.active[0].getProgressOfGesture(this.id);
+    const change = state.centroid.minus(progress.lastEmit);
+    progress.lastEmit = state.centroid;
+    return {
+      change,
+      centroid: state.centroid,
+    };
+  }
+
+  end(state) {
+    const progress = state.active[0].getProgressOfGesture(this.id);
+    progress.lastEmit = state.centroid;
+  }
+}
+```
+
+In fact, this example is very close to the Pan implementation that is included
+in the `westures` module.
 
 ### Data Passed to Handlers
 

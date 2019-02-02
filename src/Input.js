@@ -1,5 +1,5 @@
 /**
- * @file Contains the {@link Input} class
+ * Contains the {@link Input} class
  */
 
 'use strict';
@@ -17,7 +17,7 @@ class Input {
    *
    * @param {(PointerEvent | MouseEvent | TouchEvent)} event - The input event
    *    which will initialize this Input object.
-   * @param {Number} identifier - The identifier for this input, so that it can
+   * @param {number} identifier - The identifier for this input, so that it can
    *    be located in subsequent Event objects.
    */
   constructor(event, identifier) {
@@ -27,7 +27,8 @@ class Input {
      * The set of elements along the original event's propagation path at the
      * time it was dispatched.
      *
-     * @member {WeakSet.<Element>}
+     * @private
+     * @type {WeakSet.<Element>}
      */
     this.initialElements = getElementsInPath(event);
 
@@ -35,21 +36,21 @@ class Input {
      * Holds the initial data from the mousedown / touchstart / pointerdown that
      * began this input.
      *
-     * @member {PointerData}
+     * @type {PointerData}
      */
     this.initial = currentData;
 
     /**
      * Holds the most current pointer data for this Input.
      *
-     * @member {PointerData}
+     * @type {PointerData}
      */
     this.current = currentData;
 
     /**
      * Holds the previous pointer data for this Input.
      *
-     * @member {PointerData}
+     * @type {PointerData}
      */
     this.previous = currentData;
 
@@ -57,7 +58,7 @@ class Input {
      * The identifier for the pointer / touch / mouse button associated with
      * this input.
      *
-     * @member {Number}
+     * @type {number}
      */
     this.identifier = identifier;
 
@@ -65,7 +66,8 @@ class Input {
      * Stores internal state between events for each gesture based off of the
      * gesture's id.
      *
-     * @member {Object}
+     * @private
+     * @type {Object}
      */
     this.progress = {};
   }
@@ -73,19 +75,19 @@ class Input {
   /**
    * The phase of the input: 'start' or 'move' or 'end'
    *
-   * @type {String} 
+   * @type {string} 
    */
   get phase() { return this.current.type; }
 
   /**
    * The timestamp of the initiating event for this input.
    *
-   * @type {Number}
+   * @type {number}
    */
   get startTime() { return this.initial.time; }
 
   /**
-   * @param {String} id - The ID of the gesture whose progress is sought.
+   * @param {string} id - The ID of the gesture whose progress is sought.
    * @return {Object} The progress of the gesture.
    */
   getProgressOfGesture(id) {
@@ -96,7 +98,7 @@ class Input {
   }
 
   /**
-   * @return {Number} The distance between the initiating event for this input
+   * @return {number} The distance between the initiating event for this input
    *    and its current event.
    */
   totalDistance() {
@@ -108,6 +110,7 @@ class Input {
    * input, pushing the old current data into the previous slot, and tossing
    * out the old previous data.
    *
+   * @private
    * @param {Event} event - The event object to wrap with a PointerData.
    * @return {undefined}
    */
@@ -120,8 +123,9 @@ class Input {
    * Determines if this PointerData was inside the given element at the time it
    * was dispatched.
    *
+   * @private
    * @param {Element} element
-   * @return {Boolean} true if the PointerData occurred inside the element,
+   * @return {boolean} true if the PointerData occurred inside the element,
    *    false otherwise.
    */
   wasInitiallyInside(element) {
@@ -145,7 +149,7 @@ function getElementsInPath(event) {
  *
  * @private
  * @param {Event} event
- * @return {Element[]}
+ * @return {Element[]} The elements along the composed path of the event.
  */
 function getPropagationPath(event) {
   if (typeof event.composedPath === 'function') {

@@ -1,23 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    
     <meta charset="utf-8">
-    <title>JSDoc: Source: src/Region.js</title>
-
-    <script src="scripts/prettify/prettify.js"> </script>
-    <script src="scripts/prettify/lang-css.js"> </script>
+    <title>src/Region.js - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
     <!--[if lt IE 9]>
       <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
-    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
-    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
-
 <body>
 
-<div id="main">
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
 
-    <h1 class="page-title">Source: src/Region.js</h1>
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    <input type="text" id="nav-search" placeholder="Search" />
+    
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-westures-core.html">westures-core</a></li></ul><h3>Classes</h3><ul><li><a href="Binding.html">Binding</a></li><li><a href="Gesture.html">Gesture</a><ul class='methods'><li data-type='method' style='display: none;'><a href="Gesture.html#start">start</a></li><li data-type='method' style='display: none;'><a href="Gesture.html#move">move</a></li><li data-type='method' style='display: none;'><a href="Gesture.html#end">end</a></li></ul></li><li><a href="Input.html">Input</a><ul class='methods'><li data-type='method' style='display: none;'><a href="Input.html#getProgressOfGesture">getProgressOfGesture</a></li><li data-type='method' style='display: none;'><a href="Input.html#totalDistance">totalDistance</a></li></ul></li><li><a href="Point2D.html">Point2D</a><ul class='methods'><li data-type='method' style='display: none;'><a href="Point2D.html#angleTo">angleTo</a></li><li data-type='method' style='display: none;'><a href="Point2D.html#averageDistanceTo">averageDistanceTo</a></li><li data-type='method' style='display: none;'><a href="Point2D.html#clone">clone</a></li><li data-type='method' style='display: none;'><a href="Point2D.html#distanceTo">distanceTo</a></li><li data-type='method' style='display: none;'><a href="Point2D.html#minus">minus</a></li><li data-type='method' style='display: none;'><a href="Point2D.html#plus">plus</a></li><li data-type='method' style='display: none;'><a href="Point2D.html#totalDistanceTo">totalDistanceTo</a></li><li data-type='method' style='display: none;'><a href="Point2D.html#.midpoint">midpoint</a></li><li data-type='method' style='display: none;'><a href="Point2D.html#.sum">sum</a></li></ul></li><li><a href="PointerData.html">PointerData</a><ul class='methods'><li data-type='method' style='display: none;'><a href="PointerData.html#angleTo">angleTo</a></li><li data-type='method' style='display: none;'><a href="PointerData.html#distanceTo">distanceTo</a></li></ul></li><li><a href="Region.html">Region</a><ul class='methods'><li data-type='method' style='display: none;'><a href="Region.html#bind">bind</a></li><li data-type='method' style='display: none;'><a href="Region.html#unbind">unbind</a></li></ul></li><li><a href="State.html">State</a><ul class='methods'><li data-type='method' style='display: none;'><a href="State.html#getInputsInPhase">getInputsInPhase</a></li><li data-type='method' style='display: none;'><a href="State.html#getInputsNotInPhase">getInputsNotInPhase</a></li></ul></li></ul>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">src/Region.js</h1>
+    
 
     
 
@@ -27,7 +44,7 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>/**
- * @file Contains the {@link Region} class
+ * Contains the {@link Region} class
  */
 
 'use strict';
@@ -63,9 +80,9 @@ class Region {
    * Constructor function for the Region class.
    *
    * @param {Element} element - The element which should listen to input events.
-   * @param {Boolean} capture - Whether the region uses the capture phase of
+   * @param {boolean} capture - Whether the region uses the capture phase of
    *    input events. If false, uses the bubbling phase.
-   * @param {Boolean} preventDefault - Whether the default browser functionality
+   * @param {boolean} preventDefault - Whether the default browser functionality
    *    should be disabled. This option should most likely be ignored. Here
    *    there by dragons if set to false.
    */
@@ -73,21 +90,24 @@ class Region {
     /**
      * The list of relations between elements, their gestures, and the handlers.
      *
-     * @member {Binding[]}
+     * @private
+     * @type {Binding[]}
      */
     this.bindings = [];
 
     /**
      * The element being bound to.
      *
-     * @member {Element}
+     * @private
+     * @type {Element}
      */
     this.element = element;
 
     /**
      * Whether the region listens for captures or bubbles.
      *
-     * @member {Boolean}
+     * @private
+     * @type {boolean}
      */
     this.capture = capture;
 
@@ -95,14 +115,16 @@ class Region {
      * Whether the default browser functionality should be disabled. This option
      * should most likely be ignored. Here there by dragons if set to false.
      *   
-     * @member {Boolean}
+     * @private
+     * @type {boolean}
      */
     this.preventDefault = preventDefault;
 
     /**
      * The internal state object for a Region.  Keeps track of inputs.
      *
-     * @member {State}
+     * @private
+     * @type {State}
      */
     this.state = new State();
 
@@ -195,7 +217,7 @@ class Region {
    *
    * @private
    * @param {Element} element - The element for which to find bindings.
-   * @return {Binding[]} - Bindings to which the element is bound.
+   * @return {Binding[]} Bindings to which the element is bound.
    */
   retrieveBindingsByElement(element) {
     return this.bindings.filter( b => b.element === element );
@@ -207,7 +229,7 @@ class Region {
    * into the correct region, this would still be valid.
    *
    * @private
-   * @return {Binding[]} - Bindings in which an active input began.
+   * @return {Binding[]} Bindings in which an active input began.
    */
   retrieveBindingsByInitialPos() {
     return this.bindings.filter( 
@@ -222,7 +244,7 @@ class Region {
    * @param {Element} element - The element to unbind.
    * @param {Gesture} [ gesture ] - The gesture to unbind. If undefined, will
    *    unbind all Bindings associated with the given element.
-   * @return {Binding[]} - Bindings that were unbound to the element.
+   * @return {Binding[]} Bindings that were unbound to the element.
    */
   unbind(element, gesture) {
     let bindings = this.retrieveBindingsByElement(element);
@@ -248,19 +270,27 @@ module.exports = Region;
 
 
 
+    
+    
 </div>
-
-<nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-westures-core.html">westures-core</a></li></ul><h3>Classes</h3><ul><li><a href="Binding.html">Binding</a></li><li><a href="Gesture.html">Gesture</a></li><li><a href="Input.html">Input</a></li><li><a href="Point2D.html">Point2D</a></li><li><a href="PointerData.html">PointerData</a></li><li><a href="Region.html">Region</a></li><li><a href="State.html">State</a></li></ul>
-</nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Fri Feb 01 2019 10:52:20 GMT-0600 (Central Standard Time)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sat Feb 02 2019 12:19:38 GMT-0600 (Central Standard Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
-<script> prettyPrint(); </script>
-<script src="scripts/linenumber.js"> </script>
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+
+<script src="scripts/jquery-3.1.1.min.js"></script>
+
+<script src="scripts/search.js"></script>
+
+
+<script src="scripts/collapse.js"></script>
+
+
+
 </body>
 </html>
