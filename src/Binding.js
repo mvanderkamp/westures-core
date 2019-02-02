@@ -1,4 +1,4 @@
-/**
+/*
  * Contains the Binding class.
  */
 
