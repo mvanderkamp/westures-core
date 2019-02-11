@@ -8,6 +8,10 @@ const Input   = require('./Input.js');
 const PHASE   = require('./PHASE.js');
 const Point2D = require('./Point2D.js');
 
+const symbols = Object.freeze({
+  inputs: Symbol.for('inputs'),
+});
+
 /**
  * Keeps track of currently active and ending input points on the interactive
  * surface.
@@ -21,9 +25,9 @@ class State {
      * Keeps track of the current Input objects.
      *
      * @private
-     * @type {Object}
+     * @type {Map}
      */
-    this._inputs_obj = {};
+    this[symbols.inputs] = new Map();
 
     /**
      * All currently valid inputs, including those that have ended.
@@ -70,9 +74,9 @@ class State {
    * @return {undefined}
    */
   clearEndedInputs() {
-    for (let k in this._inputs_obj) {
-      if (this._inputs_obj[k].phase === 'end') delete this._inputs_obj[k];
-    }
+    this[symbols.inputs].forEach((v,k) => {
+      if (v.phase === 'end') this[symbols.inputs].delete(k);
+    });
   }
 
   /**
@@ -110,9 +114,9 @@ class State {
    */
   updateInput(event, identifier) {
     if (PHASE[ event.type ] === 'start') {
-      this._inputs_obj[identifier] = new Input(event, identifier);
-    } else if (this._inputs_obj[identifier]) {
-      this._inputs_obj[identifier].update(event);
+      this[symbols.inputs].set(identifier, new Input(event, identifier));
+    } else if (this[symbols.inputs].has( identifier )) {
+      this[symbols.inputs].get( identifier ).update(event);
     }
   }
 
@@ -125,7 +129,7 @@ class State {
    */
   updateAllInputs(event) {
     update_fns[event.constructor.name].call(this, event);
-    this.inputs = Object.values(this._inputs_obj);
+    this.inputs = Array.from(this[symbols.inputs].values());
     this.active = this.getInputsNotInPhase('end');
     this.activePoints = this.active.map( i => i.current.point );
     this.centroid = Point2D.midpoint( this.activePoints );
