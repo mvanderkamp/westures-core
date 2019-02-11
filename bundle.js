@@ -4,18 +4,13 @@
  * {@link Region} and the generic {@link Gesture} class for user gestures to
  * implement, as well as the {@link Point2D} class, which may be useful.
  *
- * @module westures-core
+ * @namespace westures-core
  */
 
 'use strict';
 
-/** {@link Region} */
 const Region  = require('./src/Region.js');
-
-/** {@link Point2D} */
 const Point2D = require('./src/Point2D.js');
-
-/** {@link Gesture} */
 const Gesture = require('./src/Gesture.js');
 
 module.exports = {
@@ -26,7 +21,7 @@ module.exports = {
 
 
 },{"./src/Gesture.js":3,"./src/Point2D.js":6,"./src/Region.js":8}],2:[function(require,module,exports){
-/**
+/*
  * Contains the Binding class.
  */
 
@@ -35,13 +30,15 @@ module.exports = {
 /**
  * A Binding associates a gesture with an element and a handler function that
  * will be called when the gesture is recognized.
+ *
+ * @private
  */
 class Binding {
   /**
    * Constructor function for the Binding class.
    *
    * @param {Element} element - The element to which to associate the gesture.
-   * @param {Gesture} gesture - A instance of the Gesture type.
+   * @param {westures-core.Gesture} gesture - A instance of the Gesture type.
    * @param {Function} handler - The function handler to execute when a gesture
    *    is recognized on the associated element.
    */
@@ -76,10 +73,10 @@ class Binding {
    * Evalutes the given gesture hook, and dispatches any data that is produced.
    *
    * @private
-   * @param {string} hook - which gesture hook to call, must be one of 'start', 
+   *
+   * @param {string} hook - which gesture hook to call, must be one of 'start',
    *    'move', or 'end'.
    * @param {State} state - The current State instance.
-   * @return {undefined}
    */
   evaluateHook(hook, state) {
     const data = this.gesture[hook](state);
@@ -106,10 +103,14 @@ let nextGestureNum = 0;
 
 /**
  * The Gesture class that all gestures inherit from.
+ *
+ * @memberof westures-core
  */
 class Gesture {
   /**
    * Constructor function for the Gesture class.
+   *
+   * @param {string} type - The name of the gesture.
    */
   constructor(type) {
     /**
@@ -117,7 +118,9 @@ class Gesture {
      *
      * @type {string}
      */
-    if (typeof type === 'undefined') throw 'Gestures require a type!';
+    if (typeof type !== 'string') {
+      throw new TypeError('Gestures require a string type');
+    }
     this.type = type;
 
     /**
@@ -133,34 +136,43 @@ class Gesture {
   /**
    * Event hook for the start of a gesture.
    *
+   * @private
+   *
    * @param {State} state - The input state object of the current region.
+   *
    * @return {?Object} Gesture is considered recognized if an Object is
    *    returned.
    */
-  start(state) {
-    return void state;
+  start() {
+    return null;
   }
 
   /**
    * Event hook for the move of a gesture.
    *
+   * @private
+   *
    * @param {State} state - The input state object of the current region.
+   *
    * @return {?Object} Gesture is considered recognized if an Object is
    *    returned.
    */
-  move(state) {
-    return void state;
+  move() {
+    return null;
   }
 
   /**
    * Event hook for the move of a gesture.
    *
+   * @private
+   *
    * @param {State} state - The input state object of the current region.
+   *
    * @return {?Object} Gesture is considered recognized if an Object is
    *    returned.
    */
-  end(state) {
-    return void state;
+  end() {
+    return null;
   }
 }
 
@@ -177,9 +189,44 @@ module.exports = Gesture;
 const PointerData = require('./PointerData.js');
 
 /**
+ * In case event.composedPath() is not available.
+ *
+ * @private
+ * @param {Event} event
+ * @return {Element[]} The elements along the composed path of the event.
+ */
+function getPropagationPath(event) {
+  if (typeof event.composedPath === 'function') {
+    return event.composedPath();
+  }
+
+  const path = [];
+  for (let node = event.target; node !== document; node = node.parentNode) {
+    path.push(node);
+  }
+  path.push(document);
+  path.push(window);
+
+  return path;
+}
+
+/**
+ * A WeakSet is used so that references will be garbage collected when the
+ * element they point to is removed from the page.
+ *
+ * @private
+ * @return {WeakSet.<Element>} The Elements in the path of the given event.
+ */
+function getElementsInPath(event) {
+  return new WeakSet(getPropagationPath(event));
+}
+
+/**
  * Tracks a single input and contains information about the current, previous,
  * and initial events. Contains the progress of each Input and its associated
  * gestures.
+ *
+ * @hideconstructor
  */
 class Input {
   /**
@@ -245,7 +292,7 @@ class Input {
   /**
    * The phase of the input: 'start' or 'move' or 'end'
    *
-   * @type {string} 
+   * @type {string}
    */
   get phase() { return this.current.type; }
 
@@ -258,6 +305,7 @@ class Input {
 
   /**
    * @param {string} id - The ID of the gesture whose progress is sought.
+   *
    * @return {Object} The progress of the gesture.
    */
   getProgressOfGesture(id) {
@@ -281,8 +329,8 @@ class Input {
    * out the old previous data.
    *
    * @private
+   *
    * @param {Event} event - The event object to wrap with a PointerData.
-   * @return {undefined}
    */
   update(event) {
     this.previous = this.current;
@@ -294,46 +342,15 @@ class Input {
    * was dispatched.
    *
    * @private
+   *
    * @param {Element} element
+   *
    * @return {boolean} true if the PointerData occurred inside the element,
    *    false otherwise.
    */
   wasInitiallyInside(element) {
     return this.initialElements.has(element);
   }
-}
-
-/**
- * A WeakSet is used so that references will be garbage collected when the
- * element they point to is removed from the page.
- *
- * @private
- * @return {WeakSet.<Element>} The Elements in the path of the given event.
- */
-function getElementsInPath(event) {
-  return new WeakSet(getPropagationPath(event));
-}
-
-/**
- * In case event.composedPath() is not available.
- *
- * @private
- * @param {Event} event
- * @return {Element[]} The elements along the composed path of the event.
- */
-function getPropagationPath(event) {
-  if (typeof event.composedPath === 'function') {
-    return event.composedPath();
-  } 
-
-  const path = [];
-  for (let node = event.target; node !== document; node = node.parentNode) {
-    path.push(node);
-  }
-  path.push(document);
-  path.push(window);
-
-  return path;
 }
 
 module.exports = Input;
@@ -351,6 +368,7 @@ module.exports = Input;
  * Normalizes window events to be either of type start, move, or end.
  *
  * @private
+ * @enum {string}
  */
 const PHASE = Object.freeze({
   mousedown:   'start',
@@ -379,13 +397,15 @@ module.exports = PHASE;
 /**
  * The Point2D class stores and operates on 2-dimensional points, represented as
  * x and y coordinates.
+ *
+ * @memberof westures-core
  */
 class Point2D {
   /**
    * Constructor function for the Point2D class.
    *
-   * @param {number} x - The x coordinate of the point.
-   * @param {number} y - The y coordinate of the point.
+   * @param {number} [ x=0 ] - The x coordinate of the point.
+   * @param {number} [ y=0 ] - The y coordinate of the point.
    */
   constructor(x = 0, y = 0) {
     /**
@@ -406,9 +426,11 @@ class Point2D {
   /**
    * Calculates the angle between this point and the given point.
    *
-   * @param {Point2D} point - Projected point for calculating the angle.
-   * @return {number} Radians along the unit circle where the projected point
-   *    lies.
+   * @param {westures-core.Point2D} point - Projected point for calculating the
+   * angle.
+   *
+   * @return {number} Radians along the unit circle where the projected
+   * point lies.
    */
   angleTo(point) {
     return Math.atan2(point.y - this.y, point.x - this.x);
@@ -418,8 +440,8 @@ class Point2D {
    * Determine the average distance from this point to the provided array of
    * points.
    *
-   * @param {Point2D[]} points - the Point2D objects to calculate the average
-   *    distance to.
+   * @param {westures-core.Point2D[]} points - the Point2D objects to calculate
+   *    the average distance to.
    * @return {number} The average distance from this point to the provided
    *    points.
    */
@@ -430,7 +452,7 @@ class Point2D {
   /**
    * Clone this point.
    *
-   * @return {Point2D} A new Point2D, identical to this point.
+   * @return {westures-core.Point2D} A new Point2D, identical to this point.
    */
   clone() {
     return new Point2D(this.x, this.y);
@@ -439,9 +461,11 @@ class Point2D {
   /**
    * Calculates the distance between two points.
    *
-   * @param {Point2D} point - Point to which the distance is calculated.
+   * @param {westures-core.Point2D} point - Point to which the distance is
+   * calculated.
+   *
    * @return {number} The distance between the two points, a.k.a. the
-   *    hypoteneuse. 
+   *    hypoteneuse.
    */
   distanceTo(point) {
     return Math.hypot(point.x - this.x, point.y - this.y);
@@ -450,8 +474,10 @@ class Point2D {
   /**
    * Subtract the given point from this point.
    *
-   * @param {Point2D} point - Point to subtract from this point.
-   * @return {Point2D} A new Point2D, which is the result of (this - point).
+   * @param {westures-core.Point2D} point - Point to subtract from this point.
+   *
+   * @return {westures-core.Point2D} A new Point2D, which is the result of (this
+   * - point).
    */
   minus(point) {
     return new Point2D(
@@ -463,8 +489,10 @@ class Point2D {
   /**
    * Return the summation of this point to the given point.
    *
-   * @param {Point2D} point - Point to add to this point.
-   * @return {Point2D} A new Point2D, which is the addition of the two points.
+   * @param {westures-core.Point2D} point - Point to add to this point.
+   *
+   * @return {westures-core.Point2D} A new Point2D, which is the addition of the
+   * two points.
    */
   plus(point) {
     return new Point2D(
@@ -476,26 +504,28 @@ class Point2D {
   /**
    * Calculates the total distance from this point to an array of points.
    *
-   * @param {Point2D[]} points - The array of Point2D objects to calculate the
-   *    total distance to.
+   * @param {westures-core.Point2D[]} points - The array of Point2D objects to
+   *    calculate the total distance to.
+   *
    * @return {number} The total distance from this point to the provided points.
    */
   totalDistanceTo(points = []) {
-    return points.reduce( (d, p) => d + this.distanceTo(p), 0);
+    return points.reduce((d, p) => d + this.distanceTo(p), 0);
   }
 
   /**
    * Calculates the midpoint of a list of points.
    *
-   * @param {Point2D[]} points - The array of Point2D objects for which to
-   *    calculate the midpoint
-   * @return {Point2D} The midpoint of the provided points.
+   * @param {westures-core.Point2D[]} points - The array of Point2D objects for
+   *    which to calculate the midpoint
+   *
+   * @return {westures-core.Point2D} The midpoint of the provided points.
    */
   static midpoint(points = []) {
     if (points.length === 0) return null;
 
     const total = Point2D.sum(points);
-    return new Point2D (
+    return new Point2D(
       total.x / points.length,
       total.y / points.length,
     );
@@ -504,11 +534,13 @@ class Point2D {
   /**
    * Calculates the sum of the given points.
    *
-   * @param {Point2D[]} points - The Point2D objects to sum up.
-   * @return {Point2D} A new Point2D representing the sum of the given points.
+   * @param {westures-core.Point2D[]} points - The Point2D objects to sum up.
+   *
+   * @return {westures-core.Point2D} A new Point2D representing the sum of the
+   * given points.
    */
   static sum(points = []) {
-    return points.reduce( (total, pt) => total.plus(pt), new Point2D(0,0) );
+    return points.reduce((total, pt) => total.plus(pt), new Point2D(0, 0));
   }
 }
 
@@ -526,8 +558,24 @@ const Point2D = require('./Point2D.js');
 const PHASE   = require('./PHASE.js');
 
 /**
+ * @private
+ * @return {Event} The Event object which corresponds to the given identifier.
+ *    Contains clientX, clientY values.
+ */
+function getEventObject(event, identifier) {
+  if (event.changedTouches) {
+    return Array.from(event.changedTouches).find(t => {
+      return t.identifier === identifier;
+    });
+  }
+  return event;
+}
+
+/**
  * Low-level storage of pointer data based on incoming data from an interaction
  * event.
+ *
+ * @hideconstructor
  */
 class PointerData {
   /**
@@ -548,14 +596,14 @@ class PointerData {
      * The type or 'phase' of this batch of pointer data. 'start' or 'move' or
      * 'end'.
      *
-     * @type {( String | null )}
+     * @type {string}
      */
-    this.type = PHASE[ event.type ];
+    this.type = PHASE[event.type];
 
     /**
      * The timestamp of the event in milliseconds elapsed since January 1, 1970,
      * 00:00:00 UTC.
-     * 
+     *
      * @type {number}
      */
     this.time = Date.now();
@@ -564,7 +612,7 @@ class PointerData {
     /**
      * The (x,y) coordinate of the event, wrapped in a Point2D.
      *
-     * @type {Point2D}
+     * @type {westures-core.Point2D}
      */
     this.point = new Point2D(eventObj.clientX, eventObj.clientY);
   }
@@ -573,6 +621,7 @@ class PointerData {
    * Calculates the angle between this event and the given event.
    *
    * @param {PointerData} pdata
+   *
    * @return {number} Radians measurement between this event and the given
    *    event's points.
    */
@@ -584,26 +633,13 @@ class PointerData {
    * Calculates the distance between two PointerDatas.
    *
    * @param {PointerData} pdata
+   *
    * @return {number} The distance between the two points, a.k.a. the
-   *    hypoteneuse. 
+   *    hypoteneuse.
    */
   distanceTo(pdata) {
     return this.point.distanceTo(pdata.point);
   }
-}
-
-/**
- * @private
- * @return {Event} The Event object which corresponds to the given identifier.
- *    Contains clientX, clientY values.
- */
-function getEventObject(event, identifier) {
-  if (event.changedTouches) {
-    return Array.from(event.changedTouches).find( t => {
-      return t.identifier === identifier;
-    });
-  } 
-  return event;
 }
 
 module.exports = PointerData;
@@ -638,9 +674,11 @@ const TOUCH_EVENTS = [
   'touchend',
 ];
 
-/** 
+/**
  * Allows the user to specify the control region which will listen for user
  * input events.
+ *
+ * @memberof westures-core
  */
 class Region {
   /**
@@ -681,7 +719,7 @@ class Region {
     /**
      * Whether the default browser functionality should be disabled. This option
      * should most likely be ignored. Here there by dragons if set to false.
-     *   
+     *
      * @private
      * @type {boolean}
      */
@@ -704,7 +742,6 @@ class Region {
    * events to the region's element.
    *
    * @private
-   * @return {undefined}
    */
   activate() {
     /*
@@ -735,10 +772,10 @@ class Region {
 
     // Bind detected browser events to the region element.
     const arbiter = this.arbitrate.bind(this);
-    eventNames.forEach( eventName => {
+    eventNames.forEach(eventName => {
       this.element.addEventListener(eventName, arbiter, {
         capture: this.capture,
-        once: false,
+        once:    false,
         passive: false,
       });
     });
@@ -752,15 +789,14 @@ class Region {
    *
    * @private
    * @param {Event} event - The event emitted from the window object.
-   * @return {undefined}
    */
   arbitrate(event) {
     if (this.preventDefault) event.preventDefault();
 
     this.state.updateAllInputs(event, this.element);
 
-    this.retrieveBindingsByInitialPos().forEach( binding => {
-      binding.evaluateHook(PHASE[ event.type ], this.state);
+    this.retrieveBindingsByInitialPos().forEach(binding => {
+      binding.evaluateHook(PHASE[event.type], this.state);
     });
 
     this.state.clearEndedInputs();
@@ -770,24 +806,25 @@ class Region {
    * Bind an element to a gesture with multiple function signatures.
    *
    * @param {Element} element - The element object.
-   * @param {Gesture} gesture - Gesture type with which to bind.
+   * @param {westures-core.Gesture} gesture - Gesture type with which to bind.
    * @param {Function} handler - The function to execute when a gesture is
    *    recognized.
-   * @return {undefined}
    */
   bind(element, gesture, handler) {
-    this.bindings.push( new Binding(element, gesture, handler) );
+    this.bindings.push(new Binding(element, gesture, handler));
   }
 
   /**
    * Retrieves Bindings by their associated element.
    *
    * @private
+   *
    * @param {Element} element - The element for which to find bindings.
+   *
    * @return {Binding[]} Bindings to which the element is bound.
    */
   retrieveBindingsByElement(element) {
-    return this.bindings.filter( b => b.element === element );
+    return this.bindings.filter(b => b.element === element);
   }
 
   /**
@@ -799,9 +836,9 @@ class Region {
    * @return {Binding[]} Bindings in which an active input began.
    */
   retrieveBindingsByInitialPos() {
-    return this.bindings.filter( 
-      b => this.state.someInputWasInitiallyInside(b.element)
-    );
+    return this.bindings.filter(b => {
+      return this.state.someInputWasInitiallyInside(b.element);
+    });
   }
 
   /**
@@ -809,16 +846,17 @@ class Region {
    * is specified.
    *
    * @param {Element} element - The element to unbind.
-   * @param {Gesture} [ gesture ] - The gesture to unbind. If undefined, will
-   *    unbind all Bindings associated with the given element.
+   * @param {westures-core.Gesture} [ gesture ] - The gesture to unbind. If
+   * undefined, will unbind all Bindings associated with the given element.
+   *
    * @return {Binding[]} Bindings that were unbound to the element.
    */
   unbind(element, gesture) {
-    let bindings = this.retrieveBindingsByElement(element);
-    let unbound = [];
+    const bindings = this.retrieveBindingsByElement(element);
+    const unbound = [];
 
-    bindings.forEach( b => {
-      if (gesture == undefined || b.gesture === gesture) {
+    bindings.forEach(b => {
+      if (gesture == null || b.gesture === gesture) {
         this.bindings.splice(this.bindings.indexOf(b), 1);
         unbound.push(b);
       }
@@ -842,9 +880,37 @@ const Input   = require('./Input.js');
 const PHASE   = require('./PHASE.js');
 const Point2D = require('./Point2D.js');
 
+const symbols = Object.freeze({
+  inputs: Symbol.for('inputs'),
+});
+
+/*
+ * Set of helper functions for updating inputs based on type of input.
+ * Must be called with a bound 'this', via bind(), or call(), or apply().
+ *
+ * @private
+ */
+const update_fns = {
+  TouchEvent: function TouchEvent(event) {
+    Array.from(event.changedTouches).forEach(touch => {
+      this.updateInput(event, touch.identifier);
+    });
+  },
+
+  PointerEvent: function PointerEvent(event) {
+    this.updateInput(event, event.pointerId);
+  },
+
+  MouseEvent: function MouseEvent(event) {
+    this.updateInput(event, event.button);
+  },
+};
+
 /**
  * Keeps track of currently active and ending input points on the interactive
  * surface.
+ *
+ * @hideconstructor
  */
 class State {
   /**
@@ -855,13 +921,13 @@ class State {
      * Keeps track of the current Input objects.
      *
      * @private
-     * @type {Object}
+     * @type {Map}
      */
-    this._inputs_obj = {};
+    this[symbols.inputs] = new Map();
 
     /**
      * All currently valid inputs, including those that have ended.
-     * 
+     *
      * @type {Input[]}
      */
     this.inputs = [];
@@ -878,14 +944,14 @@ class State {
      * The array of latest point data for the currently active inputs, sourced
      * from this.active.
      *
-     * @type {Point2D[]}
+     * @type {westures-core.Point2D[]}
      */
     this.activePoints = [];
 
     /**
      * The centroid of the currently active points.
      *
-     * @type {Point2D}
+     * @type {westures-core.Point2D}
      */
     this.centroid = {};
 
@@ -901,52 +967,55 @@ class State {
    * Deletes all inputs that are in the 'end' phase.
    *
    * @private
-   * @return {undefined}
    */
   clearEndedInputs() {
-    for (let k in this._inputs_obj) {
-      if (this._inputs_obj[k].phase === 'end') delete this._inputs_obj[k];
-    }
+    this[symbols.inputs].forEach((v, k) => {
+      if (v.phase === 'end') this[symbols.inputs].delete(k);
+    });
   }
 
   /**
    * @param {string} phase - One of 'start', 'move', or 'end'.
+   *
    * @return {Input[]} Inputs in the given phase.
    */
   getInputsInPhase(phase) {
-    return this.inputs.filter( i => i.phase === phase );
+    return this.inputs.filter(i => i.phase === phase);
   }
 
   /**
    * @param {string} phase - One of 'start', 'move', or 'end'.
+   *
    * @return {Input[]} Inputs <b>not</b> in the given phase.
    */
   getInputsNotInPhase(phase) {
-    return this.inputs.filter( i => i.phase !== phase );
+    return this.inputs.filter(i => i.phase !== phase);
   }
 
   /**
    * @private
+   *
    * @param {Element} element - The Element to test.
+   *
    * @return {boolean} True if some input was initially inside the element.
    */
   someInputWasInitiallyInside(element) {
-    return this.inputs.some( i => i.wasInitiallyInside(element) );
+    return this.inputs.some(i => i.wasInitiallyInside(element));
   }
 
   /**
    * Update the input with the given identifier using the given event.
    *
    * @private
+   *
    * @param {Event} event - The event being captured.
    * @param {number} identifier - The identifier of the input to update.
-   * @return {undefined}
    */
   updateInput(event, identifier) {
-    if (PHASE[ event.type ] === 'start') {
-      this._inputs_obj[identifier] = new Input(event, identifier);
-    } else if (this._inputs_obj[identifier]) {
-      this._inputs_obj[identifier].update(event);
+    if (PHASE[event.type] === 'start') {
+      this[symbols.inputs].set(identifier, new Input(event, identifier));
+    } else if (this[symbols.inputs].has(identifier)) {
+      this[symbols.inputs].get(identifier).update(event);
     }
   }
 
@@ -954,40 +1023,17 @@ class State {
    * Updates the inputs with new information based upon a new event being fired.
    *
    * @private
-   * @param {Event} event - The event being captured. 
-   * @return {undefined}
+   * @param {Event} event - The event being captured.
    */
   updateAllInputs(event) {
     update_fns[event.constructor.name].call(this, event);
-    this.inputs = Object.values(this._inputs_obj);
+    this.inputs = Array.from(this[symbols.inputs].values());
     this.active = this.getInputsNotInPhase('end');
-    this.activePoints = this.active.map( i => i.current.point );
-    this.centroid = Point2D.midpoint( this.activePoints );
+    this.activePoints = this.active.map(i => i.current.point);
+    this.centroid = Point2D.midpoint(this.activePoints);
     this.event = event;
   }
 }
-
-/*
- * Set of helper functions for updating inputs based on type of input.
- * Must be called with a bound 'this', via bind(), or call(), or apply().
- * 
- * @private
- */
-const update_fns = {
-  TouchEvent: function(event) {
-    Array.from(event.changedTouches).forEach( touch => {
-      this.updateInput(event, touch.identifier);
-    });
-  },
-
-  PointerEvent: function(event) {
-    this.updateInput(event, event.pointerId);
-  },
-
-  MouseEvent: function(event) {
-    this.updateInput(event, event.button);
-  },
-};
 
 module.exports = State;
 
