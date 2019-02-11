@@ -37,6 +37,8 @@ const update_fns = {
 /**
  * Keeps track of currently active and ending input points on the interactive
  * surface.
+ *
+ * @hideconstructor
  */
 class State {
   /**
@@ -70,14 +72,14 @@ class State {
      * The array of latest point data for the currently active inputs, sourced
      * from this.active.
      *
-     * @type {Point2D[]}
+     * @type {westures-core.Point2D[]}
      */
     this.activePoints = [];
 
     /**
      * The centroid of the currently active points.
      *
-     * @type {Point2D}
+     * @type {westures-core.Point2D}
      */
     this.centroid = {};
 
@@ -93,7 +95,6 @@ class State {
    * Deletes all inputs that are in the 'end' phase.
    *
    * @private
-   * @return {undefined}
    */
   clearEndedInputs() {
     this[symbols.inputs].forEach((v, k) => {
@@ -103,6 +104,7 @@ class State {
 
   /**
    * @param {string} phase - One of 'start', 'move', or 'end'.
+   *
    * @return {Input[]} Inputs in the given phase.
    */
   getInputsInPhase(phase) {
@@ -111,6 +113,7 @@ class State {
 
   /**
    * @param {string} phase - One of 'start', 'move', or 'end'.
+   *
    * @return {Input[]} Inputs <b>not</b> in the given phase.
    */
   getInputsNotInPhase(phase) {
@@ -119,7 +122,9 @@ class State {
 
   /**
    * @private
+   *
    * @param {Element} element - The Element to test.
+   *
    * @return {boolean} True if some input was initially inside the element.
    */
   someInputWasInitiallyInside(element) {
@@ -130,9 +135,9 @@ class State {
    * Update the input with the given identifier using the given event.
    *
    * @private
+   *
    * @param {Event} event - The event being captured.
    * @param {number} identifier - The identifier of the input to update.
-   * @return {undefined}
    */
   updateInput(event, identifier) {
     if (PHASE[event.type] === 'start') {
@@ -147,7 +152,6 @@ class State {
    *
    * @private
    * @param {Event} event - The event being captured.
-   * @return {undefined}
    */
   updateAllInputs(event) {
     update_fns[event.constructor.name].call(this, event);

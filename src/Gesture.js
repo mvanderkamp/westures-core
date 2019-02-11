@@ -42,7 +42,9 @@ class Gesture {
    * Event hook for the start of a gesture.
    *
    * @private
+   *
    * @param {State} state - The input state object of the current region.
+   *
    * @return {?Object} Gesture is considered recognized if an Object is
    *    returned.
    */
@@ -54,7 +56,9 @@ class Gesture {
    * Event hook for the move of a gesture.
    *
    * @private
+   *
    * @param {State} state - The input state object of the current region.
+   *
    * @return {?Object} Gesture is considered recognized if an Object is
    *    returned.
    */
@@ -66,7 +70,9 @@ class Gesture {
    * Event hook for the move of a gesture.
    *
    * @private
+   *
    * @param {State} state - The input state object of the current region.
+   *
    * @return {?Object} Gesture is considered recognized if an Object is
    *    returned.
    */

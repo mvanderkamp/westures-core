@@ -24,6 +24,8 @@ function getEventObject(event, identifier) {
 /**
  * Low-level storage of pointer data based on incoming data from an interaction
  * event.
+ *
+ * @hideconstructor
  */
 class PointerData {
   /**
@@ -44,7 +46,7 @@ class PointerData {
      * The type or 'phase' of this batch of pointer data. 'start' or 'move' or
      * 'end'.
      *
-     * @type {( String | null )}
+     * @type {string}
      */
     this.type = PHASE[event.type];
 
@@ -60,7 +62,7 @@ class PointerData {
     /**
      * The (x,y) coordinate of the event, wrapped in a Point2D.
      *
-     * @type {Point2D}
+     * @type {westures-core.Point2D}
      */
     this.point = new Point2D(eventObj.clientX, eventObj.clientY);
   }
@@ -69,6 +71,7 @@ class PointerData {
    * Calculates the angle between this event and the given event.
    *
    * @param {PointerData} pdata
+   *
    * @return {number} Radians measurement between this event and the given
    *    event's points.
    */
@@ -80,6 +83,7 @@ class PointerData {
    * Calculates the distance between two PointerDatas.
    *
    * @param {PointerData} pdata
+   *
    * @return {number} The distance between the two points, a.k.a. the
    *    hypoteneuse.
    */

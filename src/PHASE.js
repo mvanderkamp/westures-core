@@ -9,6 +9,7 @@
  * Normalizes window events to be either of type start, move, or end.
  *
  * @private
+ * @enum {string}
  */
 const PHASE = Object.freeze({
   mousedown:   'start',

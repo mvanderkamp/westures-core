@@ -29,6 +29,8 @@ const TOUCH_EVENTS = [
 /**
  * Allows the user to specify the control region which will listen for user
  * input events.
+ *
+ * @memberof westures-core
  */
 class Region {
   /**
@@ -92,7 +94,6 @@ class Region {
    * events to the region's element.
    *
    * @private
-   * @return {undefined}
    */
   activate() {
     /*
@@ -140,7 +141,6 @@ class Region {
    *
    * @private
    * @param {Event} event - The event emitted from the window object.
-   * @return {undefined}
    */
   arbitrate(event) {
     if (this.preventDefault) event.preventDefault();
@@ -158,10 +158,9 @@ class Region {
    * Bind an element to a gesture with multiple function signatures.
    *
    * @param {Element} element - The element object.
-   * @param {Gesture} gesture - Gesture type with which to bind.
+   * @param {westures-core.Gesture} gesture - Gesture type with which to bind.
    * @param {Function} handler - The function to execute when a gesture is
    *    recognized.
-   * @return {undefined}
    */
   bind(element, gesture, handler) {
     this.bindings.push(new Binding(element, gesture, handler));
@@ -171,7 +170,9 @@ class Region {
    * Retrieves Bindings by their associated element.
    *
    * @private
+   *
    * @param {Element} element - The element for which to find bindings.
+   *
    * @return {Binding[]} Bindings to which the element is bound.
    */
   retrieveBindingsByElement(element) {
@@ -197,8 +198,9 @@ class Region {
    * is specified.
    *
    * @param {Element} element - The element to unbind.
-   * @param {Gesture} [ gesture ] - The gesture to unbind. If undefined, will
-   *    unbind all Bindings associated with the given element.
+   * @param {westures-core.Gesture} [ gesture ] - The gesture to unbind. If
+   * undefined, will unbind all Bindings associated with the given element.
+   *
    * @return {Binding[]} Bindings that were unbound to the element.
    */
   unbind(element, gesture) {
