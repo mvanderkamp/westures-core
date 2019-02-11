@@ -61,31 +61,33 @@ describe('State', () => {
   });
 
   describe('prototype methods', () => {
+    let inputSymbol;
     beforeAll(() => {
       state = new State();
+      inputSymbol = Symbol.for('inputs');
     });
 
     describe('updateInput', () => {
       test('Instantiates a new input for "start" phase events', () => {
-        expect(state._inputs_obj[0]).toBeFalsy();
+        expect(state[inputSymbol].get(0)).toBeFalsy();
         expect(() => state.updateInput(startevents[0], 0)).not.toThrow();
-        expect(state._inputs_obj[0]).toBeInstanceOf(Input);
+        expect(state[inputSymbol].get(0)).toBeInstanceOf(Input);
       });
 
       test('Updates an old input for "move" or "end" phase events', () => {
         expect(() => state.updateInput(startevents[1], 1)).not.toThrow();
-        expect(state._inputs_obj[1].phase).toBe('start');
+        expect(state[inputSymbol].get(1).phase).toBe('start');
         expect(() => state.updateInput(testevents[0], 1)).not.toThrow();
-        expect(state._inputs_obj[1].phase).toBe('end');
+        expect(state[inputSymbol].get(1).phase).toBe('end');
       });
     });
 
     describe('updateAllInputs', () => {
       test('Instantiates new inputs for "start" phase events', () => {
         for (let i = 2; i < startevents.length; i++) {
-          expect(state._inputs_obj[i]).toBeFalsy();
+          expect(state[inputSymbol].get(i)).toBeFalsy();
           expect(() => state.updateAllInputs(startevents[i])).not.toThrow();
-          expect(state._inputs_obj[i]).toBeInstanceOf(Input);
+          expect(state[inputSymbol].get(i)).toBeInstanceOf(Input);
         }
       });
 
@@ -93,9 +95,9 @@ describe('State', () => {
         for (let i = 1; i < testevents.length; i++) {
           expect(() => state.updateAllInputs(testevents[i])).not.toThrow();
         }
-        expect(state._inputs_obj[2].phase).toBe('move');
-        expect(state._inputs_obj[3].phase).toBe('move');
-        expect(state._inputs_obj[6].phase).toBe('end');
+        expect(state[inputSymbol].get(2).phase).toBe('move');
+        expect(state[inputSymbol].get(3).phase).toBe('move');
+        expect(state[inputSymbol].get(6).phase).toBe('end');
       });
 
       test('Records additional information about state after update', () => {
@@ -273,13 +275,13 @@ describe('State', () => {
       });
 
       test('Removes inputs in "end" phase from state', () => {
-        Object.values(state._inputs_obj).forEach( i => {
+        state[inputSymbol].forEach(i => {
           expect(i.phase).not.toBe('end');
         });
       });
 
       test('Ids and order of remaining inputs persisted', () => {
-        const inputs = Object.values(state._inputs_obj);
+        const inputs = Array.from(state[inputSymbol].values());
         expect(inputs[0].identifier).toBe(0);
         expect(inputs[1].identifier).toBe(2);
         expect(inputs[2].identifier).toBe(3);
