@@ -1,10 +1,8 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Source: src/State.js | westures-core</title>
+    <title>Namespace: westures-core | westures-core</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -49,179 +47,128 @@
 
 
 
+
+<section>
+
+<header>
     
-    <section>
-        <article>
-            <pre class="prettyprint source linenums"><code>/*
- * Contains the {@link State} class
- */
+        <h2>westures-core</h2>
+        
+    
+</header>
 
-'use strict';
+<article>
+    
+        <div class="container-overview">
+        
+            
+                <div class="description">The global API interface for Westures. Exposes a constructor for the
+Region and the generic Gesture class for user gestures to
+implement, as well as the Point2D class, which may be useful.</div>
+            
 
-const Input   = require('./Input.js');
-const PHASE   = require('./PHASE.js');
-const Point2D = require('./Point2D.js');
+            
 
-const symbols = Object.freeze({
-  inputs: Symbol.for('inputs'),
-});
 
-/*
- * Set of helper functions for updating inputs based on type of input.
- * Must be called with a bound 'this', via bind(), or call(), or apply().
- *
- * @private
- */
-const update_fns = {
-  TouchEvent: function TouchEvent(event) {
-    Array.from(event.changedTouches).forEach(touch => {
-      this.updateInput(event, touch.identifier);
-    });
-  },
+<dl class="details">
 
-  PointerEvent: function PointerEvent(event) {
-    this.updateInput(event, event.pointerId);
-  },
+    
 
-  MouseEvent: function MouseEvent(event) {
-    this.updateInput(event, event.button);
-  },
-};
+    
 
-/**
- * Keeps track of currently active and ending input points on the interactive
- * surface.
- *
- * @hideconstructor
- */
-class State {
-  /**
-   * Constructor for the State class.
-   */
-  constructor() {
-    /**
-     * Keeps track of the current Input objects.
-     *
-     * @private
-     * @type {Map}
-     */
-    this[symbols.inputs] = new Map();
+    
 
-    /**
-     * All currently valid inputs, including those that have ended.
-     *
-     * @type {Input[]}
-     */
-    this.inputs = [];
+    
 
-    /**
-     * The array of currently active inputs, sourced from the current Input
-     * objects. "Active" is defined as not being in the 'end' phase.
-     *
-     * @type {Input[]}
-     */
-    this.active = [];
+    
 
-    /**
-     * The array of latest point data for the currently active inputs, sourced
-     * from this.active.
-     *
-     * @type {westures-core.Point2D[]}
-     */
-    this.activePoints = [];
+    
 
-    /**
-     * The centroid of the currently active points.
-     *
-     * @type {westures-core.Point2D}
-     */
-    this.centroid = {};
+    
 
-    /**
-     * The latest event that the state processed.
-     *
-     * @type {Event}
-     */
-    this.event = null;
-  }
+    
 
-  /**
-   * Deletes all inputs that are in the 'end' phase.
-   *
-   * @private
-   */
-  clearEndedInputs() {
-    this[symbols.inputs].forEach((v, k) => {
-      if (v.phase === 'end') this[symbols.inputs].delete(k);
-    });
-  }
+    
 
-  /**
-   * @param {string} phase - One of 'start', 'move', or 'end'.
-   *
-   * @return {Input[]} Inputs in the given phase.
-   */
-  getInputsInPhase(phase) {
-    return this.inputs.filter(i => i.phase === phase);
-  }
+    
 
-  /**
-   * @param {string} phase - One of 'start', 'move', or 'end'.
-   *
-   * @return {Input[]} Inputs &lt;b>not&lt;/b> in the given phase.
-   */
-  getInputsNotInPhase(phase) {
-    return this.inputs.filter(i => i.phase !== phase);
-  }
+    
 
-  /**
-   * @private
-   *
-   * @param {Element} element - The Element to test.
-   *
-   * @return {boolean} True if some input was initially inside the element.
-   */
-  someInputWasInitiallyInside(element) {
-    return this.inputs.some(i => i.wasInitiallyInside(element));
-  }
+    
 
-  /**
-   * Update the input with the given identifier using the given event.
-   *
-   * @private
-   *
-   * @param {Event} event - The event being captured.
-   * @param {number} identifier - The identifier of the input to update.
-   */
-  updateInput(event, identifier) {
-    if (PHASE[event.type] === 'start') {
-      this[symbols.inputs].set(identifier, new Input(event, identifier));
-    } else if (this[symbols.inputs].has(identifier)) {
-      this[symbols.inputs].get(identifier).update(event);
-    }
-  }
+    
 
-  /**
-   * Updates the inputs with new information based upon a new event being fired.
-   *
-   * @private
-   * @param {Event} event - The event being captured.
-   */
-  updateAllInputs(event) {
-    update_fns[event.constructor.name].call(this, event);
-    this.inputs = Array.from(this[symbols.inputs].values());
-    this.active = this.getInputsNotInPhase('end');
-    this.activePoints = this.active.map(i => i.current.point);
-    this.centroid = Point2D.midpoint(this.activePoints);
-    this.event = event;
-  }
-}
+    
 
-module.exports = State;
+    
+</dl>
 
-</code></pre>
-        </article>
-    </section>
+
+            
+        
+        </div>
+    
+
+    
+
+    
+
+    
+            <h3 class="subsection-title">Classes</h3>
+            
+
+<dl>
+    
+        <dt>
+            <h4 class="name">
+                <a href="westures-core.Gesture.html">Gesture</a>
+                <div class="container-source members">
+                    <code><a href="westures-core.Gesture.html">westures-core.Gesture</a></code>
+                </div>
+            </h4>
+        </dt>
+        
+    
+        <dt>
+            <h4 class="name">
+                <a href="westures-core.Point2D.html">Point2D</a>
+                <div class="container-source members">
+                    <code><a href="westures-core.Point2D.html">westures-core.Point2D</a></code>
+                </div>
+            </h4>
+        </dt>
+        
+    
+        <dt>
+            <h4 class="name">
+                <a href="westures-core.Region.html">Region</a>
+                <div class="container-source members">
+                    <code><a href="westures-core.Region.html">westures-core.Region</a></code>
+                </div>
+            </h4>
+        </dt>
+        
+    
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</article>
+
+</section>
 
 
 
@@ -238,7 +185,7 @@ module.exports = State;
 <script src="scripts/linenumber.js"></script>
 
     <script>
-        var id = '_sub'.replace(/"/g, '_');
+        var id = 'westures-core_sub'.replace(/"/g, '_');
         var selectedApi = document.getElementById(id); // do not use jquery selector
         var $selectedApi = $(selectedApi);
 

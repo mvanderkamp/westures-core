@@ -1,14 +1,16 @@
 {
   "opts": {
     "destination": "docs",
-    "template": "node_modules/docdash",
-    "recurse": true
+    "mainpagetitle": "Home | Westures Core Documentation",
+    "package": "package.json",
+    "readme": "readme.md",
+    "recurse": true,
+    "template": "node_modules/tui-jsdoc-template"
   },
   "plugins": [],
   "recurseDepth": 10,
   "source": {
     "include": [
-      "readme.md", 
       "src", 
       "index.js"
     ],
@@ -21,17 +23,12 @@
   },
   "templates": {
     "cleverLinks": false,
-    "monospaceLinks": false
-  },
-  "docdash": {
-    "collapse": true,
-    "search": true,
-    "sectionOrder": [
-      "Modules",
-      "Classes"
+    "css": [
+      "styles/custom.css"
     ],
-    "sort": false,
-    "typedefs": true
+    "footerText": "Westures: Simultaneous Multitouch Gestures",
+    "monospaceLinks": false,
+    "name": "westures-core"
   }
 }
 

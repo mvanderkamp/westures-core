@@ -27,15 +27,15 @@ pull request!
 
 There are seven classes defined in this module:
 
-- _Binding_: Bind a Gesture to an element within a Region.
-- _Gesture_: Respond to input phase "hooks" to define a gesture.
-- _Input_: Track a single pointer through its lifetime, and store the progress
+- _Binding:_ Bind a Gesture to an element within a Region.
+- _Gesture:_ Respond to input phase "hooks" to define a gesture.
+- _Input:_ Track a single pointer through its lifetime, and store the progress
     of gestures associated with that input.
-- _Point2D_: Store and act on a 2-dimensional point.
-- _PointerData_: Record data pertaining to a single user input event for a
+- _Point2D:_ Store and act on a 2-dimensional point.
+- _PointerData:_ Record data pertaining to a single user input event for a
     single pointer.
-- _Region_: Listen for user input events and respond appropriately.
-- _State_: Track all active Inputs within a Region.
+- _Region:_ Listen for user input events and respond appropriately.
+- _State:_ Track all active Inputs within a Region.
 
 These classes are structured as follows:
 

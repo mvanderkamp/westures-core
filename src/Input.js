@@ -7,9 +7,44 @@
 const PointerData = require('./PointerData.js');
 
 /**
+ * In case event.composedPath() is not available.
+ *
+ * @private
+ * @param {Event} event
+ * @return {Element[]} The elements along the composed path of the event.
+ */
+function getPropagationPath(event) {
+  if (typeof event.composedPath === 'function') {
+    return event.composedPath();
+  }
+
+  const path = [];
+  for (let node = event.target; node !== document; node = node.parentNode) {
+    path.push(node);
+  }
+  path.push(document);
+  path.push(window);
+
+  return path;
+}
+
+/**
+ * A WeakSet is used so that references will be garbage collected when the
+ * element they point to is removed from the page.
+ *
+ * @private
+ * @return {WeakSet.<Element>} The Elements in the path of the given event.
+ */
+function getElementsInPath(event) {
+  return new WeakSet(getPropagationPath(event));
+}
+
+/**
  * Tracks a single input and contains information about the current, previous,
  * and initial events. Contains the progress of each Input and its associated
  * gestures.
+ *
+ * @hideconstructor
  */
 class Input {
   /**
@@ -75,7 +110,7 @@ class Input {
   /**
    * The phase of the input: 'start' or 'move' or 'end'
    *
-   * @type {string} 
+   * @type {string}
    */
   get phase() { return this.current.type; }
 
@@ -88,6 +123,7 @@ class Input {
 
   /**
    * @param {string} id - The ID of the gesture whose progress is sought.
+   *
    * @return {Object} The progress of the gesture.
    */
   getProgressOfGesture(id) {
@@ -111,8 +147,8 @@ class Input {
    * out the old previous data.
    *
    * @private
+   *
    * @param {Event} event - The event object to wrap with a PointerData.
-   * @return {undefined}
    */
   update(event) {
     this.previous = this.current;
@@ -124,46 +160,15 @@ class Input {
    * was dispatched.
    *
    * @private
+   *
    * @param {Element} element
+   *
    * @return {boolean} true if the PointerData occurred inside the element,
    *    false otherwise.
    */
   wasInitiallyInside(element) {
     return this.initialElements.has(element);
   }
-}
-
-/**
- * A WeakSet is used so that references will be garbage collected when the
- * element they point to is removed from the page.
- *
- * @private
- * @return {WeakSet.<Element>} The Elements in the path of the given event.
- */
-function getElementsInPath(event) {
-  return new WeakSet(getPropagationPath(event));
-}
-
-/**
- * In case event.composedPath() is not available.
- *
- * @private
- * @param {Event} event
- * @return {Element[]} The elements along the composed path of the event.
- */
-function getPropagationPath(event) {
-  if (typeof event.composedPath === 'function') {
-    return event.composedPath();
-  } 
-
-  const path = [];
-  for (let node = event.target; node !== document; node = node.parentNode) {
-    path.push(node);
-  }
-  path.push(document);
-  path.push(window);
-
-  return path;
 }
 
 module.exports = Input;

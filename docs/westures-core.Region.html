@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Class: State | westures-core</title>
+    <title>Class: Region | westures-core</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -52,10 +52,11 @@
 
 <header>
     
-        <h2><span class="attribs"><span class="type-signature"></span></span>State</h2>
+        <h2><span class="attribs"><span class="type-signature"></span></span>
+            <span class="ancestors"><a href="westures-core.html">westures-core</a>.</span>Region<span class="signature">(element, capture, preventDefault)</span><span class="type-signature"></span></h2>
         
-            <div class="class-description">Keeps track of currently active and ending input points on the interactive
-surface.</div>
+            <div class="class-description">Allows the user to specify the control region which will listen for user
+input events.</div>
         
     
 </header>
@@ -68,14 +69,14 @@ surface.</div>
 
 <dt>
     
-        <h4 class="name" id="State">
+        <h4 class="name" id="Region">
             
-                State
+                new <span class="type-signature"></span>Region<span class="signature">(element, capture, preventDefault)</span><span class="type-signature"></span>
                 
             
             <div class="container-source members">
-                <code><a href="src_State.js.html">src/State.js</a></code>,
-                <code><a href="src_State.js.html#line43">line 43</a></code>
+                <code><a href="src_Region.js.html">src/Region.js</a></code>,
+                <code><a href="src_Region.js.html#line35">line 35</a></code>
             </div>
             
         </h4>
@@ -86,13 +87,134 @@ surface.</div>
 <dd>
 
     
-
+    <div class="description">
+        Constructor function for the Region class.
+    </div>
     
 
     
 
     
 
+    
+
+    
+    <div class="container-params">
+        <h5>Parameters:</h5>
+        
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>element</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Element</span>
+
+
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last">The element which should listen to input events.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>capture</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
+            
+
+            <td class="description last">Whether the region uses the capture phase of
+   input events. If false, uses the bubbling phase.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>preventDefault</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                    true
+                
+                </td>
+            
+
+            <td class="description last">Whether the default browser functionality
+   should be disabled. This option should most likely be ignored. Here
+   there by dragons if set to false.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    </div>
     
 
     
@@ -165,407 +287,6 @@ surface.</div>
     
 
     
-        <h3 class="subsection-title">Members</h3>
-
-        <dl>
-            
-
-<dt>
-<h4 class="name" id="active">
-    <span class="type-signature"></span>active<span class="type-signature"> :Array.&lt;<a href="Input.html">Input</a>></span>
-    
-    <div class="container-source members">
-        <code><a href="src_State.js.html">src/State.js</a></code>,
-        <code><a href="src_State.js.html#line69">line 69</a></code>
-    </div>
-    
-</h4>
-
-
-</dt>
-<dd>
-    
-    <div class="description">
-        The array of currently active inputs, sourced from the current Input
-objects. "Active" is defined as not being in the 'end' phase.
-    </div>
-    
-
-    <!--
-    
-        <h5>Type:</h5>
-        <ul>
-            <li>
-                
-<span class="param-type">Array.&lt;<a href="Input.html">Input</a>></span>
-
-
-            </li>
-        </ul>
-    
-    -->
-
-    
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-
-    
-</dd>
-
-        
-            
-
-<dt>
-<h4 class="name" id="activePoints">
-    <span class="type-signature"></span>activePoints<span class="type-signature"> :Array.&lt;<a href="westures-core.Point2D.html">westures-core.Point2D</a>></span>
-    
-    <div class="container-source members">
-        <code><a href="src_State.js.html">src/State.js</a></code>,
-        <code><a href="src_State.js.html#line77">line 77</a></code>
-    </div>
-    
-</h4>
-
-
-</dt>
-<dd>
-    
-    <div class="description">
-        The array of latest point data for the currently active inputs, sourced
-from this.active.
-    </div>
-    
-
-    <!--
-    
-        <h5>Type:</h5>
-        <ul>
-            <li>
-                
-<span class="param-type">Array.&lt;<a href="westures-core.Point2D.html">westures-core.Point2D</a>></span>
-
-
-            </li>
-        </ul>
-    
-    -->
-
-    
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-
-    
-</dd>
-
-        
-            
-
-<dt>
-<h4 class="name" id="centroid">
-    <span class="type-signature"></span>centroid<span class="type-signature"> :<a href="westures-core.Point2D.html">westures-core.Point2D</a></span>
-    
-    <div class="container-source members">
-        <code><a href="src_State.js.html">src/State.js</a></code>,
-        <code><a href="src_State.js.html#line84">line 84</a></code>
-    </div>
-    
-</h4>
-
-
-</dt>
-<dd>
-    
-    <div class="description">
-        The centroid of the currently active points.
-    </div>
-    
-
-    <!--
-    
-        <h5>Type:</h5>
-        <ul>
-            <li>
-                
-<span class="param-type"><a href="westures-core.Point2D.html">westures-core.Point2D</a></span>
-
-
-            </li>
-        </ul>
-    
-    -->
-
-    
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-
-    
-</dd>
-
-        
-            
-
-<dt>
-<h4 class="name" id="event">
-    <span class="type-signature"></span>event<span class="type-signature"> :Event</span>
-    
-    <div class="container-source members">
-        <code><a href="src_State.js.html">src/State.js</a></code>,
-        <code><a href="src_State.js.html#line91">line 91</a></code>
-    </div>
-    
-</h4>
-
-
-</dt>
-<dd>
-    
-    <div class="description">
-        The latest event that the state processed.
-    </div>
-    
-
-    <!--
-    
-        <h5>Type:</h5>
-        <ul>
-            <li>
-                
-<span class="param-type">Event</span>
-
-
-            </li>
-        </ul>
-    
-    -->
-
-    
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-
-    
-</dd>
-
-        
-            
-
-<dt>
-<h4 class="name" id="inputs">
-    <span class="type-signature"></span>inputs<span class="type-signature"> :Array.&lt;<a href="Input.html">Input</a>></span>
-    
-    <div class="container-source members">
-        <code><a href="src_State.js.html">src/State.js</a></code>,
-        <code><a href="src_State.js.html#line61">line 61</a></code>
-    </div>
-    
-</h4>
-
-
-</dt>
-<dd>
-    
-    <div class="description">
-        All currently valid inputs, including those that have ended.
-    </div>
-    
-
-    <!--
-    
-        <h5>Type:</h5>
-        <ul>
-            <li>
-                
-<span class="param-type">Array.&lt;<a href="Input.html">Input</a>></span>
-
-
-            </li>
-        </ul>
-    
-    -->
-
-    
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-
-    
-</dd>
-
-        </dl>
-    
 
     
         <h3 class="subsection-title">Methods</h3>
@@ -575,14 +296,14 @@ from this.active.
 
 <dt>
     
-        <h4 class="name" id="getInputsInPhase">
+        <h4 class="name" id="bind">
             
-                <span class="type-signature"></span>getInputsInPhase<span class="signature">(phase)</span><span class="type-signature"> &rarr; {Array.&lt;<a href="Input.html">Input</a>>}</span>
+                <span class="type-signature"></span>bind<span class="signature">(element, gesture, handler)</span><span class="type-signature"></span>
                 
             
             <div class="container-source members">
-                <code><a href="src_State.js.html">src/State.js</a></code>,
-                <code><a href="src_State.js.html#line110">line 110</a></code>
+                <code><a href="src_Region.js.html">src/Region.js</a></code>,
+                <code><a href="src_Region.js.html#line165">line 165</a></code>
             </div>
             
         </h4>
@@ -592,6 +313,10 @@ from this.active.
 </dt>
 <dd>
 
+    
+    <div class="description">
+        Bind an element to a gesture with multiple function signatures.
+    </div>
     
 
     
@@ -626,13 +351,13 @@ from this.active.
 
         <tr>
             
-                <td class="name"><code>phase</code></td>
+                <td class="name"><code>element</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">string</span>
+<span class="param-type">Element</span>
 
 
             
@@ -642,7 +367,54 @@ from this.active.
 
             
 
-            <td class="description last">One of 'start', 'move', or 'end'.</td>
+            <td class="description last">The element object.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>gesture</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="westures-core.Gesture.html">westures-core.Gesture</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Gesture type with which to bind.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>handler</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The function to execute when a gesture is
+   recognized.</td>
         </tr>
 
     
@@ -662,27 +434,6 @@ from this.active.
 
     
 
-    
-    <div class="container-returns">
-        <h5>Returns:</h5>
-        
-                
-
-
-
-<span class="param-type">Array.&lt;<a href="Input.html">Input</a>></span>
-
-
-
-
-
-- Inputs in the given phase.
-
-
-
-
-            
-    </div>
     
 
     
@@ -731,14 +482,14 @@ from this.active.
 
 <dt>
     
-        <h4 class="name" id="getInputsNotInPhase">
+        <h4 class="name" id="unbind">
             
-                <span class="type-signature"></span>getInputsNotInPhase<span class="signature">(phase)</span><span class="type-signature"> &rarr; {Array.&lt;<a href="Input.html">Input</a>>}</span>
+                <span class="type-signature"></span>unbind<span class="signature">(element, gesture<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Array.&lt;Binding>}</span>
                 
             
             <div class="container-source members">
-                <code><a href="src_State.js.html">src/State.js</a></code>,
-                <code><a href="src_State.js.html#line119">line 119</a></code>
+                <code><a href="src_Region.js.html">src/Region.js</a></code>,
+                <code><a href="src_Region.js.html#line206">line 206</a></code>
             </div>
             
         </h4>
@@ -748,6 +499,11 @@ from this.active.
 </dt>
 <dd>
 
+    
+    <div class="description">
+        Unbinds an element from either the specified gesture or all if no gesture
+is specified.
+    </div>
     
 
     
@@ -770,6 +526,8 @@ from this.active.
         <th>Type</th>
 
         
+        <th>Attributes</th>
+        
 
         
 
@@ -782,23 +540,65 @@ from this.active.
 
         <tr>
             
-                <td class="name"><code>phase</code></td>
+                <td class="name"><code>element</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">string</span>
+<span class="param-type">Element</span>
 
 
             
             </td>
 
             
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
 
             
 
-            <td class="description last">One of 'start', 'move', or 'end'.</td>
+            <td class="description last">The element to unbind.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>gesture</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="westures-core.Gesture.html">westures-core.Gesture</a></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">The gesture to unbind. If
+undefined, will unbind all Bindings associated with the given element.</td>
         </tr>
 
     
@@ -826,13 +626,13 @@ from this.active.
 
 
 
-<span class="param-type">Array.&lt;<a href="Input.html">Input</a>></span>
+<span class="param-type">Array.&lt;Binding></span>
 
 
 
 
 
-- Inputs <b>not</b> in the given phase.
+- Bindings that were unbound to the element.
 
 
 
@@ -907,7 +707,7 @@ from this.active.
 <script src="scripts/linenumber.js"></script>
 
     <script>
-        var id = 'State_sub'.replace(/"/g, '_');
+        var id = 'westures-core.Region_sub'.replace(/"/g, '_');
         var selectedApi = document.getElementById(id); // do not use jquery selector
         var $selectedApi = $(selectedApi);
 
