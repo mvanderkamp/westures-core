@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Class: Input | westures-core</title>
+    <title>Class: Region | westures-core</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -52,11 +52,11 @@
 
 <header>
     
-        <h2><span class="attribs"><span class="type-signature"></span></span>Input</h2>
+        <h2><span class="attribs"><span class="type-signature"></span></span>
+            <span class="ancestors"><a href="westures-core.html">westures-core</a>.</span>Region<span class="signature">(element, capture, preventDefault)</span><span class="type-signature"></span></h2>
         
-            <div class="class-description">Tracks a single input and contains information about the current, previous,
-and initial events. Contains the progress of each Input and its associated
-gestures.</div>
+            <div class="class-description">Allows the user to specify the control region which will listen for user
+input events.</div>
         
     
 </header>
@@ -69,14 +69,14 @@ gestures.</div>
 
 <dt>
     
-        <h4 class="name" id="Input">
+        <h4 class="name" id="Region">
             
-                Input
+                new <span class="type-signature"></span>Region<span class="signature">(element, capture, preventDefault)</span><span class="type-signature"></span>
                 
             
             <div class="container-source members">
-                <code><a href="src_Input.js.html">src/Input.js</a></code>,
-                <code><a href="src_Input.js.html#line49">line 49</a></code>
+                <code><a href="src_Region.js.html">src/Region.js</a></code>,
+                <code><a href="src_Region.js.html#line35">line 35</a></code>
             </div>
             
         </h4>
@@ -87,13 +87,134 @@ gestures.</div>
 <dd>
 
     
-
+    <div class="description">
+        Constructor function for the Region class.
+    </div>
     
 
     
 
     
 
+    
+
+    
+    <div class="container-params">
+        <h5>Parameters:</h5>
+        
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>element</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Element</span>
+
+
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last">The element which should listen to input events.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>capture</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
+            
+
+            <td class="description last">Whether the region uses the capture phase of
+   input events. If false, uses the bubbling phase.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>preventDefault</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                    true
+                
+                </td>
+            
+
+            <td class="description last">Whether the default browser functionality
+   should be disabled. This option should most likely be ignored. Here
+   there by dragons if set to false.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    </div>
     
 
     
@@ -166,486 +287,6 @@ gestures.</div>
     
 
     
-        <h3 class="subsection-title">Members</h3>
-
-        <dl>
-            
-
-<dt>
-<h4 class="name" id="current">
-    <span class="type-signature"></span>current<span class="type-signature"> :<a href="PointerData.html">PointerData</a></span>
-    
-    <div class="container-source members">
-        <code><a href="src_Input.js.html">src/Input.js</a></code>,
-        <code><a href="src_Input.js.html#line83">line 83</a></code>
-    </div>
-    
-</h4>
-
-
-</dt>
-<dd>
-    
-    <div class="description">
-        Holds the most current pointer data for this Input.
-    </div>
-    
-
-    <!--
-    
-        <h5>Type:</h5>
-        <ul>
-            <li>
-                
-<span class="param-type"><a href="PointerData.html">PointerData</a></span>
-
-
-            </li>
-        </ul>
-    
-    -->
-
-    
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-
-    
-</dd>
-
-        
-            
-
-<dt>
-<h4 class="name" id="identifier">
-    <span class="type-signature"></span>identifier<span class="type-signature"> :number</span>
-    
-    <div class="container-source members">
-        <code><a href="src_Input.js.html">src/Input.js</a></code>,
-        <code><a href="src_Input.js.html#line98">line 98</a></code>
-    </div>
-    
-</h4>
-
-
-</dt>
-<dd>
-    
-    <div class="description">
-        The identifier for the pointer / touch / mouse button associated with
-this input.
-    </div>
-    
-
-    <!--
-    
-        <h5>Type:</h5>
-        <ul>
-            <li>
-                
-<span class="param-type">number</span>
-
-
-            </li>
-        </ul>
-    
-    -->
-
-    
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-
-    
-</dd>
-
-        
-            
-
-<dt>
-<h4 class="name" id="initial">
-    <span class="type-signature"></span>initial<span class="type-signature"> :<a href="PointerData.html">PointerData</a></span>
-    
-    <div class="container-source members">
-        <code><a href="src_Input.js.html">src/Input.js</a></code>,
-        <code><a href="src_Input.js.html#line76">line 76</a></code>
-    </div>
-    
-</h4>
-
-
-</dt>
-<dd>
-    
-    <div class="description">
-        Holds the initial data from the mousedown / touchstart / pointerdown that
-began this input.
-    </div>
-    
-
-    <!--
-    
-        <h5>Type:</h5>
-        <ul>
-            <li>
-                
-<span class="param-type"><a href="PointerData.html">PointerData</a></span>
-
-
-            </li>
-        </ul>
-    
-    -->
-
-    
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-
-    
-</dd>
-
-        
-            
-
-<dt>
-<h4 class="name" id="phase">
-    <span class="type-signature"></span>phase<span class="type-signature"> :string</span>
-    
-    <div class="container-source members">
-        <code><a href="src_Input.js.html">src/Input.js</a></code>,
-        <code><a href="src_Input.js.html#line115">line 115</a></code>
-    </div>
-    
-</h4>
-
-
-</dt>
-<dd>
-    
-    <div class="description">
-        The phase of the input: 'start' or 'move' or 'end'
-    </div>
-    
-
-    <!--
-    
-        <h5>Type:</h5>
-        <ul>
-            <li>
-                
-<span class="param-type">string</span>
-
-
-            </li>
-        </ul>
-    
-    -->
-
-    
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-
-    
-</dd>
-
-        
-            
-
-<dt>
-<h4 class="name" id="previous">
-    <span class="type-signature"></span>previous<span class="type-signature"> :<a href="PointerData.html">PointerData</a></span>
-    
-    <div class="container-source members">
-        <code><a href="src_Input.js.html">src/Input.js</a></code>,
-        <code><a href="src_Input.js.html#line90">line 90</a></code>
-    </div>
-    
-</h4>
-
-
-</dt>
-<dd>
-    
-    <div class="description">
-        Holds the previous pointer data for this Input.
-    </div>
-    
-
-    <!--
-    
-        <h5>Type:</h5>
-        <ul>
-            <li>
-                
-<span class="param-type"><a href="PointerData.html">PointerData</a></span>
-
-
-            </li>
-        </ul>
-    
-    -->
-
-    
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-
-    
-</dd>
-
-        
-            
-
-<dt>
-<h4 class="name" id="startTime">
-    <span class="type-signature"></span>startTime<span class="type-signature"> :number</span>
-    
-    <div class="container-source members">
-        <code><a href="src_Input.js.html">src/Input.js</a></code>,
-        <code><a href="src_Input.js.html#line122">line 122</a></code>
-    </div>
-    
-</h4>
-
-
-</dt>
-<dd>
-    
-    <div class="description">
-        The timestamp of the initiating event for this input.
-    </div>
-    
-
-    <!--
-    
-        <h5>Type:</h5>
-        <ul>
-            <li>
-                
-<span class="param-type">number</span>
-
-
-            </li>
-        </ul>
-    
-    -->
-
-    
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-
-    
-</dd>
-
-        </dl>
-    
 
     
         <h3 class="subsection-title">Methods</h3>
@@ -655,14 +296,14 @@ began this input.
 
 <dt>
     
-        <h4 class="name" id="getProgressOfGesture">
+        <h4 class="name" id="bind">
             
-                <span class="type-signature"></span>getProgressOfGesture<span class="signature">(id)</span><span class="type-signature"> &rarr; {Object}</span>
+                <span class="type-signature"></span>bind<span class="signature">(element, gesture, handler)</span><span class="type-signature"></span>
                 
             
             <div class="container-source members">
-                <code><a href="src_Input.js.html">src/Input.js</a></code>,
-                <code><a href="src_Input.js.html#line129">line 129</a></code>
+                <code><a href="src_Region.js.html">src/Region.js</a></code>,
+                <code><a href="src_Region.js.html#line165">line 165</a></code>
             </div>
             
         </h4>
@@ -672,6 +313,10 @@ began this input.
 </dt>
 <dd>
 
+    
+    <div class="description">
+        Bind an element to a gesture with multiple function signatures.
+    </div>
     
 
     
@@ -706,13 +351,13 @@ began this input.
 
         <tr>
             
-                <td class="name"><code>id</code></td>
+                <td class="name"><code>element</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">string</span>
+<span class="param-type">Element</span>
 
 
             
@@ -722,7 +367,54 @@ began this input.
 
             
 
-            <td class="description last">The ID of the gesture whose progress is sought.</td>
+            <td class="description last">The element object.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>gesture</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="westures-core.Gesture.html">westures-core.Gesture</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Gesture type with which to bind.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>handler</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The function to execute when a gesture is
+   recognized.</td>
         </tr>
 
     
@@ -742,27 +434,6 @@ began this input.
 
     
 
-    
-    <div class="container-returns">
-        <h5>Returns:</h5>
-        
-                
-
-
-
-<span class="param-type">Object</span>
-
-
-
-
-
-- The progress of the gesture.
-
-
-
-
-            
-    </div>
     
 
     
@@ -811,14 +482,14 @@ began this input.
 
 <dt>
     
-        <h4 class="name" id="totalDistance">
+        <h4 class="name" id="unbind">
             
-                <span class="type-signature"></span>totalDistance<span class="signature">()</span><span class="type-signature"> &rarr; {number}</span>
+                <span class="type-signature"></span>unbind<span class="signature">(element, gesture<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Array.&lt;Binding>}</span>
                 
             
             <div class="container-source members">
-                <code><a href="src_Input.js.html">src/Input.js</a></code>,
-                <code><a href="src_Input.js.html#line140">line 140</a></code>
+                <code><a href="src_Region.js.html">src/Region.js</a></code>,
+                <code><a href="src_Region.js.html#line206">line 206</a></code>
             </div>
             
         </h4>
@@ -829,13 +500,112 @@ began this input.
 <dd>
 
     
-
+    <div class="description">
+        Unbinds an element from either the specified gesture or all if no gesture
+is specified.
+    </div>
     
 
     
 
     
 
+    
+
+    
+    <div class="container-params">
+        <h5>Parameters:</h5>
+        
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>element</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Element</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">The element to unbind.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>gesture</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="westures-core.Gesture.html">westures-core.Gesture</a></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">The gesture to unbind. If
+undefined, will unbind all Bindings associated with the given element.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    </div>
     
 
     
@@ -856,14 +626,13 @@ began this input.
 
 
 
-<span class="param-type">number</span>
+<span class="param-type">Array.&lt;Binding></span>
 
 
 
 
 
-- The distance between the initiating event for this input
-   and its current event.
+- Bindings that were unbound to the element.
 
 
 
@@ -938,7 +707,7 @@ began this input.
 <script src="scripts/linenumber.js"></script>
 
     <script>
-        var id = 'Input_sub'.replace(/"/g, '_');
+        var id = 'westures-core.Region_sub'.replace(/"/g, '_');
         var selectedApi = document.getElementById(id); // do not use jquery selector
         var $selectedApi = $(selectedApi);
 

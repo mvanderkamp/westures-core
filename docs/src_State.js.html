@@ -1,41 +1,50 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    
     <meta charset="utf-8">
-    <title>src/State.js - Documentation</title>
-    
-    
-    <script src="scripts/prettify/prettify.js"></script>
-    <script src="scripts/prettify/lang-css.js"></script>
+    <title>Source: src/State.js | westures-core</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
     <!--[if lt IE 9]>
       <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
-    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
-    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link type="text/css" rel="stylesheet" href="styles/bootstrap.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-jsdoc.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/tui-doc.css">
+
+    
+        
+            <link type="text/css" rel="stylesheet" href="styles/custom.css">
+        
+    
 </head>
 <body>
-
-<input type="checkbox" id="nav-trigger" class="nav-trigger" />
-<label for="nav-trigger" class="navicon-button x">
-  <div class="navicon"></div>
-</label>
-
-<label for="nav-trigger" class="overlay"></label>
-
-<nav >
+<nav class="lnb" id="lnb">
+    <div class="logo" style="">
+        
+            <img src="img/toast-ui.png" width="100%" height="100%">
+        
+    </div>
+    <div class="title">
+        <h1><a href="index.html" class="link">westures-core</a></h1>
+        
+            <span class="version">v0.4.2</span>
+        
+    </div>
+    <div class="search-container" id="search-container">
+        <input type="text" placeholder="Search">
+        <ul></ul>
+    </div>
     
-    <input type="text" id="nav-search" placeholder="Search" />
-    
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-westures-core.html">westures-core</a></li></ul><h3>Classes</h3><ul><li><a href="Binding.html">Binding</a></li><li><a href="Gesture.html">Gesture</a></li><li><a href="Input.html">Input</a><ul class='methods'><li data-type='method' style='display: none;'><a href="Input.html#getProgressOfGesture">getProgressOfGesture</a></li><li data-type='method' style='display: none;'><a href="Input.html#totalDistance">totalDistance</a></li></ul></li><li><a href="Point2D.html">Point2D</a><ul class='methods'><li data-type='method' style='display: none;'><a href="Point2D.html#angleTo">angleTo</a></li><li data-type='method' style='display: none;'><a href="Point2D.html#averageDistanceTo">averageDistanceTo</a></li><li data-type='method' style='display: none;'><a href="Point2D.html#clone">clone</a></li><li data-type='method' style='display: none;'><a href="Point2D.html#distanceTo">distanceTo</a></li><li data-type='method' style='display: none;'><a href="Point2D.html#minus">minus</a></li><li data-type='method' style='display: none;'><a href="Point2D.html#plus">plus</a></li><li data-type='method' style='display: none;'><a href="Point2D.html#totalDistanceTo">totalDistanceTo</a></li><li data-type='method' style='display: none;'><a href="Point2D.html#.midpoint">midpoint</a></li><li data-type='method' style='display: none;'><a href="Point2D.html#.sum">sum</a></li></ul></li><li><a href="PointerData.html">PointerData</a><ul class='methods'><li data-type='method' style='display: none;'><a href="PointerData.html#angleTo">angleTo</a></li><li data-type='method' style='display: none;'><a href="PointerData.html#distanceTo">distanceTo</a></li></ul></li><li><a href="Region.html">Region</a><ul class='methods'><li data-type='method' style='display: none;'><a href="Region.html#bind">bind</a></li><li data-type='method' style='display: none;'><a href="Region.html#unbind">unbind</a></li></ul></li><li><a href="State.html">State</a><ul class='methods'><li data-type='method' style='display: none;'><a href="State.html#getInputsInPhase">getInputsInPhase</a></li><li data-type='method' style='display: none;'><a href="State.html#getInputsNotInPhase">getInputsNotInPhase</a></li></ul></li></ul>
+    <div class="lnb-api hidden"><h3>Classes</h3><ul><li><a href="Input.html">Input</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="Input_sub"><div class="member-type">Members</div><ul class="inner"><li><a href="Input.html#current">current</a></li><li><a href="Input.html#identifier">identifier</a></li><li><a href="Input.html#initial">initial</a></li><li><a href="Input.html#phase">phase</a></li><li><a href="Input.html#previous">previous</a></li><li><a href="Input.html#startTime">startTime</a></li></ul><div class="member-type">Methods</div><ul class="inner"><li><a href="Input.html#getProgressOfGesture">getProgressOfGesture</a></li><li><a href="Input.html#totalDistance">totalDistance</a></li></ul></div></li><li><a href="PointerData.html">PointerData</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="PointerData_sub"><div class="member-type">Members</div><ul class="inner"><li><a href="PointerData.html#originalEvent">originalEvent</a></li><li><a href="PointerData.html#point">point</a></li><li><a href="PointerData.html#time">time</a></li><li><a href="PointerData.html#type">type</a></li></ul><div class="member-type">Methods</div><ul class="inner"><li><a href="PointerData.html#angleTo">angleTo</a></li><li><a href="PointerData.html#distanceTo">distanceTo</a></li></ul></div></li><li><a href="State.html">State</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="State_sub"><div class="member-type">Members</div><ul class="inner"><li><a href="State.html#active">active</a></li><li><a href="State.html#activePoints">activePoints</a></li><li><a href="State.html#centroid">centroid</a></li><li><a href="State.html#event">event</a></li><li><a href="State.html#inputs">inputs</a></li></ul><div class="member-type">Methods</div><ul class="inner"><li><a href="State.html#getInputsInPhase">getInputsInPhase</a></li><li><a href="State.html#getInputsNotInPhase">getInputsNotInPhase</a></li></ul></div></li><li><a href="westures-core.Gesture.html">Gesture</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="westures-core.Gesture_sub"><div class="member-type">Members</div><ul class="inner"><li><a href="westures-core.Gesture.html#id">id</a></li></ul></div></li><li><a href="westures-core.Point2D.html">Point2D</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="westures-core.Point2D_sub"><div class="member-type">Members</div><ul class="inner"><li><a href="westures-core.Point2D.html#x">x</a></li><li><a href="westures-core.Point2D.html#y">y</a></li></ul><div class="member-type">Methods</div><ul class="inner"><li><a href="westures-core.Point2D.html#.midpoint">midpoint</a></li><li><a href="westures-core.Point2D.html#.sum">sum</a></li><li><a href="westures-core.Point2D.html#angleTo">angleTo</a></li><li><a href="westures-core.Point2D.html#averageDistanceTo">averageDistanceTo</a></li><li><a href="westures-core.Point2D.html#clone">clone</a></li><li><a href="westures-core.Point2D.html#distanceTo">distanceTo</a></li><li><a href="westures-core.Point2D.html#minus">minus</a></li><li><a href="westures-core.Point2D.html#plus">plus</a></li><li><a href="westures-core.Point2D.html#totalDistanceTo">totalDistanceTo</a></li></ul></div></li><li><a href="westures-core.Region.html">Region</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="westures-core.Region_sub"><div class="member-type">Methods</div><ul class="inner"><li><a href="westures-core.Region.html#bind">bind</a></li><li><a href="westures-core.Region.html#unbind">unbind</a></li></ul></div></li></ul></div><div class="lnb-api hidden"><h3>Namespaces</h3><ul><li><a href="westures-core.html">westures-core</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="westures-core_sub"></div></li></ul></div>
 </nav>
+<div id="resizer"></div>
 
-<div id="main">
-    
-    <h1 class="page-title">src/State.js</h1>
-    
-
+<div class="main" id="main">
     
 
 
@@ -53,9 +62,37 @@ const Input   = require('./Input.js');
 const PHASE   = require('./PHASE.js');
 const Point2D = require('./Point2D.js');
 
+const symbols = Object.freeze({
+  inputs: Symbol.for('inputs'),
+});
+
+/*
+ * Set of helper functions for updating inputs based on type of input.
+ * Must be called with a bound 'this', via bind(), or call(), or apply().
+ *
+ * @private
+ */
+const update_fns = {
+  TouchEvent: function TouchEvent(event) {
+    Array.from(event.changedTouches).forEach(touch => {
+      this.updateInput(event, touch.identifier);
+    });
+  },
+
+  PointerEvent: function PointerEvent(event) {
+    this.updateInput(event, event.pointerId);
+  },
+
+  MouseEvent: function MouseEvent(event) {
+    this.updateInput(event, event.button);
+  },
+};
+
 /**
  * Keeps track of currently active and ending input points on the interactive
  * surface.
+ *
+ * @hideconstructor
  */
 class State {
   /**
@@ -66,13 +103,13 @@ class State {
      * Keeps track of the current Input objects.
      *
      * @private
-     * @type {Object}
+     * @type {Map}
      */
-    this._inputs_obj = {};
+    this[symbols.inputs] = new Map();
 
     /**
      * All currently valid inputs, including those that have ended.
-     * 
+     *
      * @type {Input[]}
      */
     this.inputs = [];
@@ -89,14 +126,14 @@ class State {
      * The array of latest point data for the currently active inputs, sourced
      * from this.active.
      *
-     * @type {Point2D[]}
+     * @type {westures-core.Point2D[]}
      */
     this.activePoints = [];
 
     /**
      * The centroid of the currently active points.
      *
-     * @type {Point2D}
+     * @type {westures-core.Point2D}
      */
     this.centroid = {};
 
@@ -112,52 +149,55 @@ class State {
    * Deletes all inputs that are in the 'end' phase.
    *
    * @private
-   * @return {undefined}
    */
   clearEndedInputs() {
-    for (let k in this._inputs_obj) {
-      if (this._inputs_obj[k].phase === 'end') delete this._inputs_obj[k];
-    }
+    this[symbols.inputs].forEach((v, k) => {
+      if (v.phase === 'end') this[symbols.inputs].delete(k);
+    });
   }
 
   /**
    * @param {string} phase - One of 'start', 'move', or 'end'.
+   *
    * @return {Input[]} Inputs in the given phase.
    */
   getInputsInPhase(phase) {
-    return this.inputs.filter( i => i.phase === phase );
+    return this.inputs.filter(i => i.phase === phase);
   }
 
   /**
    * @param {string} phase - One of 'start', 'move', or 'end'.
+   *
    * @return {Input[]} Inputs &lt;b>not&lt;/b> in the given phase.
    */
   getInputsNotInPhase(phase) {
-    return this.inputs.filter( i => i.phase !== phase );
+    return this.inputs.filter(i => i.phase !== phase);
   }
 
   /**
    * @private
+   *
    * @param {Element} element - The Element to test.
+   *
    * @return {boolean} True if some input was initially inside the element.
    */
   someInputWasInitiallyInside(element) {
-    return this.inputs.some( i => i.wasInitiallyInside(element) );
+    return this.inputs.some(i => i.wasInitiallyInside(element));
   }
 
   /**
    * Update the input with the given identifier using the given event.
    *
    * @private
+   *
    * @param {Event} event - The event being captured.
    * @param {number} identifier - The identifier of the input to update.
-   * @return {undefined}
    */
   updateInput(event, identifier) {
-    if (PHASE[ event.type ] === 'start') {
-      this._inputs_obj[identifier] = new Input(event, identifier);
-    } else if (this._inputs_obj[identifier]) {
-      this._inputs_obj[identifier].update(event);
+    if (PHASE[event.type] === 'start') {
+      this[symbols.inputs].set(identifier, new Input(event, identifier));
+    } else if (this[symbols.inputs].has(identifier)) {
+      this[symbols.inputs].get(identifier).update(event);
     }
   }
 
@@ -165,40 +205,17 @@ class State {
    * Updates the inputs with new information based upon a new event being fired.
    *
    * @private
-   * @param {Event} event - The event being captured. 
-   * @return {undefined}
+   * @param {Event} event - The event being captured.
    */
   updateAllInputs(event) {
     update_fns[event.constructor.name].call(this, event);
-    this.inputs = Object.values(this._inputs_obj);
+    this.inputs = Array.from(this[symbols.inputs].values());
     this.active = this.getInputsNotInPhase('end');
-    this.activePoints = this.active.map( i => i.current.point );
-    this.centroid = Point2D.midpoint( this.activePoints );
+    this.activePoints = this.active.map(i => i.current.point);
+    this.centroid = Point2D.midpoint(this.activePoints);
     this.event = event;
   }
 }
-
-/*
- * Set of helper functions for updating inputs based on type of input.
- * Must be called with a bound 'this', via bind(), or call(), or apply().
- * 
- * @private
- */
-const update_fns = {
-  TouchEvent: function(event) {
-    Array.from(event.changedTouches).forEach( touch => {
-      this.updateInput(event, touch.identifier);
-    });
-  },
-
-  PointerEvent: function(event) {
-    this.updateInput(event, event.pointerId);
-  },
-
-  MouseEvent: function(event) {
-    this.updateInput(event, event.button);
-  },
-};
 
 module.exports = State;
 
@@ -209,27 +226,26 @@ module.exports = State;
 
 
 
-    
-    
 </div>
 
-<br class="clear">
-
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sat Feb 02 2019 13:29:24 GMT-0600 (Central Standard Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    <img class="logo" src="img/toast-ui.png" style="">
+    <div class="footer-text">Westures: Simultaneous Multitouch Gestures</div>
 </footer>
-
 <script>prettyPrint();</script>
+<script src="scripts/jquery.min.js"></script>
+<script src="scripts/tui-doc.js"></script>
 <script src="scripts/linenumber.js"></script>
 
-<script src="scripts/jquery-3.1.1.min.js"></script>
+    <script>
+        var id = '_sub'.replace(/"/g, '_');
+        var selectedApi = document.getElementById(id); // do not use jquery selector
+        var $selectedApi = $(selectedApi);
 
-<script src="scripts/search.js"></script>
-
-
-<script src="scripts/collapse.js"></script>
-
-
+        $selectedApi.removeClass('hidden');
+        $selectedApi.parent().find('.glyphicon').removeClass('glyphicon-plus').addClass('glyphicon-minus');
+        showLnbApi();
+    </script>
 
 </body>
 </html>

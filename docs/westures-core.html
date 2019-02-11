@@ -1,10 +1,8 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Source: src/Gesture.js | westures-core</title>
+    <title>Namespace: westures-core | westures-core</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -49,97 +47,128 @@
 
 
 
+
+<section>
+
+<header>
     
-    <section>
-        <article>
-            <pre class="prettyprint source linenums"><code>/*
- * Contains the {@link Gesture} class
- */
+        <h2>westures-core</h2>
+        
+    
+</header>
 
-'use strict';
+<article>
+    
+        <div class="container-overview">
+        
+            
+                <div class="description">The global API interface for Westures. Exposes a constructor for the
+Region and the generic Gesture class for user gestures to
+implement, as well as the Point2D class, which may be useful.</div>
+            
 
-let nextGestureNum = 0;
+            
 
-/**
- * The Gesture class that all gestures inherit from.
- *
- * @memberof westures-core
- */
-class Gesture {
-  /**
-   * Constructor function for the Gesture class.
-   *
-   * @param {string} type - The name of the gesture.
-   */
-  constructor(type) {
-    /**
-     * The type or name of the gesture. (e.g. 'pan' or 'tap' or 'pinch').
-     *
-     * @type {string}
-     */
-    if (typeof type !== 'string') {
-      throw new TypeError('Gestures require a string type');
-    }
-    this.type = type;
 
-    /**
-     * The unique identifier for each gesture. This allows for distinctions
-     * across instances of Gestures that are created on the fly (e.g.
-     * gesture-tap-1, gesture-tap-2).
-     *
-     * @type {string}
-     */
-    this.id = `gesture-${this.type}-${nextGestureNum++}`;
-  }
+<dl class="details">
 
-  /**
-   * Event hook for the start of a gesture.
-   *
-   * @private
-   *
-   * @param {State} state - The input state object of the current region.
-   *
-   * @return {?Object} Gesture is considered recognized if an Object is
-   *    returned.
-   */
-  start() {
-    return null;
-  }
+    
 
-  /**
-   * Event hook for the move of a gesture.
-   *
-   * @private
-   *
-   * @param {State} state - The input state object of the current region.
-   *
-   * @return {?Object} Gesture is considered recognized if an Object is
-   *    returned.
-   */
-  move() {
-    return null;
-  }
+    
 
-  /**
-   * Event hook for the move of a gesture.
-   *
-   * @private
-   *
-   * @param {State} state - The input state object of the current region.
-   *
-   * @return {?Object} Gesture is considered recognized if an Object is
-   *    returned.
-   */
-  end() {
-    return null;
-  }
-}
+    
 
-module.exports = Gesture;
+    
 
-</code></pre>
-        </article>
-    </section>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+            
+        
+        </div>
+    
+
+    
+
+    
+
+    
+            <h3 class="subsection-title">Classes</h3>
+            
+
+<dl>
+    
+        <dt>
+            <h4 class="name">
+                <a href="westures-core.Gesture.html">Gesture</a>
+                <div class="container-source members">
+                    <code><a href="westures-core.Gesture.html">westures-core.Gesture</a></code>
+                </div>
+            </h4>
+        </dt>
+        
+    
+        <dt>
+            <h4 class="name">
+                <a href="westures-core.Point2D.html">Point2D</a>
+                <div class="container-source members">
+                    <code><a href="westures-core.Point2D.html">westures-core.Point2D</a></code>
+                </div>
+            </h4>
+        </dt>
+        
+    
+        <dt>
+            <h4 class="name">
+                <a href="westures-core.Region.html">Region</a>
+                <div class="container-source members">
+                    <code><a href="westures-core.Region.html">westures-core.Region</a></code>
+                </div>
+            </h4>
+        </dt>
+        
+    
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</article>
+
+</section>
 
 
 
@@ -156,7 +185,7 @@ module.exports = Gesture;
 <script src="scripts/linenumber.js"></script>
 
     <script>
-        var id = '_sub'.replace(/"/g, '_');
+        var id = 'westures-core_sub'.replace(/"/g, '_');
         var selectedApi = document.getElementById(id); // do not use jquery selector
         var $selectedApi = $(selectedApi);
 

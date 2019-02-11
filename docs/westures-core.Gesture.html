@@ -1,10 +1,8 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Source: src/Gesture.js | westures-core</title>
+    <title>Class: Gesture | westures-core</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -49,97 +47,272 @@
 
 
 
+
+<section>
+
+<header>
     
-    <section>
-        <article>
-            <pre class="prettyprint source linenums"><code>/*
- * Contains the {@link Gesture} class
- */
+        <h2><span class="attribs"><span class="type-signature"></span></span>
+            <span class="ancestors"><a href="westures-core.html">westures-core</a>.</span>Gesture<span class="signature">(type)</span><span class="type-signature"></span></h2>
+        
+            <div class="class-description">The Gesture class that all gestures inherit from.</div>
+        
+    
+</header>
 
-'use strict';
+<article>
+    
+        <div class="container-overview">
+        
+            
 
-let nextGestureNum = 0;
+<dt>
+    
+        <h4 class="name" id="Gesture">
+            
+                new <span class="type-signature"></span>Gesture<span class="signature">(type)</span><span class="type-signature"></span>
+                
+            
+            <div class="container-source members">
+                <code><a href="src_Gesture.js.html">src/Gesture.js</a></code>,
+                <code><a href="src_Gesture.js.html#line14">line 14</a></code>
+            </div>
+            
+        </h4>
 
-/**
- * The Gesture class that all gestures inherit from.
- *
- * @memberof westures-core
- */
-class Gesture {
-  /**
-   * Constructor function for the Gesture class.
-   *
-   * @param {string} type - The name of the gesture.
-   */
-  constructor(type) {
-    /**
-     * The type or name of the gesture. (e.g. 'pan' or 'tap' or 'pinch').
-     *
-     * @type {string}
-     */
-    if (typeof type !== 'string') {
-      throw new TypeError('Gestures require a string type');
-    }
-    this.type = type;
+        
+    
+</dt>
+<dd>
 
-    /**
-     * The unique identifier for each gesture. This allows for distinctions
-     * across instances of Gestures that are created on the fly (e.g.
-     * gesture-tap-1, gesture-tap-2).
-     *
-     * @type {string}
-     */
-    this.id = `gesture-${this.type}-${nextGestureNum++}`;
-  }
+    
+    <div class="description">
+        Constructor function for the Gesture class.
+    </div>
+    
 
-  /**
-   * Event hook for the start of a gesture.
-   *
-   * @private
-   *
-   * @param {State} state - The input state object of the current region.
-   *
-   * @return {?Object} Gesture is considered recognized if an Object is
-   *    returned.
-   */
-  start() {
-    return null;
-  }
+    
 
-  /**
-   * Event hook for the move of a gesture.
-   *
-   * @private
-   *
-   * @param {State} state - The input state object of the current region.
-   *
-   * @return {?Object} Gesture is considered recognized if an Object is
-   *    returned.
-   */
-  move() {
-    return null;
-  }
+    
 
-  /**
-   * Event hook for the move of a gesture.
-   *
-   * @private
-   *
-   * @param {State} state - The input state object of the current region.
-   *
-   * @return {?Object} Gesture is considered recognized if an Object is
-   *    returned.
-   */
-  end() {
-    return null;
-  }
-}
+    
 
-module.exports = Gesture;
+    
+    <div class="container-params">
+        <h5>Parameters:</h5>
+        
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
 
-</code></pre>
-        </article>
-    </section>
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>type</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The name of the gesture.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+</dd>
+
+        
+        </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Members</h3>
+
+        <dl>
+            
+
+<dt>
+<h4 class="name" id="id">
+    <span class="type-signature"></span>id<span class="type-signature"> :string</span>
+    
+    <div class="container-source members">
+        <code><a href="src_Gesture.js.html">src/Gesture.js</a></code>,
+        <code><a href="src_Gesture.js.html#line38">line 38</a></code>
+    </div>
+    
+</h4>
+
+
+</dt>
+<dd>
+    
+    <div class="description">
+        The unique identifier for each gesture. This allows for distinctions
+across instances of Gestures that are created on the fly (e.g.
+gesture-tap-1, gesture-tap-2).
+    </div>
+    
+
+    <!--
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type">string</span>
+
+
+            </li>
+        </ul>
+    
+    -->
+
+    
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+</dd>
+
+        </dl>
+    
+
+    
+
+    
+
+    
+</article>
+
+</section>
 
 
 
@@ -156,7 +329,7 @@ module.exports = Gesture;
 <script src="scripts/linenumber.js"></script>
 
     <script>
-        var id = '_sub'.replace(/"/g, '_');
+        var id = 'westures-core.Gesture_sub'.replace(/"/g, '_');
         var selectedApi = document.getElementById(id); // do not use jquery selector
         var $selectedApi = $(selectedApi);
 
