@@ -36,7 +36,8 @@
     "docdash": "^1.0.2",
     "eslint": "^5.13.0",
     "jest": "^23.6.0",
-    "jsdoc": "^3.5.5"
+    "jsdoc": "^3.5.5",
+    "tui-jsdoc-template": "^1.2.2"
   },
   "dependencies": {}
 }
