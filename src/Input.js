@@ -7,6 +7,39 @@
 const PointerData = require('./PointerData.js');
 
 /**
+ * In case event.composedPath() is not available.
+ *
+ * @private
+ * @param {Event} event
+ * @return {Element[]} The elements along the composed path of the event.
+ */
+function getPropagationPath(event) {
+  if (typeof event.composedPath === 'function') {
+    return event.composedPath();
+  }
+
+  const path = [];
+  for (let node = event.target; node !== document; node = node.parentNode) {
+    path.push(node);
+  }
+  path.push(document);
+  path.push(window);
+
+  return path;
+}
+
+/**
+ * A WeakSet is used so that references will be garbage collected when the
+ * element they point to is removed from the page.
+ *
+ * @private
+ * @return {WeakSet.<Element>} The Elements in the path of the given event.
+ */
+function getElementsInPath(event) {
+  return new WeakSet(getPropagationPath(event));
+}
+
+/**
  * Tracks a single input and contains information about the current, previous,
  * and initial events. Contains the progress of each Input and its associated
  * gestures.
@@ -75,7 +108,7 @@ class Input {
   /**
    * The phase of the input: 'start' or 'move' or 'end'
    *
-   * @type {string} 
+   * @type {string}
    */
   get phase() { return this.current.type; }
 
@@ -131,39 +164,6 @@ class Input {
   wasInitiallyInside(element) {
     return this.initialElements.has(element);
   }
-}
-
-/**
- * A WeakSet is used so that references will be garbage collected when the
- * element they point to is removed from the page.
- *
- * @private
- * @return {WeakSet.<Element>} The Elements in the path of the given event.
- */
-function getElementsInPath(event) {
-  return new WeakSet(getPropagationPath(event));
-}
-
-/**
- * In case event.composedPath() is not available.
- *
- * @private
- * @param {Event} event
- * @return {Element[]} The elements along the composed path of the event.
- */
-function getPropagationPath(event) {
-  if (typeof event.composedPath === 'function') {
-    return event.composedPath();
-  } 
-
-  const path = [];
-  for (let node = event.target; node !== document; node = node.parentNode) {
-    path.push(node);
-  }
-  path.push(document);
-  path.push(window);
-
-  return path;
 }
 
 module.exports = Input;

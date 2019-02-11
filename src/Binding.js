@@ -48,7 +48,7 @@ class Binding {
    * Evalutes the given gesture hook, and dispatches any data that is produced.
    *
    * @private
-   * @param {string} hook - which gesture hook to call, must be one of 'start', 
+   * @param {string} hook - which gesture hook to call, must be one of 'start',
    *    'move', or 'end'.
    * @param {State} state - The current State instance.
    * @return {undefined}

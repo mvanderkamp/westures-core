@@ -26,7 +26,7 @@ const TOUCH_EVENTS = [
   'touchend',
 ];
 
-/** 
+/**
  * Allows the user to specify the control region which will listen for user
  * input events.
  */
@@ -69,7 +69,7 @@ class Region {
     /**
      * Whether the default browser functionality should be disabled. This option
      * should most likely be ignored. Here there by dragons if set to false.
-     *   
+     *
      * @private
      * @type {boolean}
      */
@@ -123,10 +123,10 @@ class Region {
 
     // Bind detected browser events to the region element.
     const arbiter = this.arbitrate.bind(this);
-    eventNames.forEach( eventName => {
+    eventNames.forEach(eventName => {
       this.element.addEventListener(eventName, arbiter, {
         capture: this.capture,
-        once: false,
+        once:    false,
         passive: false,
       });
     });
@@ -147,8 +147,8 @@ class Region {
 
     this.state.updateAllInputs(event, this.element);
 
-    this.retrieveBindingsByInitialPos().forEach( binding => {
-      binding.evaluateHook(PHASE[ event.type ], this.state);
+    this.retrieveBindingsByInitialPos().forEach(binding => {
+      binding.evaluateHook(PHASE[event.type], this.state);
     });
 
     this.state.clearEndedInputs();
@@ -164,7 +164,7 @@ class Region {
    * @return {undefined}
    */
   bind(element, gesture, handler) {
-    this.bindings.push( new Binding(element, gesture, handler) );
+    this.bindings.push(new Binding(element, gesture, handler));
   }
 
   /**
@@ -175,7 +175,7 @@ class Region {
    * @return {Binding[]} Bindings to which the element is bound.
    */
   retrieveBindingsByElement(element) {
-    return this.bindings.filter( b => b.element === element );
+    return this.bindings.filter(b => b.element === element);
   }
 
   /**
@@ -187,9 +187,9 @@ class Region {
    * @return {Binding[]} Bindings in which an active input began.
    */
   retrieveBindingsByInitialPos() {
-    return this.bindings.filter( 
-      b => this.state.someInputWasInitiallyInside(b.element)
-    );
+    return this.bindings.filter(b => {
+      return this.state.someInputWasInitiallyInside(b.element);
+    });
   }
 
   /**
@@ -202,11 +202,11 @@ class Region {
    * @return {Binding[]} Bindings that were unbound to the element.
    */
   unbind(element, gesture) {
-    let bindings = this.retrieveBindingsByElement(element);
-    let unbound = [];
+    const bindings = this.retrieveBindingsByElement(element);
+    const unbound = [];
 
-    bindings.forEach( b => {
-      if (gesture == undefined || b.gesture === gesture) {
+    bindings.forEach(b => {
+      if (gesture == null || b.gesture === gesture) {
         this.bindings.splice(this.bindings.indexOf(b), 1);
         unbound.push(b);
       }

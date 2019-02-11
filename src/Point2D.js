@@ -69,7 +69,7 @@ class Point2D {
    *
    * @param {Point2D} point - Point to which the distance is calculated.
    * @return {number} The distance between the two points, a.k.a. the
-   *    hypoteneuse. 
+   *    hypoteneuse.
    */
   distanceTo(point) {
     return Math.hypot(point.x - this.x, point.y - this.y);
@@ -109,7 +109,7 @@ class Point2D {
    * @return {number} The total distance from this point to the provided points.
    */
   totalDistanceTo(points = []) {
-    return points.reduce( (d, p) => d + this.distanceTo(p), 0);
+    return points.reduce((d, p) => d + this.distanceTo(p), 0);
   }
 
   /**
@@ -123,7 +123,7 @@ class Point2D {
     if (points.length === 0) return null;
 
     const total = Point2D.sum(points);
-    return new Point2D (
+    return new Point2D(
       total.x / points.length,
       total.y / points.length,
     );
@@ -136,7 +136,7 @@ class Point2D {
    * @return {Point2D} A new Point2D representing the sum of the given points.
    */
   static sum(points = []) {
-    return points.reduce( (total, pt) => total.plus(pt), new Point2D(0,0) );
+    return points.reduce((total, pt) => total.plus(pt), new Point2D(0, 0));
   }
 }
 

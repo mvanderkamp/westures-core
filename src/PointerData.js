@@ -8,6 +8,20 @@ const Point2D = require('./Point2D.js');
 const PHASE   = require('./PHASE.js');
 
 /**
+ * @private
+ * @return {Event} The Event object which corresponds to the given identifier.
+ *    Contains clientX, clientY values.
+ */
+function getEventObject(event, identifier) {
+  if (event.changedTouches) {
+    return Array.from(event.changedTouches).find(t => {
+      return t.identifier === identifier;
+    });
+  }
+  return event;
+}
+
+/**
  * Low-level storage of pointer data based on incoming data from an interaction
  * event.
  */
@@ -32,12 +46,12 @@ class PointerData {
      *
      * @type {( String | null )}
      */
-    this.type = PHASE[ event.type ];
+    this.type = PHASE[event.type];
 
     /**
      * The timestamp of the event in milliseconds elapsed since January 1, 1970,
      * 00:00:00 UTC.
-     * 
+     *
      * @type {number}
      */
     this.time = Date.now();
@@ -67,25 +81,11 @@ class PointerData {
    *
    * @param {PointerData} pdata
    * @return {number} The distance between the two points, a.k.a. the
-   *    hypoteneuse. 
+   *    hypoteneuse.
    */
   distanceTo(pdata) {
     return this.point.distanceTo(pdata.point);
   }
-}
-
-/**
- * @private
- * @return {Event} The Event object which corresponds to the given identifier.
- *    Contains clientX, clientY values.
- */
-function getEventObject(event, identifier) {
-  if (event.changedTouches) {
-    return Array.from(event.changedTouches).find( t => {
-      return t.identifier === identifier;
-    });
-  } 
-  return event;
 }
 
 module.exports = PointerData;

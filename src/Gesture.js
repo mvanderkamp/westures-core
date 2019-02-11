@@ -8,10 +8,14 @@ let nextGestureNum = 0;
 
 /**
  * The Gesture class that all gestures inherit from.
+ *
+ * @memberof westures-core
  */
 class Gesture {
   /**
    * Constructor function for the Gesture class.
+   *
+   * @param {string} type - The name of the gesture.
    */
   constructor(type) {
     /**
@@ -19,7 +23,9 @@ class Gesture {
      *
      * @type {string}
      */
-    if (typeof type === 'undefined') throw 'Gestures require a type!';
+    if (typeof type !== 'string') {
+      throw new TypeError('Gestures require a string type');
+    }
     this.type = type;
 
     /**
@@ -40,8 +46,8 @@ class Gesture {
    * @return {?Object} Gesture is considered recognized if an Object is
    *    returned.
    */
-  start(state) {
-    return void state;
+  start() {
+    return null;
   }
 
   /**
@@ -52,8 +58,8 @@ class Gesture {
    * @return {?Object} Gesture is considered recognized if an Object is
    *    returned.
    */
-  move(state) {
-    return void state;
+  move() {
+    return null;
   }
 
   /**
@@ -64,8 +70,8 @@ class Gesture {
    * @return {?Object} Gesture is considered recognized if an Object is
    *    returned.
    */
-  end(state) {
-    return void state;
+  end() {
+    return null;
   }
 }
 
