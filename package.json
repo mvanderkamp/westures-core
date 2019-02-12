@@ -1,6 +1,6 @@
 {
   "name": "westures-core",
-  "version": "0.4.3",
+  "version": "0.4.4",
   "description": "The core logic of the Westures JavaScript gesture library.",
   "keywords": [
     "gesture",
