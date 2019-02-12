@@ -11,7 +11,10 @@
     "swipe",
     "swivel",
     "track",
-    "simultaenous",
+    "simultaneous",
+    "touch",
+    "mouse",
+    "pointer",
     "multitouch"
   ],
   "browser": "index.js",
