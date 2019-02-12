@@ -10,7 +10,9 @@ const PointerData = require('./PointerData.js');
  * In case event.composedPath() is not available.
  *
  * @private
+ *
  * @param {Event} event
+ *
  * @return {Element[]} The elements along the composed path of the event.
  */
 function getPropagationPath(event) {
@@ -163,8 +165,8 @@ class Input {
    *
    * @param {Element} element
    *
-   * @return {boolean} true if the PointerData occurred inside the element,
-   *    false otherwise.
+   * @return {boolean} true if the Input began inside the element, false
+   *    otherwise.
    */
   wasInitiallyInside(element) {
     return this.initialElements.has(element);
