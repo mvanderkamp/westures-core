@@ -1,4 +1,7 @@
 {
+  "markdown": {
+    "idInHeadings": true
+  },
   "opts": {
     "destination": "docs",
     "mainpagetitle": "Home | Westures Core Documentation",
