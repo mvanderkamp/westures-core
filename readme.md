@@ -1,5 +1,9 @@
 # westures-core
 
+[![Maintainability](
+https://api.codeclimate.com/v1/badges/a5f4a4745352d6e2520c/maintainability)
+](https://codeclimate.com/github/mvanderkamp/westures-core/maintainability)
+
 This module contains the core functionality of the Westures JavaScript gesture
 library. It is intended for use as a lighter-weight module to use if you do not
 intend on using the base gestures included with the standard `westures` module.
