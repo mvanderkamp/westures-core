@@ -53,6 +53,22 @@ class Region {
     this.bindings = [];
 
     /**
+     * The list of active bindings for the current input session.
+     *
+     * @private
+     * @type {Binding[]}
+     */
+    this.activeBindings = [];
+
+    /**
+     * Whether an input session is currently active.
+     *
+     * @private
+     * @type {boolean}
+     */
+    this.isWaiting = true;
+
+    /**
      * The element being bound to.
      *
      * @private
@@ -134,6 +150,31 @@ class Region {
   }
 
   /**
+   * Selects the bindings that are active for the current input sequence.
+   *
+   * @private
+   * @return {Binding[]} The active bindgins that should be evaluated.
+   */
+  selectActiveBindings() {
+    if (this.isWaiting) {
+      this.activeBindings = this.retrieveBindingsByInitialPos();
+      this.isWaiting = false;
+    }
+    return this.activeBindings;
+  }
+
+  /**
+   * Evaluates whether the current input session has completed.
+   *
+   * @private
+   */
+  pruneActiveBindings() {
+    if (this.state.inputs.length === 0) {
+      this.isWaiting = true;
+    }
+  }
+
+  /**
    * All input events flow through this function. It makes sure that the input
    * state is maintained, determines which bindings to analyze based on the
    * initial position of the inputs, calls the relevant gesture hooks, and
@@ -147,11 +188,12 @@ class Region {
 
     this.state.updateAllInputs(event, this.element);
 
-    this.retrieveBindingsByInitialPos().forEach(binding => {
+    this.selectActiveBindings().forEach(binding => {
       binding.evaluateHook(PHASE[event.type], this.state);
     });
 
     this.state.clearEndedInputs();
+    this.pruneActiveBindings();
   }
 
   /**
