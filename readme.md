@@ -6,7 +6,8 @@ https://api.codeclimate.com/v1/badges/a5f4a4745352d6e2520c/maintainability)
 
 This module contains the core functionality of the Westures JavaScript gesture
 library. It is intended for use as a lighter-weight module to use if you do not
-intend on using the base gestures included with the standard `westures` module.
+intend on using the base gestures included with the standard [westures](
+https://mvanderkamp.github.io/westures/) module.
 
 Westures is a fork of [ZingTouch](https://github.com/zingchart/zingtouch). 
 
@@ -26,6 +27,7 @@ pull request!
 - [Basic Usage](#basic-usage)
 - [Implementing Custom Gestures](#implementing-custom-gestures)
 - [What's Changed](#changes-from-zingtouch)
+- [Links](#links)
 
 ## Overview
 
@@ -239,4 +241,17 @@ gesture support. Beyond that, here are some spefic changes:
   as the callback for an event, the parameters do not need to be wrapped up
   inside the 'details' property of an event object.
 
+## Links
+
+### westures
+
+- [npm](https://www.npmjs.com/package/westures)
+- [github](https://github.com/mvanderkamp/westures)
+- [documentation](https://mvanderkamp.github.io/westures/)
+
+### westures-core
+
+- [npm](https://www.npmjs.com/package/westures-core)
+- [github](https://github.com/mvanderkamp/westures-core)
+- [documentation](https://mvanderkamp.github.io/westures-core/)
 
