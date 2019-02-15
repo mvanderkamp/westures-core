@@ -61,6 +61,7 @@ class Binding {
       data.phase = hook;
       data.event = state.event;
       data.type = this.gesture.type;
+      data.target = this.element;
       this.handler(data);
     }
   }
