@@ -115,8 +115,9 @@ class Region {
     /*
      * Having to listen to both mouse and touch events is annoying, but
      * necessary due to conflicting standards and browser implementations.
-     * Pointer is a fallback instead of the primary because it lacks useful
-     * properties such as 'ctrlKey' and 'altKey'.
+     * Pointer is a fallback for now instead of the primary, until I figure out
+     * all the details to do with pointer-events and touch-action and their
+     * cross browser compatibility.
      *
      * Listening to both mouse and touch comes with the difficulty that
      * preventDefault() must be called to prevent both events from iterating
