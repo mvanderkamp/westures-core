@@ -157,7 +157,7 @@ class Region {
    */
   selectActiveBindings() {
     if (this.isWaiting) {
-      this.activeBindings = this.retrieveBindingsByInitialPos();
+      this.activeBindings = this.getBindingsByInitialPos();
       this.isWaiting = false;
     }
     return this.activeBindings;
@@ -217,7 +217,7 @@ class Region {
    *
    * @return {Binding[]} Bindings to which the element is bound.
    */
-  retrieveBindingsByElement(element) {
+  getBindingsByElement(element) {
     return this.bindings.filter(b => b.element === element);
   }
 
@@ -229,7 +229,7 @@ class Region {
    * @private
    * @return {Binding[]} Bindings in which an active input began.
    */
-  retrieveBindingsByInitialPos() {
+  getBindingsByInitialPos() {
     return this.bindings.filter(b => {
       return this.state.someInputWasInitiallyInside(b.element);
     });
@@ -242,21 +242,13 @@ class Region {
    * @param {Element} element - The element to unbind.
    * @param {westures-core.Gesture} [ gesture ] - The gesture to unbind. If
    * undefined, will unbind all Bindings associated with the given element.
-   *
-   * @return {Binding[]} Bindings that were unbound to the element.
    */
   unbind(element, gesture) {
-    const bindings = this.retrieveBindingsByElement(element);
-    const unbound = [];
-
-    bindings.forEach(b => {
+    this.getBindingsByElement(element).forEach(b => {
       if (gesture == null || b.gesture === gesture) {
         this.bindings.splice(this.bindings.indexOf(b), 1);
-        unbound.push(b);
       }
     });
-
-    return unbound;
   }
 }
 
