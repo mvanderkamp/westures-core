@@ -20,4 +20,7 @@
       behaviour.
     - If you want this behaviour, you'll now have to simulate it by creating a
       separate region for each binding.
+- Removed Region#getBindingsByInitialPos
+- Removed State#someInputWasInitiallyInside
+- Improved test coverage a bit
 
