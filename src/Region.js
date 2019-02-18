@@ -226,20 +226,6 @@ class Region {
   }
 
   /**
-   * Retrieves all bindings based upon the initial X/Y position of the inputs.
-   * e.g. if gesture started on the correct target element, but diverted away
-   * into the correct region, this would still be valid.
-   *
-   * @private
-   * @return {Binding[]} Bindings in which an active input began.
-   */
-  getBindingsByInitialPos() {
-    return this.bindings.filter(b => {
-      return this.state.someInputWasInitiallyInside(b.element);
-    });
-  }
-
-  /**
    * Unbinds an element from either the specified gesture or all if no gesture
    * is specified.
    *

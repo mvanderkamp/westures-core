@@ -121,17 +121,6 @@ class State {
   }
 
   /**
-   * @private
-   *
-   * @param {Element} element - The Element to test.
-   *
-   * @return {boolean} True if some input was initially inside the element.
-   */
-  someInputWasInitiallyInside(element) {
-    return this.inputs.some(i => i.wasInitiallyInside(element));
-  }
-
-  /**
    * Update the input with the given identifier using the given event.
    *
    * @private
