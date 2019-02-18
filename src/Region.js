@@ -157,8 +157,11 @@ class Region {
    * @return {Binding[]} The active bindgins that should be evaluated.
    */
   selectActiveBindings() {
-    if (this.isWaiting) {
-      this.activeBindings = this.getBindingsByInitialPos();
+    if (this.isWaiting && this.state.inputs.length > 0) {
+      const input = this.state.inputs[0];
+      this.activeBindings = this.bindings.filter(b => {
+        return input.wasInitiallyInside(b.element);
+      });
       this.isWaiting = false;
     }
     return this.activeBindings;
