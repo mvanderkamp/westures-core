@@ -8,7 +8,8 @@ const PointerData = require('../src/PointerData.js');
 const Point2D     = require('../src/Point2D.js');
 
 describe('PointerData', () => {
-  let mdata, tdata, mouseevent, touchevent, id, element, childElement;
+  let mouseevent, touchevent, pointerevent, pointerangle, pointerdist;
+  let mdata, tdata, id, element, childElement;
   
   beforeAll(() => {
     element = document.createElement('div');
@@ -39,6 +40,30 @@ describe('PointerData', () => {
           clientY: 117,
         },
       ],
+    };
+
+    pointerevent = {
+      type: 'pointermove',
+      target: childElement,
+      pointerId: 3,
+      clientX: 0,
+      clientY: 0,
+    };
+
+    pointerangle = {
+      type: 'pointermove',
+      target: childElement,
+      pointerId: 3,
+      clientX: 3,
+      clientY: 3,
+    };
+
+    pointerdist = {
+      type: 'pointermove',
+      target: childElement,
+      pointerId: 3,
+      clientX: 3,
+      clientY: 4,
     };
 
     id = 42;
@@ -79,6 +104,24 @@ describe('PointerData', () => {
       expect(tdata.point).toBeInstanceOf(Point2D);
       expect(tdata.point.x).toBe(touchevent.changedTouches[1].clientX);
       expect(tdata.point.y).toBe(touchevent.changedTouches[1].clientY);
+    });
+  });
+
+  describe('angleTo(pdata)', () => {
+    test('gives the correct angle', () => {
+      const pdata = new PointerData(pointerevent, id);
+      const pangle = new PointerData(pointerangle, id);
+      expect(pdata.angleTo(pangle)).toBeCloseTo(Math.PI/4);
+      expect(pdata.angleTo(pdata)).toBe(0);
+    });
+  });
+
+  describe('distanceTo(pdata)', () => {
+    test('gives the correct distance', () => {
+      const pdata = new PointerData(pointerevent, id);
+      const pdist = new PointerData(pointerdist, id);
+      expect(pdata.distanceTo(pdist)).toBe(5);
+      expect(pdata.distanceTo(pdata)).toBe(0);
     });
   });
 });

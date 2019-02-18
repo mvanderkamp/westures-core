@@ -250,25 +250,6 @@ describe('State', () => {
       });
     });
 
-    describe('someInputWasInitiallyInside', () => {
-      test('Returns true for initial target element', () => {
-        expect(state.someInputWasInitiallyInside(targetdiv)).toBe(true);
-      });
-  
-      test('Returns true for elements on initial path', () => {
-        expect(state.someInputWasInitiallyInside(parentdiv)).toBe(true);
-      });
-  
-      test('Returns true for document and window', () => {
-        expect(state.someInputWasInitiallyInside(document)).toBe(true);
-        expect(state.someInputWasInitiallyInside(window)).toBe(true);
-      });
-  
-      test('Returns false for elements outside the initial path', () => {
-        expect(state.someInputWasInitiallyInside(outerdiv)).toBe(false);
-      });
-    });
-
     describe('clearEndedInputs', () => {
       test('Does not throw an exception', () => {
         expect(() => state.clearEndedInputs()).not.toThrow();

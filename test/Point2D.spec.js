@@ -46,6 +46,10 @@ describe('Prototype methods', () => {
     test('gives the correct distance', () => {
       expect(origin.averageDistanceTo([left,right])).toBe(5);
     });
+
+    test('Throws an error if points not provided', () => {
+      expect(() => origin.averageDistanceTo()).toThrow();
+    });
   });
 
   describe('clone()', () => {
@@ -95,6 +99,10 @@ describe('Prototype methods', () => {
   
     test('gives the correct distance', () => {
       expect(origin.totalDistanceTo([left,right])).toBe(10);
+    });
+
+    test('Throws an error if points not provided', () => {
+      expect(() => origin.totalDistanceTo()).toThrow();
     });
   });
 });
