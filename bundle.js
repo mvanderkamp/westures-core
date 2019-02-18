@@ -84,6 +84,7 @@ class Binding {
       data.phase = hook;
       data.event = state.event;
       data.type = this.gesture.type;
+      data.target = this.element;
       this.handler(data);
     }
   }
@@ -423,7 +424,7 @@ class Point2D {
   /**
    * Calculates the angle between this point and the given point.
    *
-   * @param {westures-core.Point2D} point - Projected point for calculating the
+   * @param {!westures-core.Point2D} point - Projected point for calculating the
    * angle.
    *
    * @return {number} Radians along the unit circle where the projected
@@ -437,12 +438,13 @@ class Point2D {
    * Determine the average distance from this point to the provided array of
    * points.
    *
-   * @param {westures-core.Point2D[]} points - the Point2D objects to calculate
+   * @param {!westures-core.Point2D[]} points - the Point2D objects to calculate
    *    the average distance to.
+   *
    * @return {number} The average distance from this point to the provided
    *    points.
    */
-  averageDistanceTo(points = []) {
+  averageDistanceTo(points) {
     return this.totalDistanceTo(points) / points.length;
   }
 
@@ -458,7 +460,7 @@ class Point2D {
   /**
    * Calculates the distance between two points.
    *
-   * @param {westures-core.Point2D} point - Point to which the distance is
+   * @param {!westures-core.Point2D} point - Point to which the distance is
    * calculated.
    *
    * @return {number} The distance between the two points, a.k.a. the
@@ -471,7 +473,7 @@ class Point2D {
   /**
    * Subtract the given point from this point.
    *
-   * @param {westures-core.Point2D} point - Point to subtract from this point.
+   * @param {!westures-core.Point2D} point - Point to subtract from this point.
    *
    * @return {westures-core.Point2D} A new Point2D, which is the result of (this
    * - point).
@@ -486,7 +488,7 @@ class Point2D {
   /**
    * Return the summation of this point to the given point.
    *
-   * @param {westures-core.Point2D} point - Point to add to this point.
+   * @param {!westures-core.Point2D} point - Point to add to this point.
    *
    * @return {westures-core.Point2D} A new Point2D, which is the addition of the
    * two points.
@@ -501,12 +503,12 @@ class Point2D {
   /**
    * Calculates the total distance from this point to an array of points.
    *
-   * @param {westures-core.Point2D[]} points - The array of Point2D objects to
+   * @param {!westures-core.Point2D[]} points - The array of Point2D objects to
    *    calculate the total distance to.
    *
    * @return {number} The total distance from this point to the provided points.
    */
-  totalDistanceTo(points = []) {
+  totalDistanceTo(points) {
     return points.reduce((d, p) => d + this.distanceTo(p), 0);
   }
 
@@ -760,8 +762,9 @@ class Region {
     /*
      * Having to listen to both mouse and touch events is annoying, but
      * necessary due to conflicting standards and browser implementations.
-     * Pointer is a fallback instead of the primary because it lacks useful
-     * properties such as 'ctrlKey' and 'altKey'.
+     * Pointer is a fallback for now instead of the primary, until I figure out
+     * all the details to do with pointer-events and touch-action and their
+     * cross browser compatibility.
      *
      * Listening to both mouse and touch comes with the difficulty that
      * preventDefault() must be called to prevent both events from iterating
@@ -801,8 +804,11 @@ class Region {
    * @return {Binding[]} The active bindgins that should be evaluated.
    */
   selectActiveBindings() {
-    if (this.isWaiting) {
-      this.activeBindings = this.retrieveBindingsByInitialPos();
+    if (this.isWaiting && this.state.inputs.length > 0) {
+      const input = this.state.inputs[0];
+      this.activeBindings = this.bindings.filter(b => {
+        return input.wasInitiallyInside(b.element);
+      });
       this.isWaiting = false;
     }
     return this.activeBindings;
@@ -862,22 +868,8 @@ class Region {
    *
    * @return {Binding[]} Bindings to which the element is bound.
    */
-  retrieveBindingsByElement(element) {
+  getBindingsByElement(element) {
     return this.bindings.filter(b => b.element === element);
-  }
-
-  /**
-   * Retrieves all bindings based upon the initial X/Y position of the inputs.
-   * e.g. if gesture started on the correct target element, but diverted away
-   * into the correct region, this would still be valid.
-   *
-   * @private
-   * @return {Binding[]} Bindings in which an active input began.
-   */
-  retrieveBindingsByInitialPos() {
-    return this.bindings.filter(b => {
-      return this.state.someInputWasInitiallyInside(b.element);
-    });
   }
 
   /**
@@ -887,21 +879,13 @@ class Region {
    * @param {Element} element - The element to unbind.
    * @param {westures-core.Gesture} [ gesture ] - The gesture to unbind. If
    * undefined, will unbind all Bindings associated with the given element.
-   *
-   * @return {Binding[]} Bindings that were unbound to the element.
    */
   unbind(element, gesture) {
-    const bindings = this.retrieveBindingsByElement(element);
-    const unbound = [];
-
-    bindings.forEach(b => {
+    this.getBindingsByElement(element).forEach(b => {
       if (gesture == null || b.gesture === gesture) {
         this.bindings.splice(this.bindings.indexOf(b), 1);
-        unbound.push(b);
       }
     });
-
-    return unbound;
   }
 }
 
@@ -1029,17 +1013,6 @@ class State {
    */
   getInputsNotInPhase(phase) {
     return this.inputs.filter(i => i.phase !== phase);
-  }
-
-  /**
-   * @private
-   *
-   * @param {Element} element - The Element to test.
-   *
-   * @return {boolean} True if some input was initially inside the element.
-   */
-  someInputWasInitiallyInside(element) {
-    return this.inputs.some(i => i.wasInitiallyInside(element));
   }
 
   /**
