@@ -53,6 +53,22 @@ class Region {
     this.bindings = [];
 
     /**
+     * The list of active bindings for the current input session.
+     *
+     * @private
+     * @type {Binding[]}
+     */
+    this.activeBindings = [];
+
+    /**
+     * Whether an input session is currently active.
+     *
+     * @private
+     * @type {boolean}
+     */
+    this.isWaiting = true;
+
+    /**
      * The element being bound to.
      *
      * @private
@@ -99,8 +115,9 @@ class Region {
     /*
      * Having to listen to both mouse and touch events is annoying, but
      * necessary due to conflicting standards and browser implementations.
-     * Pointer is a fallback instead of the primary because it lacks useful
-     * properties such as 'ctrlKey' and 'altKey'.
+     * Pointer is a fallback for now instead of the primary, until I figure out
+     * all the details to do with pointer-events and touch-action and their
+     * cross browser compatibility.
      *
      * Listening to both mouse and touch comes with the difficulty that
      * preventDefault() must be called to prevent both events from iterating
@@ -134,6 +151,32 @@ class Region {
   }
 
   /**
+   * Selects the bindings that are active for the current input sequence.
+   *
+   * @private
+   */
+  updateBindings() {
+    if (this.isWaiting && this.state.inputs.length > 0) {
+      const input = this.state.inputs[0];
+      this.activeBindings = this.bindings.filter(b => {
+        return input.wasInitiallyInside(b.element);
+      });
+      this.isWaiting = false;
+    }
+  }
+
+  /**
+   * Evaluates whether the current input session has completed.
+   *
+   * @private
+   */
+  pruneBindings() {
+    if (this.state.hasNoActiveInputs()) {
+      this.isWaiting = true;
+    }
+  }
+
+  /**
    * All input events flow through this function. It makes sure that the input
    * state is maintained, determines which bindings to analyze based on the
    * initial position of the inputs, calls the relevant gesture hooks, and
@@ -143,26 +186,30 @@ class Region {
    * @param {Event} event - The event emitted from the window object.
    */
   arbitrate(event) {
-    if (this.preventDefault) event.preventDefault();
-
     this.state.updateAllInputs(event, this.element);
+    this.updateBindings();
 
-    this.retrieveBindingsByInitialPos().forEach(binding => {
-      binding.evaluateHook(PHASE[event.type], this.state);
-    });
+    if (this.activeBindings.length > 0) {
+      if (this.preventDefault) event.preventDefault();
+
+      this.activeBindings.forEach(binding => {
+        binding.evaluateHook(PHASE[event.type], this.state);
+      });
+    }
 
     this.state.clearEndedInputs();
+    this.pruneBindings();
   }
 
   /**
-   * Bind an element to a gesture with multiple function signatures.
+   * Bind an element to a gesture with an associated handler.
    *
    * @param {Element} element - The element object.
    * @param {westures-core.Gesture} gesture - Gesture type with which to bind.
    * @param {Function} handler - The function to execute when a gesture is
    *    recognized.
    */
-  bind(element, gesture, handler) {
+  addGesture(element, gesture, handler) {
     this.bindings.push(new Binding(element, gesture, handler));
   }
 
@@ -175,22 +222,8 @@ class Region {
    *
    * @return {Binding[]} Bindings to which the element is bound.
    */
-  retrieveBindingsByElement(element) {
+  getBindingsByElement(element) {
     return this.bindings.filter(b => b.element === element);
-  }
-
-  /**
-   * Retrieves all bindings based upon the initial X/Y position of the inputs.
-   * e.g. if gesture started on the correct target element, but diverted away
-   * into the correct region, this would still be valid.
-   *
-   * @private
-   * @return {Binding[]} Bindings in which an active input began.
-   */
-  retrieveBindingsByInitialPos() {
-    return this.bindings.filter(b => {
-      return this.state.someInputWasInitiallyInside(b.element);
-    });
   }
 
   /**
@@ -200,21 +233,13 @@ class Region {
    * @param {Element} element - The element to unbind.
    * @param {westures-core.Gesture} [ gesture ] - The gesture to unbind. If
    * undefined, will unbind all Bindings associated with the given element.
-   *
-   * @return {Binding[]} Bindings that were unbound to the element.
    */
-  unbind(element, gesture) {
-    const bindings = this.retrieveBindingsByElement(element);
-    const unbound = [];
-
-    bindings.forEach(b => {
+  removeGestures(element, gesture) {
+    this.getBindingsByElement(element).forEach(b => {
       if (gesture == null || b.gesture === gesture) {
         this.bindings.splice(this.bindings.indexOf(b), 1);
-        unbound.push(b);
       }
     });
-
-    return unbound;
   }
 }
 

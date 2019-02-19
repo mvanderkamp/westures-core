@@ -12,10 +12,3 @@ describe('Region', () => {
   });
 });
 
-describe('Region.bind(element)', () => {
-  let region = new Region(document.body);
-  test('should exist', () => {
-    expect(region.bind).toBeDefined();
-  });
-});
-

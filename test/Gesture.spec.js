@@ -18,5 +18,12 @@ describe('Gesture', () => {
       expect(() => new Gesture()).toThrow();
     });
   });
+
+  describe.each(['start', 'move', 'end'])('%s', (s) => {
+    test('Returns null', () => {
+      const gesture = new Gesture('dummy');
+      expect(gesture[s]()).toBeNull();
+    });
+  });
 });
 

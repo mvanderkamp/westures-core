@@ -1,7 +1,7 @@
 {
   "name": "westures-core",
-  "version": "0.4.4",
-  "description": "The core logic of the Westures JavaScript gesture library.",
+  "version": "0.5.0",
+  "description": "The core engine of the Westures gesture library.",
   "keywords": [
     "gesture",
     "tap",
@@ -20,12 +20,6 @@
   "browser": "index.js",
   "directories": {
     "test": "test"
-  },
-  "scripts": {
-    "bundle": "browserify 'index.js' --standalone westuresCore --outfile 'bundle.js'",
-    "docs": "jsdoc -c .jsdocrc.json",
-    "lint": "eslint src",
-    "test": "jest"
   },
   "author": "Michael van der Kamp <michael.vanderkamp@usask.ca>",
   "repository": {

@@ -30,7 +30,9 @@ const update_fns = {
   },
 
   MouseEvent: function MouseEvent(event) {
-    this.updateInput(event, event.button);
+    if (event.button === 0) {
+      this.updateInput(event, event.button);
+    }
   },
 };
 
@@ -122,13 +124,10 @@ class State {
 
   /**
    * @private
-   *
-   * @param {Element} element - The Element to test.
-   *
-   * @return {boolean} True if some input was initially inside the element.
+   * @return {boolean} True if there are no active inputs. False otherwise.
    */
-  someInputWasInitiallyInside(element) {
-    return this.inputs.some(i => i.wasInitiallyInside(element));
+  hasNoActiveInputs() {
+    return this[symbols.inputs].size === 0;
   }
 
   /**

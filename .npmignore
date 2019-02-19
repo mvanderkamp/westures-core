@@ -2,5 +2,6 @@ edit.sh
 usage.sh
 tags
 docs
+coverage
 Makefile
 

@@ -7,9 +7,9 @@
 const State = require('../src/State.js');
 const Input = require('../src/Input.js');
 
-class MouseEvent {
+class PointerEvent {
   constructor(id, target, type, x, y) {
-    this.button = id;
+    this.pointerId = id;
     this.target = target;
     this.type = type;
     this.clientX = x;
@@ -33,20 +33,20 @@ describe('State', () => {
     parentdiv.appendChild(targetdiv);
 
     startevents = [
-      new MouseEvent(0, targetdiv, 'mousedown', 42, 43),
-      new MouseEvent(1, targetdiv, 'mousedown', 42, 43),
-      new MouseEvent(2, targetdiv, 'mousedown', 42, 43),
-      new MouseEvent(3, targetdiv, 'mousedown', 42, 43),
-      new MouseEvent(4, targetdiv, 'mousedown', 42, 43),
-      new MouseEvent(5, targetdiv, 'mousedown', 42, 43),
-      new MouseEvent(6, targetdiv, 'mousedown', 42, 43),
+      new PointerEvent(0, targetdiv, 'mousedown', 42, 43),
+      new PointerEvent(1, targetdiv, 'mousedown', 42, 43),
+      new PointerEvent(2, targetdiv, 'mousedown', 42, 43),
+      new PointerEvent(3, targetdiv, 'mousedown', 42, 43),
+      new PointerEvent(4, targetdiv, 'mousedown', 42, 43),
+      new PointerEvent(5, targetdiv, 'mousedown', 42, 43),
+      new PointerEvent(6, targetdiv, 'mousedown', 42, 43),
     ];
 
     testevents = [
-      new MouseEvent(1, targetdiv, 'mouseup',   43, 40),
-      new MouseEvent(2, targetdiv, 'mousemove', 46, 41),
-      new MouseEvent(3, targetdiv, 'mousemove', 36, 51),
-      new MouseEvent(6, targetdiv, 'mouseup',   32, 47),
+      new PointerEvent(1, targetdiv, 'mouseup',   43, 40),
+      new PointerEvent(2, targetdiv, 'mousemove', 46, 41),
+      new PointerEvent(3, targetdiv, 'mousemove', 36, 51),
+      new PointerEvent(6, targetdiv, 'mouseup',   32, 47),
     ];
   });
 
@@ -247,25 +247,6 @@ describe('State', () => {
           expect(ends[3].identifier).toBe(4);
           expect(ends[4].identifier).toBe(5);
         });
-      });
-    });
-
-    describe('someInputWasInitiallyInside', () => {
-      test('Returns true for initial target element', () => {
-        expect(state.someInputWasInitiallyInside(targetdiv)).toBe(true);
-      });
-  
-      test('Returns true for elements on initial path', () => {
-        expect(state.someInputWasInitiallyInside(parentdiv)).toBe(true);
-      });
-  
-      test('Returns true for document and window', () => {
-        expect(state.someInputWasInitiallyInside(document)).toBe(true);
-        expect(state.someInputWasInitiallyInside(window)).toBe(true);
-      });
-  
-      test('Returns false for elements outside the initial path', () => {
-        expect(state.someInputWasInitiallyInside(outerdiv)).toBe(false);
       });
     });
 
