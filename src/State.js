@@ -123,6 +123,14 @@ class State {
   }
 
   /**
+   * @private
+   * @return {boolean} True if there are no active inputs. False otherwise.
+   */
+  hasNoActiveInputs() {
+    return this[symbols.inputs].size === 0;
+  }
+
+  /**
    * Update the input with the given identifier using the given event.
    *
    * @private

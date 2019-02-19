@@ -154,9 +154,8 @@ class Region {
    * Selects the bindings that are active for the current input sequence.
    *
    * @private
-   * @return {Binding[]} The active bindgins that should be evaluated.
    */
-  selectActiveBindings() {
+  updateBindings() {
     if (this.isWaiting && this.state.inputs.length > 0) {
       const input = this.state.inputs[0];
       this.activeBindings = this.bindings.filter(b => {
@@ -164,7 +163,6 @@ class Region {
       });
       this.isWaiting = false;
     }
-    return this.activeBindings;
   }
 
   /**
@@ -172,8 +170,8 @@ class Region {
    *
    * @private
    */
-  pruneActiveBindings() {
-    if (this.state.inputs.length === 0) {
+  pruneBindings() {
+    if (this.state.hasNoActiveInputs()) {
       this.isWaiting = true;
     }
   }
@@ -188,16 +186,19 @@ class Region {
    * @param {Event} event - The event emitted from the window object.
    */
   arbitrate(event) {
-    if (this.preventDefault) event.preventDefault();
-
     this.state.updateAllInputs(event, this.element);
+    this.updateBindings();
 
-    this.selectActiveBindings().forEach(binding => {
-      binding.evaluateHook(PHASE[event.type], this.state);
-    });
+    if (this.activeBindings.length > 0) {
+      if (this.preventDefault) event.preventDefault();
+
+      this.activeBindings.forEach(binding => {
+        binding.evaluateHook(PHASE[event.type], this.state);
+      });
+    }
 
     this.state.clearEndedInputs();
-    this.pruneActiveBindings();
+    this.pruneBindings();
   }
 
   /**
