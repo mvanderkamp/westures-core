@@ -2,10 +2,14 @@
 
 ## Releases
 
-- [0.4.5](#0.4.5)
+- [0.5.0](#0.5.0)
 
-## 0.4.5
+## 0.5.0
 
+- Rename Region#bind() -> Region#addGesture() and Region#unbind() ->
+  Region#removeGestures().
+    - I was not happy with the way that the 'bind' naming clashes with the
+      'bind' function on the Function prototype.
 - Simplified "unbind" function. It now returns null, as the Bindings should not
   be exposed to the end user.
 - Sped up Binding selection in the Region's `arbitrate` function, while
