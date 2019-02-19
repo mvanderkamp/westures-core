@@ -202,14 +202,14 @@ class Region {
   }
 
   /**
-   * Bind an element to a gesture with multiple function signatures.
+   * Bind an element to a gesture with an associated handler.
    *
    * @param {Element} element - The element object.
    * @param {westures-core.Gesture} gesture - Gesture type with which to bind.
    * @param {Function} handler - The function to execute when a gesture is
    *    recognized.
    */
-  bind(element, gesture, handler) {
+  addGesture(element, gesture, handler) {
     this.bindings.push(new Binding(element, gesture, handler));
   }
 
@@ -234,7 +234,7 @@ class Region {
    * @param {westures-core.Gesture} [ gesture ] - The gesture to unbind. If
    * undefined, will unbind all Bindings associated with the given element.
    */
-  unbind(element, gesture) {
+  removeGestures(element, gesture) {
     this.getBindingsByElement(element).forEach(b => {
       if (gesture == null || b.gesture === gesture) {
         this.bindings.splice(this.bindings.indexOf(b), 1);
