@@ -801,9 +801,8 @@ class Region {
    * Selects the bindings that are active for the current input sequence.
    *
    * @private
-   * @return {Binding[]} The active bindgins that should be evaluated.
    */
-  selectActiveBindings() {
+  updateBindings() {
     if (this.isWaiting && this.state.inputs.length > 0) {
       const input = this.state.inputs[0];
       this.activeBindings = this.bindings.filter(b => {
@@ -811,7 +810,6 @@ class Region {
       });
       this.isWaiting = false;
     }
-    return this.activeBindings;
   }
 
   /**
@@ -819,8 +817,8 @@ class Region {
    *
    * @private
    */
-  pruneActiveBindings() {
-    if (this.state.inputs.length === 0) {
+  pruneBindings() {
+    if (this.state.hasNoActiveInputs()) {
       this.isWaiting = true;
     }
   }
@@ -835,27 +833,30 @@ class Region {
    * @param {Event} event - The event emitted from the window object.
    */
   arbitrate(event) {
-    if (this.preventDefault) event.preventDefault();
-
     this.state.updateAllInputs(event, this.element);
+    this.updateBindings();
 
-    this.selectActiveBindings().forEach(binding => {
-      binding.evaluateHook(PHASE[event.type], this.state);
-    });
+    if (this.activeBindings.length > 0) {
+      if (this.preventDefault) event.preventDefault();
+
+      this.activeBindings.forEach(binding => {
+        binding.evaluateHook(PHASE[event.type], this.state);
+      });
+    }
 
     this.state.clearEndedInputs();
-    this.pruneActiveBindings();
+    this.pruneBindings();
   }
 
   /**
-   * Bind an element to a gesture with multiple function signatures.
+   * Bind an element to a gesture with an associated handler.
    *
    * @param {Element} element - The element object.
    * @param {westures-core.Gesture} gesture - Gesture type with which to bind.
    * @param {Function} handler - The function to execute when a gesture is
    *    recognized.
    */
-  bind(element, gesture, handler) {
+  addGesture(element, gesture, handler) {
     this.bindings.push(new Binding(element, gesture, handler));
   }
 
@@ -880,7 +881,7 @@ class Region {
    * @param {westures-core.Gesture} [ gesture ] - The gesture to unbind. If
    * undefined, will unbind all Bindings associated with the given element.
    */
-  unbind(element, gesture) {
+  removeGestures(element, gesture) {
     this.getBindingsByElement(element).forEach(b => {
       if (gesture == null || b.gesture === gesture) {
         this.bindings.splice(this.bindings.indexOf(b), 1);
@@ -925,7 +926,9 @@ const update_fns = {
   },
 
   MouseEvent: function MouseEvent(event) {
-    this.updateInput(event, event.button);
+    if (event.button === 0) {
+      this.updateInput(event, event.button);
+    }
   },
 };
 
@@ -1013,6 +1016,14 @@ class State {
    */
   getInputsNotInPhase(phase) {
     return this.inputs.filter(i => i.phase !== phase);
+  }
+
+  /**
+   * @private
+   * @return {boolean} True if there are no active inputs. False otherwise.
+   */
+  hasNoActiveInputs() {
+    return this[symbols.inputs].size === 0;
   }
 
   /**
