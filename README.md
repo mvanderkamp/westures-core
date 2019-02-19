@@ -9,6 +9,10 @@ library. It is intended for use as a lighter-weight module to use if you do not
 intend on using the base gestures included with the standard [westures](
 https://mvanderkamp.github.io/westures/) module.
 
+Visit this page for an example of the system in action: [Westures Example](
+https://mvanderkamp.github.io/westures-example/). Note that this is best viewed
+on a touch device.
+
 Westures is a fork of [ZingTouch](https://github.com/zingchart/zingtouch). 
 
 ## Advisory
