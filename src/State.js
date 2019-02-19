@@ -30,7 +30,9 @@ const update_fns = {
   },
 
   MouseEvent: function MouseEvent(event) {
-    this.updateInput(event, event.button);
+    if (event.button === 0) {
+      this.updateInput(event, event.button);
+    }
   },
 };
 
