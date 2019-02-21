@@ -820,6 +820,7 @@ class Region {
   pruneBindings() {
     if (this.state.hasNoActiveInputs()) {
       this.isWaiting = true;
+      this.activeBindings = [];
     }
   }
 
