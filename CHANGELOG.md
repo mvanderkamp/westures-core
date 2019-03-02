@@ -2,7 +2,17 @@
 
 ## Releases
 
-- [0.5.0](#0.5.0)
+- [0.5.2](#052)
+- [0.5.0](#050)
+
+## 0.5.2
+
+- Add 'cancel' support for touchcancel and pointercancel.
+    - For many gestures, it will be the same as 'end', but in some cases it must
+      be different, specifically gestures that emit on 'end'.
+- Add a 'blur' listener to the window that resets the state when the window
+  loses focus. This should help maintain the viability of the system. I'm trying
+  it out anyway. Let me know if this causes any serious issues.
 
 ## 0.5.0
 
