@@ -12,6 +12,7 @@ const POINTER_EVENTS = [
   'pointerdown',
   'pointermove',
   'pointerup',
+  'pointercancel',
 ];
 
 const MOUSE_EVENTS = [
@@ -24,6 +25,7 @@ const TOUCH_EVENTS = [
   'touchstart',
   'touchmove',
   'touchend',
+  'touchcancel',
 ];
 
 /**
