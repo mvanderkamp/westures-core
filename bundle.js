@@ -170,6 +170,18 @@ class Gesture {
   end() {
     return null;
   }
+
+  /**
+   * Event hook for when an input is cancelled.
+   *
+   * @param {State} state - The input state object of the current region.
+   *
+   * @return {?Object} Gesture is considered recognized if an Object is
+   *    returned.
+   */
+  cancel() {
+    return null;
+  }
 }
 
 module.exports = Gesture;
@@ -377,9 +389,12 @@ const PHASE = Object.freeze({
   touchmove:   'move',
   pointermove: 'move',
 
-  mouseup:   'end',
-  touchend:  'end',
-  pointerup: 'end',
+  mouseup:       'end',
+  touchend:      'end',
+  pointerup:     'end',
+
+  touchcancel:   'cancel',
+  pointercancel: 'cancel',
 });
 
 module.exports = PHASE;
@@ -659,6 +674,7 @@ const POINTER_EVENTS = [
   'pointerdown',
   'pointermove',
   'pointerup',
+  'pointercancel',
 ];
 
 const MOUSE_EVENTS = [
@@ -671,6 +687,7 @@ const TOUCH_EVENTS = [
   'touchstart',
   'touchmove',
   'touchend',
+  'touchcancel',
 ];
 
 /**
@@ -795,6 +812,19 @@ class Region {
         passive: false,
       });
     });
+
+    window.addEventListener('blur', () => {
+      this.state = new State();
+      this.resetActiveBindings();
+    });
+  }
+
+  /**
+   * Resets the active bindings.
+   */
+  resetActiveBindings() {
+    this.activeBindings = [];
+    this.isWaiting = true;
   }
 
   /**
@@ -802,7 +832,7 @@ class Region {
    *
    * @private
    */
-  updateBindings() {
+  updateActiveBindings() {
     if (this.isWaiting && this.state.inputs.length > 0) {
       const input = this.state.inputs[0];
       this.activeBindings = this.bindings.filter(b => {
@@ -817,9 +847,9 @@ class Region {
    *
    * @private
    */
-  pruneBindings() {
+  pruneActiveBindings() {
     if (this.state.hasNoActiveInputs()) {
-      this.isWaiting = true;
+      this.resetActiveBindings();
     }
   }
 
@@ -833,8 +863,8 @@ class Region {
    * @param {Event} event - The event emitted from the window object.
    */
   arbitrate(event) {
-    this.state.updateAllInputs(event, this.element);
-    this.updateBindings();
+    this.state.updateAllInputs(event);
+    this.updateActiveBindings();
 
     if (this.activeBindings.length > 0) {
       if (this.preventDefault) event.preventDefault();
@@ -845,7 +875,7 @@ class Region {
     }
 
     this.state.clearEndedInputs();
-    this.pruneBindings();
+    this.pruneActiveBindings();
   }
 
   /**
@@ -1050,11 +1080,18 @@ class State {
    */
   updateAllInputs(event) {
     update_fns[event.constructor.name].call(this, event);
+    this.updateFields(event);
+  }
+
+  /**
+   * Updates the convenience fields.
+   */
+  updateFields(event = null) {
     this.inputs = Array.from(this[symbols.inputs].values());
     this.active = this.getInputsNotInPhase('end');
     this.activePoints = this.active.map(i => i.current.point);
     this.centroid = Point2D.midpoint(this.activePoints);
-    this.event = event;
+    if (event) this.event = event;
   }
 }
 

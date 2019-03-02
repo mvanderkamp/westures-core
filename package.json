@@ -1,6 +1,6 @@
 {
   "name": "westures-core",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "description": "The core engine of the Westures gesture library.",
   "keywords": [
     "gesture",
@@ -29,6 +29,7 @@
   "homepage": "https://mvanderkamp.github.io/westures-core/index.html",
   "license": "MIT",
   "devDependencies": {
+    "arkit": "^1.1.2",
     "browserify": "^16.2.3",
     "eslint": "^5.14.1",
     "jest": "^24.1.0",

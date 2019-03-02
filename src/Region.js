@@ -12,6 +12,7 @@ const POINTER_EVENTS = [
   'pointerdown',
   'pointermove',
   'pointerup',
+  'pointercancel',
 ];
 
 const MOUSE_EVENTS = [
@@ -24,6 +25,7 @@ const TOUCH_EVENTS = [
   'touchstart',
   'touchmove',
   'touchend',
+  'touchcancel',
 ];
 
 /**
@@ -148,6 +150,19 @@ class Region {
         passive: false,
       });
     });
+
+    window.addEventListener('blur', () => {
+      this.state = new State();
+      this.resetActiveBindings();
+    });
+  }
+
+  /**
+   * Resets the active bindings.
+   */
+  resetActiveBindings() {
+    this.activeBindings = [];
+    this.isWaiting = true;
   }
 
   /**
@@ -155,7 +170,7 @@ class Region {
    *
    * @private
    */
-  updateBindings() {
+  updateActiveBindings() {
     if (this.isWaiting && this.state.inputs.length > 0) {
       const input = this.state.inputs[0];
       this.activeBindings = this.bindings.filter(b => {
@@ -170,9 +185,9 @@ class Region {
    *
    * @private
    */
-  pruneBindings() {
+  pruneActiveBindings() {
     if (this.state.hasNoActiveInputs()) {
-      this.isWaiting = true;
+      this.resetActiveBindings();
     }
   }
 
@@ -186,8 +201,8 @@ class Region {
    * @param {Event} event - The event emitted from the window object.
    */
   arbitrate(event) {
-    this.state.updateAllInputs(event, this.element);
-    this.updateBindings();
+    this.state.updateAllInputs(event);
+    this.updateActiveBindings();
 
     if (this.activeBindings.length > 0) {
       if (this.preventDefault) event.preventDefault();
@@ -198,7 +213,7 @@ class Region {
     }
 
     this.state.clearEndedInputs();
-    this.pruneBindings();
+    this.pruneActiveBindings();
   }
 
   /**
