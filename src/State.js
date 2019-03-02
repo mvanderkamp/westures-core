@@ -154,11 +154,18 @@ class State {
    */
   updateAllInputs(event) {
     update_fns[event.constructor.name].call(this, event);
+    this.updateFields(event);
+  }
+
+  /**
+   * Updates the convenience fields.
+   */
+  updateFields(event = null) {
     this.inputs = Array.from(this[symbols.inputs].values());
     this.active = this.getInputsNotInPhase('end');
     this.activePoints = this.active.map(i => i.current.point);
     this.centroid = Point2D.midpoint(this.activePoints);
-    this.event = event;
+    if (event) this.event = event;
   }
 }
 
