@@ -159,6 +159,8 @@ class Region {
 
   /**
    * Resets the active bindings.
+   *
+   * @private
    */
   resetActiveBindings() {
     this.activeBindings = [];
