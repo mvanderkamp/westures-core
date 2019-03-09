@@ -821,6 +821,8 @@ class Region {
 
   /**
    * Resets the active bindings.
+   *
+   * @private
    */
   resetActiveBindings() {
     this.activeBindings = [];
@@ -1085,6 +1087,9 @@ class State {
 
   /**
    * Updates the convenience fields.
+   *
+   * @private
+   * @param {Event} event - Event with which to update the convenience fields.
    */
   updateFields(event = null) {
     this.inputs = Array.from(this[symbols.inputs].values());
