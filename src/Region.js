@@ -12,7 +12,6 @@ const POINTER_EVENTS = [
   'pointerdown',
   'pointermove',
   'pointerup',
-  'pointercancel',
 ];
 
 const MOUSE_EVENTS = [
@@ -25,6 +24,10 @@ const TOUCH_EVENTS = [
   'touchstart',
   'touchmove',
   'touchend',
+];
+
+const CANCEL_EVENTS = [
+  'pointercancel',
   'touchcancel',
 ];
 
@@ -151,9 +154,12 @@ class Region {
       });
     });
 
-    window.addEventListener('blur', () => {
-      this.state = new State();
-      this.resetActiveBindings();
+    ['blur'].concat(CANCEL_EVENTS).forEach(eventname => {
+      window.addEventListener(eventname, (e) => {
+        e.preventDefault();
+        this.state = new State();
+        this.resetActiveBindings();
+      });
     });
   }
 
