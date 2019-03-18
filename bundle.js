@@ -1102,6 +1102,10 @@ class State {
     this.active = this.getInputsNotInPhase('end');
     this.activePoints = this.active.map(i => i.current.point);
     this.centroid = Point2D.midpoint(this.activePoints);
+    this.radius = this.activePoints.reduce((acc, cur) => {
+      const dist = cur.distanceTo(this.centroid);
+      return dist > acc ? dist : acc;
+    }, 0);
     if (event) this.event = event;
   }
 }
