@@ -104,7 +104,7 @@ class Region {
      * @private
      * @type {State}
      */
-    this.state = new State();
+    this.state = new State(this.element);
 
     // Begin operating immediately.
     this.activate();
@@ -157,7 +157,7 @@ class Region {
     ['blur'].concat(CANCEL_EVENTS).forEach(eventname => {
       window.addEventListener(eventname, (e) => {
         e.preventDefault();
-        this.state = new State();
+        this.state = new State(this.element);
         this.resetActiveBindings();
       });
     });

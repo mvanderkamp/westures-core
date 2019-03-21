@@ -46,7 +46,15 @@ class State {
   /**
    * Constructor for the State class.
    */
-  constructor() {
+  constructor(element) {
+    /**
+     * Keep a reference to the element for the associated region.
+     *
+     * @private
+     * @type {Element}
+     */
+    this.element = element;
+
     /**
      * Keeps track of the current Input objects.
      *
@@ -139,10 +147,23 @@ class State {
    * @param {number} identifier - The identifier of the input to update.
    */
   updateInput(event, identifier) {
-    if (PHASE[event.type] === 'start') {
-      this[symbols.inputs].set(identifier, new Input(event, identifier));
-    } else if (this[symbols.inputs].has(identifier)) {
-      this[symbols.inputs].get(identifier).update(event);
+    switch (PHASE[event.type]) {
+      case 'start':
+        this[symbols.inputs].set(identifier, new Input(event, identifier));
+        try {
+          this.element.setPointerCapture(identifier);
+        } catch (e) {}
+        break;
+      case 'end':
+        try {
+          this.element.releasePointerCapture(identifier);
+        } catch (e) {}
+      case 'move':
+      case 'cancel':
+        if (this[symbols.inputs].has(identifier)) {
+          this[symbols.inputs].get(identifier).update(event);
+        }
+        break;
     }
   }
 
