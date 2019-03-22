@@ -132,27 +132,27 @@ describe('Static methods', () => {
     });
   });
 
-  describe('midpoint(points)', () => {
+  describe('centroid(points)', () => {
     test('Returns null if given no arguments', () => {
-      expect(Point2D.midpoint()).toBe(null);
+      expect(Point2D.centroid()).toBe(null);
     });
 
     test('Returns null if given an empty array', () => {
-      expect(Point2D.midpoint([])).toBe(null);
+      expect(Point2D.centroid([])).toBe(null);
     });
     
     test('Returns the point if given an array of one point', () => {
       const p = new Point2D(42,43);
-      expect(Point2D.midpoint([p])).toEqual(p);
+      expect(Point2D.centroid([p])).toEqual(p);
     });
 
-    test('Finds the midpoint of an array of points', () => {
+    test('Finds the centroid of an array of points', () => {
       const p = new Point2D(42,43);
       const q = new Point2D(8,7);
       const r = new Point2D(-5, +5);
       const s = new Point2D(1,2);
       const t = new Point2D(46 / 4, 57 / 4);
-      expect(Point2D.midpoint([p,q,r,s])).toEqual(t);
+      expect(Point2D.centroid([p,q,r,s])).toEqual(t);
     });
   });
 });

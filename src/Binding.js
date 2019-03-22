@@ -58,8 +58,10 @@ class Binding {
   evaluateHook(hook, state) {
     const data = this.gesture[hook](state);
     if (data) {
-      data.phase = hook;
+      data.centroid = state.centroid;
       data.event = state.event;
+      data.phase = hook;
+      data.radius = state.radius;
       data.type = this.gesture.type;
       data.target = this.element;
       this.handler(data);
