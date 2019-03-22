@@ -148,22 +148,24 @@ class State {
    */
   updateInput(event, identifier) {
     switch (PHASE[event.type]) {
-      case 'start':
-        this[symbols.inputs].set(identifier, new Input(event, identifier));
-        try {
-          this.element.setPointerCapture(identifier);
-        } catch (e) {}
-        break;
-      case 'end':
-        try {
-          this.element.releasePointerCapture(identifier);
-        } catch (e) {}
-      case 'move':
-      case 'cancel':
-        if (this[symbols.inputs].has(identifier)) {
-          this[symbols.inputs].get(identifier).update(event);
-        }
-        break;
+    case 'start':
+      this[symbols.inputs].set(identifier, new Input(event, identifier));
+      try {
+        this.element.setPointerCapture(identifier);
+      } catch (e) { null; }
+      break;
+    case 'end':
+      try {
+        this.element.releasePointerCapture(identifier);
+      } catch (e) { null; }
+    case 'move':
+    case 'cancel':
+      if (this[symbols.inputs].has(identifier)) {
+        this[symbols.inputs].get(identifier).update(event);
+      }
+      break;
+    default:
+      console.warn(`Unrecognized event type: ${event.type}`);
     }
   }
 
