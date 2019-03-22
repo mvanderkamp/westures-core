@@ -81,8 +81,10 @@ class Binding {
   evaluateHook(hook, state) {
     const data = this.gesture[hook](state);
     if (data) {
-      data.phase = hook;
+      data.centroid = state.centroid;
       data.event = state.event;
+      data.phase = hook;
+      data.radius = state.radius;
       data.type = this.gesture.type;
       data.target = this.element;
       this.handler(data);
@@ -528,14 +530,14 @@ class Point2D {
   }
 
   /**
-   * Calculates the midpoint of a list of points.
+   * Calculates the centroid of a list of points.
    *
    * @param {westures-core.Point2D[]} points - The array of Point2D objects for
-   *    which to calculate the midpoint
+   * which to calculate the centroid.
    *
-   * @return {westures-core.Point2D} The midpoint of the provided points.
+   * @return {westures-core.Point2D} The centroid of the provided points.
    */
-  static midpoint(points = []) {
+  static centroid(points = []) {
     if (points.length === 0) return null;
 
     const total = Point2D.sum(points);
@@ -766,7 +768,7 @@ class Region {
      * @private
      * @type {State}
      */
-    this.state = new State();
+    this.state = new State(this.element);
 
     // Begin operating immediately.
     this.activate();
@@ -819,7 +821,7 @@ class Region {
     ['blur'].concat(CANCEL_EVENTS).forEach(eventname => {
       window.addEventListener(eventname, (e) => {
         e.preventDefault();
-        this.state = new State();
+        this.state = new State(this.element);
         this.resetActiveBindings();
       });
     });
@@ -980,7 +982,15 @@ class State {
   /**
    * Constructor for the State class.
    */
-  constructor() {
+  constructor(element) {
+    /**
+     * Keep a reference to the element for the associated region.
+     *
+     * @private
+     * @type {Element}
+     */
+    this.element = element;
+
     /**
      * Keeps track of the current Input objects.
      *
@@ -1073,10 +1083,25 @@ class State {
    * @param {number} identifier - The identifier of the input to update.
    */
   updateInput(event, identifier) {
-    if (PHASE[event.type] === 'start') {
+    switch (PHASE[event.type]) {
+    case 'start':
       this[symbols.inputs].set(identifier, new Input(event, identifier));
-    } else if (this[symbols.inputs].has(identifier)) {
-      this[symbols.inputs].get(identifier).update(event);
+      try {
+        this.element.setPointerCapture(identifier);
+      } catch (e) { null; }
+      break;
+    case 'end':
+      try {
+        this.element.releasePointerCapture(identifier);
+      } catch (e) { null; }
+    case 'move':
+    case 'cancel':
+      if (this[symbols.inputs].has(identifier)) {
+        this[symbols.inputs].get(identifier).update(event);
+      }
+      break;
+    default:
+      console.warn(`Unrecognized event type: ${event.type}`);
     }
   }
 
@@ -1101,7 +1126,7 @@ class State {
     this.inputs = Array.from(this[symbols.inputs].values());
     this.active = this.getInputsNotInPhase('end');
     this.activePoints = this.active.map(i => i.current.point);
-    this.centroid = Point2D.midpoint(this.activePoints);
+    this.centroid = Point2D.centroid(this.activePoints);
     this.radius = this.activePoints.reduce((acc, cur) => {
       const dist = cur.distanceTo(this.centroid);
       return dist > acc ? dist : acc;
