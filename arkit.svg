@@ -1,56 +1,56 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentScriptType="application/ecmascript" contentStyleType="text/css" height="323px" preserveAspectRatio="none" style="width:432px;height:323px;" version="1.1" viewBox="0 0 432 323" width="432px" zoomAndPan="magnify"><defs/><g><!--entity _index--><rect fill="#F8F8F8" height="34.4844" rx="2" ry="2" style="stroke: #000000; stroke-width: 0.8;" width="53" x="74" y="8"/><text fill="#000000" font-family="Tahoma, sans-serif" font-size="12" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="33" x="84" y="30.0059">index</text><!--entity _Binding--><rect fill="#F8F8F8" height="34.4844" rx="2" ry="2" style="stroke: #000000; stroke-width: 0.8;" width="59" x="362" y="116"/><text fill="#000000" font-family="Tahoma, sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="39" x="372" y="138.0059">Binding</text><!--entity _Gesture--><rect fill="#F8F8F8" height="34.4844" rx="2" ry="2" style="stroke: #000000; stroke-width: 0.8;" width="63" x="6" y="62"/><text fill="#000000" font-family="Tahoma, sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="43" x="16" y="84.0059">Gesture</text><!--entity _Input--><rect fill="#F8F8F8" height="34.4844" rx="2" ry="2" style="stroke: #000000; stroke-width: 0.8;" width="50" x="199.5" y="170"/><text fill="#000000" font-family="Tahoma, sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="30" x="209.5" y="192.0059">Input</text><!--entity _PHASE--><rect fill="#F8F8F8" height="34.4844" rx="2" ry="2" style="stroke: #000000; stroke-width: 0.8;" width="57" x="260" y="278"/><text fill="#000000" font-family="Tahoma, sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="37" x="270" y="300.0059">PHASE</text><!--entity _Point2D--><rect fill="#F8F8F8" height="34.4844" rx="2" ry="2" style="stroke: #000000; stroke-width: 0.8;" width="63" x="111" y="278"/><text fill="#000000" font-family="Tahoma, sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="43" x="121" y="300.0059">Point2D</text><!--entity _PointerData--><rect fill="#F8F8F8" height="34.4844" rx="2" ry="2" style="stroke: #000000; stroke-width: 0.8;" width="84" x="173.5" y="224"/><text fill="#000000" font-family="Tahoma, sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="64" x="183.5" y="246.0059">PointerData</text><!--entity _Region--><rect fill="#F8F8F8" height="34.4844" rx="2" ry="2" style="stroke: #000000; stroke-width: 0.8;" width="57" x="270" y="62"/><text fill="#000000" font-family="Tahoma, sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="37" x="280" y="84.0059">Region</text><!--entity _State--><rect fill="#F8F8F8" height="34.4844" rx="2" ry="2" style="stroke: #000000; stroke-width: 0.8;" width="50" x="224.5" y="116"/><text fill="#000000" font-family="Tahoma, sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="30" x="234.5" y="138.0059">State</text><!--link _index to _Gesture--><path d="M80.5664,42.0859 C74.4764,47.3059 67.7166,53.1001 61.392,58.5212 " fill="none" id="_index-_Gesture" style="stroke: #383838; stroke-width: 2.0;"/><polygon fill="#383838" points="57.5202,61.8399,66.9567,59.0197,61.3165,58.5859,61.7503,52.9457,57.5202,61.8399" style="stroke: #383838; stroke-width: 2.0;"/><!--link _index to _Point2D--><path d="M100.5,42.2085 C100.5,63.5208 100.5,100.9375 100.5,133 C100.5,133 100.5,133 100.5,187 C100.5,218.7415 116.4536,252.3809 128.6958,273.5218 " fill="none" id="_index-_Point2D" style="stroke: #383838; stroke-width: 2.0;"/><polygon fill="#383838" points="131.2448,277.8381,130.1126,268.0545,128.7023,273.5328,123.2241,272.1225,131.2448,277.8381" style="stroke: #383838; stroke-width: 2.0;"/><!--link _index to _Region--><path d="M127.2032,32.2827 C162.8639,42.0083 226.0428,59.2389 264.8996,69.8362 " fill="none" id="_index-_Region" style="stroke: #383838; stroke-width: 2.0;"/><polygon fill="#383838" points="269.9816,71.2222,262.3512,64.9951,265.1578,69.9066,260.2463,72.7132,269.9816,71.2222" style="stroke: #383838; stroke-width: 2.0;"/><!--link _Input to _PointerData--><path d="M221.6523,204.0859 C220.8808,208.715 220.0341,213.7956 219.2222,218.6671 " fill="none" id="_Input-_PointerData" style="stroke: #383838; stroke-width: 0.7;"/><polygon fill="#383838" points="218.36,223.8399,223.7852,215.62,219.182,218.9079,215.894,214.3048,218.36,223.8399" style="stroke: #383838; stroke-width: 0.7;"/><!--link _PointerData to _PHASE--><path d="M238.5977,258.0859 C245.7875,263.4044 253.783,269.3189 261.2299,274.8276 " fill="none" id="_PointerData-_PHASE" style="stroke: #383838; stroke-width: 0.7;"/><polygon fill="#383838" points="265.302,277.8399,260.4454,269.2717,261.2823,274.8663,255.6877,275.7033,265.302,277.8399" style="stroke: #383838; stroke-width: 0.7;"/><!--link _PointerData to _Point2D--><path d="M192.4023,258.0859 C185.2125,263.4044 177.217,269.3189 169.7701,274.8276 " fill="none" id="_PointerData-_Point2D" style="stroke: #383838; stroke-width: 0.7;"/><polygon fill="#383838" points="165.698,277.8399,175.3123,275.7033,169.7177,274.8663,170.5546,269.2717,165.698,277.8399" style="stroke: #383838; stroke-width: 0.7;"/><!--link _Region to _Binding--><path d="M327.1619,95.6424 C336.7886,101.2321 347.6175,107.5198 357.6068,113.3201 " fill="none" id="_Region-_Binding" style="stroke: #383838; stroke-width: 0.7;"/><polygon fill="#383838" points="362.1301,115.9465,356.3555,107.9681,357.8062,113.4358,352.3385,114.8864,362.1301,115.9465" style="stroke: #383838; stroke-width: 0.7;"/><!--link _Region to _PHASE--><path d="M298.3492,96.0516 C297.974,127.906 296.7003,198.6036 292.5,258 C292.1653,262.733 291.6935,267.7953 291.1907,272.6086 " fill="none" id="_Region-_PHASE" style="stroke: #383838; stroke-width: 0.7;"/><polygon fill="#383838" points="290.6381,277.7063,295.585,269.1899,291.1771,272.7354,287.6316,268.3276,290.6381,277.7063" style="stroke: #383838; stroke-width: 0.7;"/><!--link _Region to _State--><path d="M282.9961,96.0859 C278.4382,101.109 273.3978,106.6636 268.6409,111.9059 " fill="none" id="_Region-_State" style="stroke: #383838; stroke-width: 0.7;"/><polygon fill="#383838" points="265.0712,115.8399,274.0814,111.8628,268.4311,112.1371,268.1569,106.4869,265.0712,115.8399" style="stroke: #383838; stroke-width: 0.7;"/><!--link _State to _Input--><path d="M241.5898,150.0859 C239.3556,154.912 236.8941,160.2288 234.552,165.2878 " fill="none" id="_State-_Input" style="stroke: #383838; stroke-width: 0.7;"/><polygon fill="#383838" points="232.4445,169.8399,239.8555,163.3533,234.5452,165.3026,232.5958,159.9922,232.4445,169.8399" style="stroke: #383838; stroke-width: 0.7;"/><!--link _State to _PHASE--><path d="M254.3095,150.2838 C255.9995,156.4887 257.8798,163.5462 259.5,170 C268.5144,205.9069 278.0457,247.8694 283.6243,272.8951 " fill="none" id="_State-_PHASE" style="stroke: #383838; stroke-width: 0.7;"/><polygon fill="#383838" points="284.7531,277.9699,286.7034,268.3161,283.6674,273.0892,278.8943,270.0532,284.7531,277.9699" style="stroke: #383838; stroke-width: 0.7;"/><!--link _State to _Point2D--><path d="M224.4193,144.3117 C212.6705,150.5732 199.1674,159.2725 189.5,170 C162.8718,199.5481 150.8255,245.6323 145.7758,272.8179 " fill="none" id="_State-_Point2D" style="stroke: #383838; stroke-width: 0.7;"/><polygon fill="#383838" points="144.8569,277.9926,150.369,269.8307,145.7312,273.0696,142.4922,268.4318,144.8569,277.9926" style="stroke: #383838; stroke-width: 0.7;"/><script type="text/plantuml"><![CDATA[
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentScriptType="application/ecmascript" contentStyleType="text/css" height="272px" preserveAspectRatio="none" style="width:261px;height:272px;" version="1.1" viewBox="0 0 261 272" width="261px" zoomAndPan="magnify"><defs/><g><ellipse cx="33.7487" cy="40.242" fill="#F8F8F8" rx="27.7487" ry="13.242" style="stroke: #383838; stroke-width: 0.5;"/><text fill="#000000" font-family="Tahoma, sans-serif" font-size="12" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="35" x="16.2487" y="43.9842">index</text><ellipse cx="188.6985" cy="92.242" fill="#F8F8F8" rx="32.6985" ry="13.242" style="stroke: #383838; stroke-width: 0.5;"/><text fill="#000000" font-family="Tahoma, sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="42" x="167.6985" y="95.9842">Binding</text><ellipse cx="109.3198" cy="40.242" fill="#F8F8F8" rx="34.8198" ry="13.242" style="stroke: #383838; stroke-width: 0.5;"/><text fill="#000000" font-family="Tahoma, sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="45" x="86.8198" y="43.9842">Gesture</text><ellipse cx="125.7132" cy="144.242" fill="#F8F8F8" rx="24.2132" ry="13.242" style="stroke: #383838; stroke-width: 0.5;"/><text fill="#000000" font-family="Tahoma, sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="30" x="110.7132" y="147.9842">Input</text><ellipse cx="202.663" cy="248.242" fill="#F8F8F8" rx="29.163" ry="13.242" style="stroke: #383838; stroke-width: 0.5;"/><text fill="#000000" font-family="Tahoma, sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="37" x="184.163" y="251.9842">PHASE</text><ellipse cx="60.3198" cy="248.242" fill="#F8F8F8" rx="34.8198" ry="13.242" style="stroke: #383838; stroke-width: 0.5;"/><text fill="#000000" font-family="Tahoma, sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="45" x="37.8198" y="251.9842">Point2D</text><ellipse cx="131.3762" cy="196.242" fill="#F8F8F8" rx="50.3762" ry="13.242" style="stroke: #383838; stroke-width: 0.5;"/><text fill="#000000" font-family="Tahoma, sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="67" x="97.8762" y="199.9842">PointerData</text><ellipse cx="188.5772" cy="40.242" fill="#F8F8F8" rx="30.5772" ry="13.242" style="stroke: #383838; stroke-width: 0.5;"/><text fill="#000000" font-family="Tahoma, sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="39" x="169.0772" y="43.9842">Region</text><ellipse cx="118.7132" cy="92.242" fill="#F8F8F8" rx="24.2132" ry="13.242" style="stroke: #383838; stroke-width: 0.5;"/><text fill="#000000" font-family="Tahoma, sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="30" x="103.7132" y="95.9842">State</text><!--link <b>index</b> to Gesture--><path d="M61.1094,40 C63.7282,40 66.347,40 68.9658,40 " fill="none" id="&lt;b&gt;index&lt;/b&gt;-Gesture" style="stroke: #000000; stroke-width: 1.0;"/><polygon fill="#000000" points="74.3412,40,65.3412,36,69.3412,40,65.3412,44,74.3412,40" style="stroke: #000000; stroke-width: 1.0;"/><!--link <b>index</b> to Point2D--><path d="M35.1081,53.269 C39.704,88.334 52.9063,189.0626 58.2321,229.6966 " fill="none" id="&lt;b&gt;index&lt;/b&gt;-Point2D" style="stroke: #000000; stroke-width: 1.0;"/><polygon fill="#000000" points="58.9003,234.795,61.6966,225.3515,58.2504,229.8374,53.7645,226.3912,58.9003,234.795" style="stroke: #000000; stroke-width: 1.0;"/><!--link <b>index</b> to Region--><path d="M47.1328,28.445 C54.562,22.909 64.2186,16.87 74,14 C103.853,5.242 113.97,5.87 144,14 C152.726,16.362 161.495,20.91 168.915,25.549 " fill="none" id="&lt;b&gt;index&lt;/b&gt;-Region" style="stroke: #000000; stroke-width: 1.0;"/><polygon fill="#000000" points="173.348,28.431,167.9837,20.1712,169.1564,25.7052,163.6224,26.8778,173.348,28.431" style="stroke: #000000; stroke-width: 1.0;"/><!--link Input to PointerData--><path d="M126.952,157.104 C127.693,163.2759 128.607,170.8925 129.421,177.6746 " fill="none" id="Input-PointerData" style="stroke: #000000; stroke-width: 0.55;"/><polygon fill="#000000" points="130.019,182.6605,132.9179,173.2479,129.4231,177.6961,124.9749,174.2013,130.019,182.6605" style="stroke: #000000; stroke-width: 0.55;"/><!--link PointerData to PHASE--><path d="M147.611,208.3458 C158.302,215.8749 172.378,225.7874 183.599,233.6893 " fill="none" id="PointerData-PHASE" style="stroke: #000000; stroke-width: 0.55;"/><polygon fill="#000000" points="187.902,236.7195,182.8462,228.2673,183.8138,233.8408,178.2403,234.8084,187.902,236.7195" style="stroke: #000000; stroke-width: 0.55;"/><!--link PointerData to Point2D--><path d="M115.389,208.3458 C104.9866,215.6714 91.3802,225.2534 80.3171,233.0443 " fill="none" id="PointerData-Point2D" style="stroke: #000000; stroke-width: 0.55;"/><polygon fill="#000000" points="76.0593,236.0427,85.7208,234.1309,80.1473,233.1637,81.1145,227.5902,76.0593,236.0427" style="stroke: #000000; stroke-width: 0.55;"/><!--link Region to Binding--><path d="M188.5,53.104 C188.5,59.155 188.5,66.594 188.5,73.275 " fill="none" id="Region-Binding" style="stroke: #000000; stroke-width: 0.55;"/><polygon fill="#000000" points="188.5,78.661,192.5,69.661,188.5,73.661,184.5,69.661,188.5,78.661" style="stroke: #000000; stroke-width: 0.55;"/><!--link Region to PHASE--><path d="M204.072,51.326 C212.741,58.055 222.723,67.677 227.5,79 C249.476,131.095 224.507,199.3989 210.588,230.4061 " fill="none" id="Region-PHASE" style="stroke: #000000; stroke-width: 0.55;"/><polygon fill="#000000" points="208.458,235.0541,215.844,228.5389,210.5411,230.5087,208.5713,225.2059,208.458,235.0541" style="stroke: #000000; stroke-width: 0.55;"/><!--link Region to State--><path d="M173.655,51.604 C162.789,59.365 147.992,69.935 136.459,78.172 " fill="none" id="Region-State" style="stroke: #000000; stroke-width: 0.55;"/><polygon fill="#000000" points="132.372,81.092,142.021,79.118,136.4413,78.1868,137.3726,72.6071,132.372,81.092" style="stroke: #000000; stroke-width: 0.55;"/><!--link State to Input--><path d="M120.195,105.104 C121.072,111.368 122.157,119.12 123.117,125.978 " fill="none" id="State-Input" style="stroke: #000000; stroke-width: 0.55;"/><polygon fill="#000000" points="123.821,131.008,126.5325,121.5397,123.1267,126.0564,118.61,122.6506,123.821,131.008" style="stroke: #000000; stroke-width: 0.55;"/><!--link State to PHASE--><path d="M130.15,103.745 C137.778,111.064 147.736,121.175 155.5,131 C172.471,152.476 178.083,157.688 188.5,183 C194.712,198.0933 198.358,216.3752 200.364,229.5285 " fill="none" id="State-PHASE" style="stroke: #000000; stroke-width: 0.55;"/><polygon fill="#000000" points="201.126,234.8274,203.8043,225.3497,200.4144,229.8783,195.8858,226.4883,201.126,234.8274" style="stroke: #000000; stroke-width: 0.55;"/><!--link State to Point2D--><path d="M110.539,104.298 C105.5467,111.682 99.1909,121.656 94.5,131 C83.3909,153.13 81.6107,159.281 74.5,183 C69.8702,198.4434 66.0752,216.4065 63.61,229.3642 " fill="none" id="State-Point2D" style="stroke: #000000; stroke-width: 0.55;"/><polygon fill="#000000" points="62.6364,234.589,68.2177,226.4743,63.5525,229.6736,60.3531,225.0085,62.6364,234.589" style="stroke: #000000; stroke-width: 0.55;"/><script type="text/plantuml"><![CDATA[
 @startuml
 
 scale max 1920 width
 top to bottom direction
 
+skinparam nodesep 13
+skinparam ranksep 26
 skinparam monochrome true
 skinparam shadowing false
-skinparam nodesep 20
-skinparam ranksep 20
 skinparam defaultFontName Tahoma
 skinparam defaultFontSize 12
 skinparam roundCorner 4
 skinparam dpi 150
-skinparam arrowThickness 0.7
+skinparam arrowColor black
+skinparam arrowThickness 0.55
 skinparam packageTitleAlignment left
 
 skinparam usecase {
-  borderThickness 0.4
-  fontSize 12
+  borderThickness 0.5
 }
 
 skinparam rectangle {
-  borderThickness 0.8
+  borderThickness 0.5
 }
 
 skinparam component {
-  borderThickness 1.2
+  borderThickness 1
 }
 
 
-rectangle "<b>index</b>" as _index
-rectangle "Binding" as _Binding
-rectangle "Gesture" as _Gesture
-rectangle "Input" as _Input
-rectangle "PHASE" as _PHASE
-rectangle "Point2D" as _Point2D
-rectangle "PointerData" as _PointerData
-rectangle "Region" as _Region
-rectangle "State" as _State
+(<b>index</b>)
+(Binding)
+(Gesture)
+(Input)
+(PHASE)
+(Point2D)
+(PointerData)
+(Region)
+(State)
 
-_index ==> _Gesture
-_index ==> _Point2D
-_index ==> _Region
-_Input --> _PointerData
-_PointerData --> _PHASE
-_PointerData --> _Point2D
-_Region --> _Binding
-_Region --> _PHASE
-_Region --> _State
-_State --> _Input
-_State --> _PHASE
-_State --> _Point2D
+(<b>index</b>) -[thickness=1]> (Gesture)
+(<b>index</b>) -[thickness=1]> (Point2D)
+(<b>index</b>) -[thickness=1]> (Region)
+(Input) --> (PointerData)
+(PointerData) --> (PHASE)
+(PointerData) --> (Point2D)
+(Region) --> (Binding)
+(Region) --> (PHASE)
+(Region) --> (State)
+(State) --> (Input)
+(State) --> (PHASE)
+(State) --> (Point2D)
 
 @enduml
 
