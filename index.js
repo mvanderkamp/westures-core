@@ -8,13 +8,15 @@
 
 'use strict';
 
-const Region  = require('./src/Region.js');
-const Point2D = require('./src/Point2D.js');
 const Gesture = require('./src/Gesture.js');
+const Point2D = require('./src/Point2D.js');
+const Region = require('./src/Region.js');
+const Smoothable = require('./src/Smoothable.js');
 
 module.exports = {
   Gesture,
   Point2D,
   Region,
+  Smoothable,
 };
 
