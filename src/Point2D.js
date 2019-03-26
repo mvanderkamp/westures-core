@@ -125,14 +125,14 @@ class Point2D {
   }
 
   /**
-   * Calculates the midpoint of a list of points.
+   * Calculates the centroid of a list of points.
    *
    * @param {westures-core.Point2D[]} points - The array of Point2D objects for
-   *    which to calculate the midpoint
+   * which to calculate the centroid.
    *
-   * @return {westures-core.Point2D} The midpoint of the provided points.
+   * @return {westures-core.Point2D} The centroid of the provided points.
    */
-  static midpoint(points = []) {
+  static centroid(points = []) {
     if (points.length === 0) return null;
 
     const total = Point2D.sum(points);

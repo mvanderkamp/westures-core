@@ -4,7 +4,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Source: src/Gesture.js | westures-core</title>
+    <title>Source: src/Smoothable.js | westures-core</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -53,96 +53,114 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>/*
- * Contains the {@link Gesture} class
+ * Contains the abstract Pinch class.
  */
 
 'use strict';
 
-let nextGestureNum = 0;
+const stagedEmit = Symbol('stagedEmit');
+const smooth = Symbol('smooth');
 
 /**
- * The Gesture class that all gestures inherit from.
+ * A Smoothable gesture is one that emits on 'move' events. It provides a
+ * 'smoothing' option through its constructor, and will apply smoothing before
+ * emitting. There will be a tiny, ~1/60th of a second delay to emits, as well
+ * as a slight amount of drift over gestures sustained for a long period of
+ * time.
+ *
+ * For a gesture to make use of smoothing, it must return `this.emit(data,
+ * field)` from the `move` phase, instead of returning the data directly. If the
+ * data being smoothed is not a simple number, it must also override the
+ * `smoothingAverage(a, b)` method. Also you will probably want to call
+ * `super.restart()` at some point in the `start`, `end`, and `cancel` phases.
  *
  * @memberof westures-core
+ * @mixin
  */
-class Gesture {
+const Smoothable = (superclass) => class Smoothable extends superclass {
   /**
-   * Constructor function for the Gesture class.
-   *
-   * @param {string} type - The name of the gesture.
+   * @param {string} name - The name of the gesture.
+   * @param {Object} [options]
+   * @param {boolean} [options.smoothing=true] Whether to apply smoothing to
+   * emitted data.
    */
-  constructor(type) {
-    if (typeof type !== 'string') {
-      throw new TypeError('Gestures require a string type');
+  constructor(name, options = {}) {
+    super(name, options);
+
+    /**
+     * The function through which emits are passed.
+     *
+     * @private
+     * @type {function}
+     */
+    this.emit = null;
+    if (options.hasOwnProperty('smoothing') &amp;&amp; !options.smoothing) {
+      this.emit = data => data;
+    } else {
+      this.emit = this[smooth].bind(this);
     }
 
     /**
-     * The name of the gesture. (e.g. 'pan' or 'tap' or 'pinch').
+     * Stage the emitted data once.
      *
-     * @type {string}
+     * @private
+     * @type {object}
      */
-    this.type = type;
-
-    /**
-     * The unique identifier for each gesture. This allows for distinctions
-     * across instances of Gestures that are created on the fly (e.g.
-     * gesture-tap-1, gesture-tap-2).
-     *
-     * @type {string}
-     */
-    this.id = `gesture-${this.type}-${nextGestureNum++}`;
+    this[stagedEmit] = null;
   }
 
   /**
-   * Event hook for the start phase of a gesture.
+   * Restart the Smoothable gesture.
    *
-   * @param {State} state - The input state object of the current region.
-   *
-   * @return {?Object} Gesture is considered recognized if an Object is
-   *    returned.
+   * @private
+   * @memberof module:westures-core.Smoothable
    */
-  start() {
-    return null;
+  restart() {
+    this[stagedEmit] = null;
   }
 
   /**
-   * Event hook for the move phase of a gesture.
+   * Smooth out the outgoing data.
    *
-   * @param {State} state - The input state object of the current region.
+   * @private
+   * @memberof module:westures-core.Smoothable
    *
-   * @return {?Object} Gesture is considered recognized if an Object is
-   *    returned.
+   * @param {object} next - The next batch of data to emit.
+   * @param {string] field - The field to which smoothing should be applied.
+   *
+   * @return {?object}
    */
-  move() {
-    return null;
+  [smooth](next, field) {
+    let result = null;
+
+    if (this[stagedEmit]) {
+      result = this[stagedEmit];
+      const avg = this.smoothingAverage(result[field], next[field]);
+      result[field] = avg;
+      next[field] = avg;
+    }
+
+    this[stagedEmit] = next;
+    return result;
   }
 
   /**
-   * Event hook for the end phase of a gesture.
+   * Average out two values, as part of the smoothing algorithm.
    *
-   * @param {State} state - The input state object of the current region.
+   * @private
+   * @memberof module:westures-core.Smoothable
    *
-   * @return {?Object} Gesture is considered recognized if an Object is
-   *    returned.
+   * @param {number} a
+   * @param {number} b
+   *
+   * @return {number} The average of 'a' and 'b'
    */
-  end() {
-    return null;
+  smoothingAverage(a, b) {
+    return (a + b) / 2;
   }
+};
 
-  /**
-   * Event hook for when an input is cancelled.
-   *
-   * @param {State} state - The input state object of the current region.
-   *
-   * @return {?Object} Gesture is considered recognized if an Object is
-   *    returned.
-   */
-  cancel() {
-    return null;
-  }
-}
-
-module.exports = Gesture;
+module.exports = Smoothable;
 
 </code></pre>
         </article>

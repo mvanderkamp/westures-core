@@ -9,18 +9,20 @@
 
 'use strict';
 
-const Region  = require('./src/Region.js');
-const Point2D = require('./src/Point2D.js');
 const Gesture = require('./src/Gesture.js');
+const Point2D = require('./src/Point2D.js');
+const Region = require('./src/Region.js');
+const Smoothable = require('./src/Smoothable.js');
 
 module.exports = {
   Gesture,
   Point2D,
   Region,
+  Smoothable,
 };
 
 
-},{"./src/Gesture.js":3,"./src/Point2D.js":6,"./src/Region.js":8}],2:[function(require,module,exports){
+},{"./src/Gesture.js":3,"./src/Point2D.js":6,"./src/Region.js":8,"./src/Smoothable.js":9}],2:[function(require,module,exports){
 /*
  * Contains the Binding class.
  */
@@ -81,11 +83,15 @@ class Binding {
   evaluateHook(hook, state) {
     const data = this.gesture[hook](state);
     if (data) {
-      data.phase = hook;
-      data.event = state.event;
-      data.type = this.gesture.type;
-      data.target = this.element;
-      this.handler(data);
+      this.handler({
+        centroid: state.centroid,
+        event:    state.event,
+        phase:    hook,
+        radius:   state.radius,
+        type:     this.gesture.type,
+        target:   this.element,
+        ...data,
+      });
     }
   }
 }
@@ -528,14 +534,14 @@ class Point2D {
   }
 
   /**
-   * Calculates the midpoint of a list of points.
+   * Calculates the centroid of a list of points.
    *
    * @param {westures-core.Point2D[]} points - The array of Point2D objects for
-   *    which to calculate the midpoint
+   * which to calculate the centroid.
    *
-   * @return {westures-core.Point2D} The midpoint of the provided points.
+   * @return {westures-core.Point2D} The centroid of the provided points.
    */
-  static midpoint(points = []) {
+  static centroid(points = []) {
     if (points.length === 0) return null;
 
     const total = Point2D.sum(points);
@@ -766,7 +772,7 @@ class Region {
      * @private
      * @type {State}
      */
-    this.state = new State();
+    this.state = new State(this.element);
 
     // Begin operating immediately.
     this.activate();
@@ -819,7 +825,7 @@ class Region {
     ['blur'].concat(CANCEL_EVENTS).forEach(eventname => {
       window.addEventListener(eventname, (e) => {
         e.preventDefault();
-        this.state = new State();
+        this.state = new State(this.element);
         this.resetActiveBindings();
       });
     });
@@ -931,7 +937,119 @@ class Region {
 module.exports = Region;
 
 
-},{"./Binding.js":2,"./PHASE.js":5,"./State.js":9}],9:[function(require,module,exports){
+},{"./Binding.js":2,"./PHASE.js":5,"./State.js":10}],9:[function(require,module,exports){
+/*
+ * Contains the abstract Pinch class.
+ */
+
+'use strict';
+
+const stagedEmit = Symbol('stagedEmit');
+const smooth = Symbol('smooth');
+
+/**
+ * A Smoothable gesture is one that emits on 'move' events. It provides a
+ * 'smoothing' option through its constructor, and will apply smoothing before
+ * emitting. There will be a tiny, ~1/60th of a second delay to emits, as well
+ * as a slight amount of drift over gestures sustained for a long period of
+ * time.
+ *
+ * For a gesture to make use of smoothing, it must return `this.emit(data,
+ * field)` from the `move` phase, instead of returning the data directly. If the
+ * data being smoothed is not a simple number, it must also override the
+ * `smoothingAverage(a, b)` method. Also you will probably want to call
+ * `super.restart()` at some point in the `start`, `end`, and `cancel` phases.
+ *
+ * @memberof westures-core
+ * @mixin
+ */
+const Smoothable = (superclass) => class Smoothable extends superclass {
+  /**
+   * @param {string} name - The name of the gesture.
+   * @param {Object} [options]
+   * @param {boolean} [options.smoothing=true] Whether to apply smoothing to
+   * emitted data.
+   */
+  constructor(name, options = {}) {
+    super(name, options);
+
+    /**
+     * The function through which emits are passed.
+     *
+     * @private
+     * @type {function}
+     */
+    this.emit = null;
+    if (options.hasOwnProperty('smoothing') && !options.smoothing) {
+      this.emit = data => data;
+    } else {
+      this.emit = this[smooth].bind(this);
+    }
+
+    /**
+     * Stage the emitted data once.
+     *
+     * @private
+     * @type {object}
+     */
+    this[stagedEmit] = null;
+  }
+
+  /**
+   * Restart the Smoothable gesture.
+   *
+   * @private
+   * @memberof module:westures-core.Smoothable
+   */
+  restart() {
+    this[stagedEmit] = null;
+  }
+
+  /**
+   * Smooth out the outgoing data.
+   *
+   * @private
+   * @memberof module:westures-core.Smoothable
+   *
+   * @param {object} next - The next batch of data to emit.
+   * @param {string] field - The field to which smoothing should be applied.
+   *
+   * @return {?object}
+   */
+  [smooth](next, field) {
+    let result = null;
+
+    if (this[stagedEmit]) {
+      result = this[stagedEmit];
+      const avg = this.smoothingAverage(result[field], next[field]);
+      result[field] = avg;
+      next[field] = avg;
+    }
+
+    this[stagedEmit] = next;
+    return result;
+  }
+
+  /**
+   * Average out two values, as part of the smoothing algorithm.
+   *
+   * @private
+   * @memberof module:westures-core.Smoothable
+   *
+   * @param {number} a
+   * @param {number} b
+   *
+   * @return {number} The average of 'a' and 'b'
+   */
+  smoothingAverage(a, b) {
+    return (a + b) / 2;
+  }
+};
+
+module.exports = Smoothable;
+
+
+},{}],10:[function(require,module,exports){
 /*
  * Contains the {@link State} class
  */
@@ -980,7 +1098,15 @@ class State {
   /**
    * Constructor for the State class.
    */
-  constructor() {
+  constructor(element) {
+    /**
+     * Keep a reference to the element for the associated region.
+     *
+     * @private
+     * @type {Element}
+     */
+    this.element = element;
+
     /**
      * Keeps track of the current Input objects.
      *
@@ -1073,10 +1199,25 @@ class State {
    * @param {number} identifier - The identifier of the input to update.
    */
   updateInput(event, identifier) {
-    if (PHASE[event.type] === 'start') {
+    switch (PHASE[event.type]) {
+    case 'start':
       this[symbols.inputs].set(identifier, new Input(event, identifier));
-    } else if (this[symbols.inputs].has(identifier)) {
-      this[symbols.inputs].get(identifier).update(event);
+      try {
+        this.element.setPointerCapture(identifier);
+      } catch (e) { null; }
+      break;
+    case 'end':
+      try {
+        this.element.releasePointerCapture(identifier);
+      } catch (e) { null; }
+    case 'move':
+    case 'cancel':
+      if (this[symbols.inputs].has(identifier)) {
+        this[symbols.inputs].get(identifier).update(event);
+      }
+      break;
+    default:
+      console.warn(`Unrecognized event type: ${event.type}`);
     }
   }
 
@@ -1101,7 +1242,11 @@ class State {
     this.inputs = Array.from(this[symbols.inputs].values());
     this.active = this.getInputsNotInPhase('end');
     this.activePoints = this.active.map(i => i.current.point);
-    this.centroid = Point2D.midpoint(this.activePoints);
+    this.centroid = Point2D.centroid(this.activePoints);
+    this.radius = this.activePoints.reduce((acc, cur) => {
+      const dist = cur.distanceTo(this.centroid);
+      return dist > acc ? dist : acc;
+    }, 0);
     if (event) this.event = event;
   }
 }

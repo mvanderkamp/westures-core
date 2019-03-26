@@ -1,10 +1,8 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Source: src/Gesture.js | westures-core</title>
+    <title>Mixin: Smoothable | westures-core</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -49,104 +47,99 @@
 
 
 
+
+<section>
+
+<header>
     
-    <section>
-        <article>
-            <pre class="prettyprint source linenums"><code>/*
- * Contains the {@link Gesture} class
- */
+        <h2>
+            <span class="ancestors"><a href="westures-core.html">westures-core</a>.</span>Smoothable</h2>
+        
+    
+</header>
 
-'use strict';
+<article>
+    
+        <div class="container-overview">
+        
+            
+                <div class="description">A Smoothable gesture is one that emits on 'move' events. It provides a
+'smoothing' option through its constructor, and will apply smoothing before
+emitting. There will be a tiny, ~1/60th of a second delay to emits, as well
+as a slight amount of drift over gestures sustained for a long period of
+time.
 
-let nextGestureNum = 0;
+For a gesture to make use of smoothing, it must return `this.emit(data,
+field)` from the `move` phase, instead of returning the data directly. If the
+data being smoothed is not a simple number, it must also override the
+`smoothingAverage(a, b)` method. Also you will probably want to call
+`super.restart()` at some point in the `start`, `end`, and `cancel` phases.</div>
+            
 
-/**
- * The Gesture class that all gestures inherit from.
- *
- * @memberof westures-core
- */
-class Gesture {
-  /**
-   * Constructor function for the Gesture class.
-   *
-   * @param {string} type - The name of the gesture.
-   */
-  constructor(type) {
-    if (typeof type !== 'string') {
-      throw new TypeError('Gestures require a string type');
-    }
+            
 
-    /**
-     * The name of the gesture. (e.g. 'pan' or 'tap' or 'pinch').
-     *
-     * @type {string}
-     */
-    this.type = type;
 
-    /**
-     * The unique identifier for each gesture. This allows for distinctions
-     * across instances of Gestures that are created on the fly (e.g.
-     * gesture-tap-1, gesture-tap-2).
-     *
-     * @type {string}
-     */
-    this.id = `gesture-${this.type}-${nextGestureNum++}`;
-  }
+<dl class="details">
 
-  /**
-   * Event hook for the start phase of a gesture.
-   *
-   * @param {State} state - The input state object of the current region.
-   *
-   * @return {?Object} Gesture is considered recognized if an Object is
-   *    returned.
-   */
-  start() {
-    return null;
-  }
+    
 
-  /**
-   * Event hook for the move phase of a gesture.
-   *
-   * @param {State} state - The input state object of the current region.
-   *
-   * @return {?Object} Gesture is considered recognized if an Object is
-   *    returned.
-   */
-  move() {
-    return null;
-  }
+    
 
-  /**
-   * Event hook for the end phase of a gesture.
-   *
-   * @param {State} state - The input state object of the current region.
-   *
-   * @return {?Object} Gesture is considered recognized if an Object is
-   *    returned.
-   */
-  end() {
-    return null;
-  }
+    
 
-  /**
-   * Event hook for when an input is cancelled.
-   *
-   * @param {State} state - The input state object of the current region.
-   *
-   * @return {?Object} Gesture is considered recognized if an Object is
-   *    returned.
-   */
-  cancel() {
-    return null;
-  }
-}
+    
 
-module.exports = Gesture;
+    
 
-</code></pre>
-        </article>
-    </section>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+            
+        
+        </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</article>
+
+</section>
 
 
 
@@ -163,7 +156,7 @@ module.exports = Gesture;
 <script src="scripts/linenumber.js"></script>
 
     <script>
-        var id = '_sub'.replace(/"/g, '_');
+        var id = 'westures-core.Smoothable_sub'.replace(/"/g, '_');
         var selectedApi = document.getElementById(id); // do not use jquery selector
         var $selectedApi = $(selectedApi);
 

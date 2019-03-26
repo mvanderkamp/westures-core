@@ -2,9 +2,19 @@
 
 ## Releases
 
+- [0.6.0](#060)
 - [0.5.3](#053)
 - [0.5.2](#052)
 - [0.5.0](#050)
+
+## 0.6.0
+
+- Add centroid and radius to base emitted data.
+- Give preference to gesture's data over base data, in the case of name
+  collisions. (So that a gesture can overwrite parts of that data, for example
+  if a tap gesture wants to write its own centroid).
+- The system now tries to obtain pointer capture on inputs.
+- Add radius to state's convenience fields.
 
 ## 0.5.3
 

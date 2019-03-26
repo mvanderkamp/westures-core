@@ -46,7 +46,15 @@ class State {
   /**
    * Constructor for the State class.
    */
-  constructor() {
+  constructor(element) {
+    /**
+     * Keep a reference to the element for the associated region.
+     *
+     * @private
+     * @type {Element}
+     */
+    this.element = element;
+
     /**
      * Keeps track of the current Input objects.
      *
@@ -139,10 +147,25 @@ class State {
    * @param {number} identifier - The identifier of the input to update.
    */
   updateInput(event, identifier) {
-    if (PHASE[event.type] === 'start') {
+    switch (PHASE[event.type]) {
+    case 'start':
       this[symbols.inputs].set(identifier, new Input(event, identifier));
-    } else if (this[symbols.inputs].has(identifier)) {
-      this[symbols.inputs].get(identifier).update(event);
+      try {
+        this.element.setPointerCapture(identifier);
+      } catch (e) { null; }
+      break;
+    case 'end':
+      try {
+        this.element.releasePointerCapture(identifier);
+      } catch (e) { null; }
+    case 'move':
+    case 'cancel':
+      if (this[symbols.inputs].has(identifier)) {
+        this[symbols.inputs].get(identifier).update(event);
+      }
+      break;
+    default:
+      console.warn(`Unrecognized event type: ${event.type}`);
     }
   }
 
@@ -167,7 +190,11 @@ class State {
     this.inputs = Array.from(this[symbols.inputs].values());
     this.active = this.getInputsNotInPhase('end');
     this.activePoints = this.active.map(i => i.current.point);
-    this.centroid = Point2D.midpoint(this.activePoints);
+    this.centroid = Point2D.centroid(this.activePoints);
+    this.radius = this.activePoints.reduce((acc, cur) => {
+      const dist = cur.distanceTo(this.centroid);
+      return dist > acc ? dist : acc;
+    }, 0);
     if (event) this.event = event;
   }
 }
