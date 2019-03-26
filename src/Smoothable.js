@@ -57,6 +57,9 @@ const Smoothable = (superclass) => class Smoothable extends superclass {
 
   /**
    * Restart the Smoothable gesture.
+   *
+   * @private
+   * @memberof module:westures-core.Smoothable
    */
   restart() {
     this[stagedEmit] = null;
@@ -66,6 +69,8 @@ const Smoothable = (superclass) => class Smoothable extends superclass {
    * Smooth out the outgoing data.
    *
    * @private
+   * @memberof module:westures-core.Smoothable
+   *
    * @param {object} next - The next batch of data to emit.
    * @param {string] field - The field to which smoothing should be applied.
    *
@@ -89,6 +94,8 @@ const Smoothable = (superclass) => class Smoothable extends superclass {
    * Average out two values, as part of the smoothing algorithm.
    *
    * @private
+   * @memberof module:westures-core.Smoothable
+   *
    * @param {number} a
    * @param {number} b
    *
