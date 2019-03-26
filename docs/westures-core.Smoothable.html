@@ -1,10 +1,8 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Source: src/Point2D.js | westures-core</title>
+    <title>Mixin: Smoothable | westures-core</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -49,171 +47,99 @@
 
 
 
+
+<section>
+
+<header>
     
-    <section>
-        <article>
-            <pre class="prettyprint source linenums"><code>/*
- * Contains the {@link Point2D} class.
- */
+        <h2>
+            <span class="ancestors"><a href="westures-core.html">westures-core</a>.</span>Smoothable</h2>
+        
+    
+</header>
 
-'use strict';
+<article>
+    
+        <div class="container-overview">
+        
+            
+                <div class="description">A Smoothable gesture is one that emits on 'move' events. It provides a
+'smoothing' option through its constructor, and will apply smoothing before
+emitting. There will be a tiny, ~1/60th of a second delay to emits, as well
+as a slight amount of drift over gestures sustained for a long period of
+time.
 
-/**
- * The Point2D class stores and operates on 2-dimensional points, represented as
- * x and y coordinates.
- *
- * @memberof westures-core
- */
-class Point2D {
-  /**
-   * Constructor function for the Point2D class.
-   *
-   * @param {number} [ x=0 ] - The x coordinate of the point.
-   * @param {number} [ y=0 ] - The y coordinate of the point.
-   */
-  constructor(x = 0, y = 0) {
-    /**
-     * The x coordinate of the point.
-     *
-     * @type {number}
-     */
-    this.x = x;
+For a gesture to make use of smoothing, it must return `this.emit(data,
+field)` from the `move` phase, instead of returning the data directly. If the
+data being smoothed is not a simple number, it must also override the
+`smoothingAverage(a, b)` method. Also you will probably want to call
+`super.restart()` at some point in the `start`, `end`, and `cancel` phases.</div>
+            
 
-    /**
-     * The y coordinate of the point.
-     *
-     * @type {number}
-     */
-    this.y = y;
-  }
+            
 
-  /**
-   * Calculates the angle between this point and the given point.
-   *
-   * @param {!westures-core.Point2D} point - Projected point for calculating the
-   * angle.
-   *
-   * @return {number} Radians along the unit circle where the projected
-   * point lies.
-   */
-  angleTo(point) {
-    return Math.atan2(point.y - this.y, point.x - this.x);
-  }
 
-  /**
-   * Determine the average distance from this point to the provided array of
-   * points.
-   *
-   * @param {!westures-core.Point2D[]} points - the Point2D objects to calculate
-   *    the average distance to.
-   *
-   * @return {number} The average distance from this point to the provided
-   *    points.
-   */
-  averageDistanceTo(points) {
-    return this.totalDistanceTo(points) / points.length;
-  }
+<dl class="details">
 
-  /**
-   * Clone this point.
-   *
-   * @return {westures-core.Point2D} A new Point2D, identical to this point.
-   */
-  clone() {
-    return new Point2D(this.x, this.y);
-  }
+    
 
-  /**
-   * Calculates the distance between two points.
-   *
-   * @param {!westures-core.Point2D} point - Point to which the distance is
-   * calculated.
-   *
-   * @return {number} The distance between the two points, a.k.a. the
-   *    hypoteneuse.
-   */
-  distanceTo(point) {
-    return Math.hypot(point.x - this.x, point.y - this.y);
-  }
+    
 
-  /**
-   * Subtract the given point from this point.
-   *
-   * @param {!westures-core.Point2D} point - Point to subtract from this point.
-   *
-   * @return {westures-core.Point2D} A new Point2D, which is the result of (this
-   * - point).
-   */
-  minus(point) {
-    return new Point2D(
-      this.x - point.x,
-      this.y - point.y
-    );
-  }
+    
 
-  /**
-   * Return the summation of this point to the given point.
-   *
-   * @param {!westures-core.Point2D} point - Point to add to this point.
-   *
-   * @return {westures-core.Point2D} A new Point2D, which is the addition of the
-   * two points.
-   */
-  plus(point) {
-    return new Point2D(
-      this.x + point.x,
-      this.y + point.y,
-    );
-  }
+    
 
-  /**
-   * Calculates the total distance from this point to an array of points.
-   *
-   * @param {!westures-core.Point2D[]} points - The array of Point2D objects to
-   *    calculate the total distance to.
-   *
-   * @return {number} The total distance from this point to the provided points.
-   */
-  totalDistanceTo(points) {
-    return points.reduce((d, p) => d + this.distanceTo(p), 0);
-  }
+    
 
-  /**
-   * Calculates the centroid of a list of points.
-   *
-   * @param {westures-core.Point2D[]} points - The array of Point2D objects for
-   * which to calculate the centroid.
-   *
-   * @return {westures-core.Point2D} The centroid of the provided points.
-   */
-  static centroid(points = []) {
-    if (points.length === 0) return null;
+    
 
-    const total = Point2D.sum(points);
-    return new Point2D(
-      total.x / points.length,
-      total.y / points.length,
-    );
-  }
+    
 
-  /**
-   * Calculates the sum of the given points.
-   *
-   * @param {westures-core.Point2D[]} points - The Point2D objects to sum up.
-   *
-   * @return {westures-core.Point2D} A new Point2D representing the sum of the
-   * given points.
-   */
-  static sum(points = []) {
-    return points.reduce((total, pt) => total.plus(pt), new Point2D(0, 0));
-  }
-}
+    
 
-module.exports = Point2D;
+    
 
-</code></pre>
-        </article>
-    </section>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+            
+        
+        </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</article>
+
+</section>
 
 
 
@@ -230,7 +156,7 @@ module.exports = Point2D;
 <script src="scripts/linenumber.js"></script>
 
     <script>
-        var id = '_sub'.replace(/"/g, '_');
+        var id = 'westures-core.Smoothable_sub'.replace(/"/g, '_');
         var selectedApi = document.getElementById(id); // do not use jquery selector
         var $selectedApi = $(selectedApi);
 

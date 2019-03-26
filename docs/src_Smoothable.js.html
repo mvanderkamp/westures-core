@@ -4,7 +4,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Source: src/Region.js | westures-core</title>
+    <title>Source: src/Smoothable.js | westures-core</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -53,274 +53,114 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>/*
- * Contains the {@link Region} class
+ * Contains the abstract Pinch class.
  */
 
 'use strict';
 
-const Binding = require('./Binding.js');
-const State   = require('./State.js');
-const PHASE   = require('./PHASE.js');
-
-const POINTER_EVENTS = [
-  'pointerdown',
-  'pointermove',
-  'pointerup',
-];
-
-const MOUSE_EVENTS = [
-  'mousedown',
-  'mousemove',
-  'mouseup',
-];
-
-const TOUCH_EVENTS = [
-  'touchstart',
-  'touchmove',
-  'touchend',
-];
-
-const CANCEL_EVENTS = [
-  'pointercancel',
-  'touchcancel',
-];
+const stagedEmit = Symbol('stagedEmit');
+const smooth = Symbol('smooth');
 
 /**
- * Allows the user to specify the control region which will listen for user
- * input events.
+ * A Smoothable gesture is one that emits on 'move' events. It provides a
+ * 'smoothing' option through its constructor, and will apply smoothing before
+ * emitting. There will be a tiny, ~1/60th of a second delay to emits, as well
+ * as a slight amount of drift over gestures sustained for a long period of
+ * time.
+ *
+ * For a gesture to make use of smoothing, it must return `this.emit(data,
+ * field)` from the `move` phase, instead of returning the data directly. If the
+ * data being smoothed is not a simple number, it must also override the
+ * `smoothingAverage(a, b)` method. Also you will probably want to call
+ * `super.restart()` at some point in the `start`, `end`, and `cancel` phases.
  *
  * @memberof westures-core
+ * @mixin
  */
-class Region {
+const Smoothable = (superclass) => class Smoothable extends superclass {
   /**
-   * Constructor function for the Region class.
-   *
-   * @param {Element} element - The element which should listen to input events.
-   * @param {boolean} capture - Whether the region uses the capture phase of
-   *    input events. If false, uses the bubbling phase.
-   * @param {boolean} preventDefault - Whether the default browser functionality
-   *    should be disabled. This option should most likely be ignored. Here
-   *    there by dragons if set to false.
+   * @param {string} name - The name of the gesture.
+   * @param {Object} [options]
+   * @param {boolean} [options.smoothing=true] Whether to apply smoothing to
+   * emitted data.
    */
-  constructor(element, capture = false, preventDefault = true) {
-    /**
-     * The list of relations between elements, their gestures, and the handlers.
-     *
-     * @private
-     * @type {Binding[]}
-     */
-    this.bindings = [];
+  constructor(name, options = {}) {
+    super(name, options);
 
     /**
-     * The list of active bindings for the current input session.
+     * The function through which emits are passed.
      *
      * @private
-     * @type {Binding[]}
+     * @type {function}
      */
-    this.activeBindings = [];
-
-    /**
-     * Whether an input session is currently active.
-     *
-     * @private
-     * @type {boolean}
-     */
-    this.isWaiting = true;
-
-    /**
-     * The element being bound to.
-     *
-     * @private
-     * @type {Element}
-     */
-    this.element = element;
-
-    /**
-     * Whether the region listens for captures or bubbles.
-     *
-     * @private
-     * @type {boolean}
-     */
-    this.capture = capture;
-
-    /**
-     * Whether the default browser functionality should be disabled. This option
-     * should most likely be ignored. Here there by dragons if set to false.
-     *
-     * @private
-     * @type {boolean}
-     */
-    this.preventDefault = preventDefault;
-
-    /**
-     * The internal state object for a Region.  Keeps track of inputs.
-     *
-     * @private
-     * @type {State}
-     */
-    this.state = new State(this.element);
-
-    // Begin operating immediately.
-    this.activate();
-  }
-
-  /**
-   * Activates the region by adding event listeners for all appropriate input
-   * events to the region's element.
-   *
-   * @private
-   */
-  activate() {
-    /*
-     * Having to listen to both mouse and touch events is annoying, but
-     * necessary due to conflicting standards and browser implementations.
-     * Pointer is a fallback for now instead of the primary, until I figure out
-     * all the details to do with pointer-events and touch-action and their
-     * cross browser compatibility.
-     *
-     * Listening to both mouse and touch comes with the difficulty that
-     * preventDefault() must be called to prevent both events from iterating
-     * through the system. However I have left it as an option to the end user,
-     * which defaults to calling preventDefault(), in case there's a use-case I
-     * haven't considered or am not aware of.
-     *
-     * It is also a good idea to keep regions small in large pages.
-     *
-     * See:
-     *  https://www.html5rocks.com/en/mobile/touchandmouse/
-     *  https://developer.mozilla.org/en-US/docs/Web/API/Touch_events
-     *  https://developer.mozilla.org/en-US/docs/Web/API/Pointer_events
-     */
-    let eventNames = [];
-    if (window.TouchEvent || window.MouseEvent) {
-      eventNames = MOUSE_EVENTS.concat(TOUCH_EVENTS);
+    this.emit = null;
+    if (options.hasOwnProperty('smoothing') &amp;&amp; !options.smoothing) {
+      this.emit = data => data;
     } else {
-      eventNames = POINTER_EVENTS;
+      this.emit = this[smooth].bind(this);
     }
 
-    // Bind detected browser events to the region element.
-    const arbiter = this.arbitrate.bind(this);
-    eventNames.forEach(eventName => {
-      this.element.addEventListener(eventName, arbiter, {
-        capture: this.capture,
-        once:    false,
-        passive: false,
-      });
-    });
-
-    ['blur'].concat(CANCEL_EVENTS).forEach(eventname => {
-      window.addEventListener(eventname, (e) => {
-        e.preventDefault();
-        this.state = new State(this.element);
-        this.resetActiveBindings();
-      });
-    });
+    /**
+     * Stage the emitted data once.
+     *
+     * @private
+     * @type {object}
+     */
+    this[stagedEmit] = null;
   }
 
   /**
-   * Resets the active bindings.
+   * Restart the Smoothable gesture.
    *
    * @private
+   * @memberof module:westures-core.Smoothable
    */
-  resetActiveBindings() {
-    this.activeBindings = [];
-    this.isWaiting = true;
+  restart() {
+    this[stagedEmit] = null;
   }
 
   /**
-   * Selects the bindings that are active for the current input sequence.
+   * Smooth out the outgoing data.
    *
    * @private
-   */
-  updateActiveBindings() {
-    if (this.isWaiting &amp;&amp; this.state.inputs.length > 0) {
-      const input = this.state.inputs[0];
-      this.activeBindings = this.bindings.filter(b => {
-        return input.wasInitiallyInside(b.element);
-      });
-      this.isWaiting = false;
-    }
-  }
-
-  /**
-   * Evaluates whether the current input session has completed.
+   * @memberof module:westures-core.Smoothable
    *
-   * @private
-   */
-  pruneActiveBindings() {
-    if (this.state.hasNoActiveInputs()) {
-      this.resetActiveBindings();
-    }
-  }
-
-  /**
-   * All input events flow through this function. It makes sure that the input
-   * state is maintained, determines which bindings to analyze based on the
-   * initial position of the inputs, calls the relevant gesture hooks, and
-   * dispatches gesture data.
+   * @param {object} next - The next batch of data to emit.
+   * @param {string] field - The field to which smoothing should be applied.
    *
-   * @private
-   * @param {Event} event - The event emitted from the window object.
+   * @return {?object}
    */
-  arbitrate(event) {
-    this.state.updateAllInputs(event);
-    this.updateActiveBindings();
+  [smooth](next, field) {
+    let result = null;
 
-    if (this.activeBindings.length > 0) {
-      if (this.preventDefault) event.preventDefault();
-
-      this.activeBindings.forEach(binding => {
-        binding.evaluateHook(PHASE[event.type], this.state);
-      });
+    if (this[stagedEmit]) {
+      result = this[stagedEmit];
+      const avg = this.smoothingAverage(result[field], next[field]);
+      result[field] = avg;
+      next[field] = avg;
     }
 
-    this.state.clearEndedInputs();
-    this.pruneActiveBindings();
+    this[stagedEmit] = next;
+    return result;
   }
 
   /**
-   * Bind an element to a gesture with an associated handler.
-   *
-   * @param {Element} element - The element object.
-   * @param {westures-core.Gesture} gesture - Gesture type with which to bind.
-   * @param {Function} handler - The function to execute when a gesture is
-   *    recognized.
-   */
-  addGesture(element, gesture, handler) {
-    this.bindings.push(new Binding(element, gesture, handler));
-  }
-
-  /**
-   * Retrieves Bindings by their associated element.
+   * Average out two values, as part of the smoothing algorithm.
    *
    * @private
+   * @memberof module:westures-core.Smoothable
    *
-   * @param {Element} element - The element for which to find bindings.
+   * @param {number} a
+   * @param {number} b
    *
-   * @return {Binding[]} Bindings to which the element is bound.
+   * @return {number} The average of 'a' and 'b'
    */
-  getBindingsByElement(element) {
-    return this.bindings.filter(b => b.element === element);
+  smoothingAverage(a, b) {
+    return (a + b) / 2;
   }
+};
 
-  /**
-   * Unbinds an element from either the specified gesture or all if no gesture
-   * is specified.
-   *
-   * @param {Element} element - The element to unbind.
-   * @param {westures-core.Gesture} [ gesture ] - The gesture to unbind. If
-   * undefined, will unbind all Bindings associated with the given element.
-   */
-  removeGestures(element, gesture) {
-    this.getBindingsByElement(element).forEach(b => {
-      if (gesture == null || b.gesture === gesture) {
-        this.bindings.splice(this.bindings.indexOf(b), 1);
-      }
-    });
-  }
-}
-
-module.exports = Region;
+module.exports = Smoothable;
 
 </code></pre>
         </article>
