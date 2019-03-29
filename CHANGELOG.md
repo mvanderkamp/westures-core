@@ -2,10 +2,16 @@
 
 ## Releases
 
+- [0.6.1](#061)
 - [0.6.0](#060)
 - [0.5.3](#053)
 - [0.5.2](#052)
 - [0.5.0](#050)
+
+## 0.6.1
+
+- Add `babelify` transform for bundle. (Add's Edge support, or at least it
+  should...)
 
 ## 0.6.0
 
