@@ -72,7 +72,7 @@ const Smoothable = (superclass) => class Smoothable extends superclass {
    * @memberof module:westures-core.Smoothable
    *
    * @param {object} next - The next batch of data to emit.
-   * @param {string] field - The field to which smoothing should be applied.
+   * @param {string} field - The field to which smoothing should be applied.
    *
    * @return {?object}
    */

@@ -42,13 +42,20 @@ class Region {
    * Constructor function for the Region class.
    *
    * @param {Element} element - The element which should listen to input events.
-   * @param {boolean} capture - Whether the region uses the capture phase of
-   *    input events. If false, uses the bubbling phase.
-   * @param {boolean} preventDefault - Whether the default browser functionality
-   *    should be disabled. This option should most likely be ignored. Here
-   *    there by dragons if set to false.
+   * @param {object} [options]
+   * @param {boolean} [options.capture=false] - Whether the region uses the
+   * capture phase of input events. If false, uses the bubbling phase.
+   * @param {boolean} [options.preventDefault=true] - Whether the default
+   * browser functionality should be disabled. This option should most likely be
+   * ignored. Here there by dragons if set to false.
+   * @param {string} [options.source='page'] - One of 'page', 'client', or
+   * 'screen'. Determines what the source of (x,y) coordinates will be from the
+   * input events. ('X' and 'Y' will be appended, then those are the properties
+   * that will be looked up).
    */
-  constructor(element, capture = false, preventDefault = true) {
+  constructor(element, options = {}) {
+    const settings = { ...Region.DEFAULTS, ...options };
+
     /**
      * The list of relations between elements, their gestures, and the handlers.
      *
@@ -87,7 +94,7 @@ class Region {
      * @private
      * @type {boolean}
      */
-    this.capture = capture;
+    this.capture = settings.capture;
 
     /**
      * Whether the default browser functionality should be disabled. This option
@@ -96,7 +103,7 @@ class Region {
      * @private
      * @type {boolean}
      */
-    this.preventDefault = preventDefault;
+    this.preventDefault = settings.preventDefault;
 
     /**
      * The internal state object for a Region.  Keeps track of inputs.
@@ -265,6 +272,11 @@ class Region {
     });
   }
 }
+
+Region.DEFAULTS = Object.freeze({
+  capture:        false,
+  preventDefault: true,
+});
 
 module.exports = Region;
 
