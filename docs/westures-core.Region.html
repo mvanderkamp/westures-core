@@ -53,7 +53,7 @@
 <header>
     
         <h2><span class="attribs"><span class="type-signature"></span></span>
-            <span class="ancestors"><a href="westures-core.html">westures-core</a>.</span>Region<span class="signature">(element, capture, preventDefault)</span><span class="type-signature"></span></h2>
+            <span class="ancestors"><a href="westures-core.html">westures-core</a>.</span>Region<span class="signature">(element, options<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h2>
         
             <div class="class-description">Allows the user to specify the control region which will listen for user
 input events.</div>
@@ -71,7 +71,7 @@ input events.</div>
     
         <h4 class="name" id="Region">
             
-                new <span class="type-signature"></span>Region<span class="signature">(element, capture, preventDefault)</span><span class="type-signature"></span>
+                new <span class="type-signature"></span>Region<span class="signature">(element, options<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span>
                 
             
             <div class="container-source members">
@@ -112,9 +112,9 @@ input events.</div>
         <th>Type</th>
 
         
-
+        <th>Attributes</th>
         
-        <th>Default</th>
+
         
 
         <th class="last">Description</th>
@@ -139,16 +139,75 @@ input events.</div>
             </td>
 
             
+                <td class="attributes">
+                
 
-            
-                <td class="default">
+                
+
                 
                 </td>
+            
+
             
 
             <td class="description last">The element which should listen to input events.</td>
         </tr>
 
+    
+
+        <tr>
+            
+                <td class="name"><code>options</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">
+                <h6>Properties</h6>
+                
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
     
 
         <tr>
@@ -166,6 +225,16 @@ input events.</div>
             </td>
 
             
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
 
             
                 <td class="default">
@@ -175,8 +244,8 @@ input events.</div>
                 </td>
             
 
-            <td class="description last">Whether the region uses the capture phase of
-   input events. If false, uses the bubbling phase.</td>
+            <td class="description last">Whether the region uses the
+capture phase of input events. If false, uses the bubbling phase.</td>
         </tr>
 
     
@@ -196,6 +265,16 @@ input events.</div>
             </td>
 
             
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
 
             
                 <td class="default">
@@ -205,9 +284,58 @@ input events.</div>
                 </td>
             
 
-            <td class="description last">Whether the default browser functionality
-   should be disabled. This option should most likely be ignored. Here
-   there by dragons if set to false.</td>
+            <td class="description last">Whether the default
+browser functionality should be disabled. This option should most likely be
+ignored. Here there by dragons if set to false.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>source</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    'page'
+                
+                </td>
+            
+
+            <td class="description last">One of 'page', 'client', or
+'screen'. Determines what the source of (x,y) coordinates will be from the
+input events. ('X' and 'Y' will be appended, then those are the properties
+that will be looked up).</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
         </tr>
 
     
@@ -303,7 +431,7 @@ input events.</div>
             
             <div class="container-source members">
                 <code><a href="src_Region.js.html">src/Region.js</a></code>,
-                <code><a href="src_Region.js.html#line235">line 235</a></code>
+                <code><a href="src_Region.js.html#line242">line 242</a></code>
             </div>
             
         </h4>
@@ -489,7 +617,7 @@ input events.</div>
             
             <div class="container-source members">
                 <code><a href="src_Region.js.html">src/Region.js</a></code>,
-                <code><a href="src_Region.js.html#line260">line 260</a></code>
+                <code><a href="src_Region.js.html#line267">line 267</a></code>
             </div>
             
         </h4>

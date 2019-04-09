@@ -1711,7 +1711,7 @@ class PointerData {
      * @type {westures-core.Point2D}
      */
 
-    this.point = new Point2D(eventObj.clientX, eventObj.clientY);
+    this.point = new Point2D(eventObj.pageX, eventObj.pageY); // this.point = new Point2D(eventObj.clientX, eventObj.clientY);
   }
   /**
    * Calculates the angle between this event and the given event.
@@ -1750,6 +1750,10 @@ module.exports = PointerData;
  */
 'use strict';
 
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 const Binding = require('./Binding.js');
 
 const State = require('./State.js');
@@ -1772,19 +1776,27 @@ class Region {
    * Constructor function for the Region class.
    *
    * @param {Element} element - The element which should listen to input events.
-   * @param {boolean} capture - Whether the region uses the capture phase of
-   *    input events. If false, uses the bubbling phase.
-   * @param {boolean} preventDefault - Whether the default browser functionality
-   *    should be disabled. This option should most likely be ignored. Here
-   *    there by dragons if set to false.
+   * @param {object} [options]
+   * @param {boolean} [options.capture=false] - Whether the region uses the
+   * capture phase of input events. If false, uses the bubbling phase.
+   * @param {boolean} [options.preventDefault=true] - Whether the default
+   * browser functionality should be disabled. This option should most likely be
+   * ignored. Here there by dragons if set to false.
+   * @param {string} [options.source='page'] - One of 'page', 'client', or
+   * 'screen'. Determines what the source of (x,y) coordinates will be from the
+   * input events. ('X' and 'Y' will be appended, then those are the properties
+   * that will be looked up).
    */
-  constructor(element, capture = false, preventDefault = true) {
+  constructor(element, options = {}) {
+    const settings = _objectSpread({}, Region.DEFAULTS, options);
     /**
      * The list of relations between elements, their gestures, and the handlers.
      *
      * @private
      * @type {Binding[]}
      */
+
+
     this.bindings = [];
     /**
      * The list of active bindings for the current input session.
@@ -1817,7 +1829,7 @@ class Region {
      * @type {boolean}
      */
 
-    this.capture = capture;
+    this.capture = settings.capture;
     /**
      * Whether the default browser functionality should be disabled. This option
      * should most likely be ignored. Here there by dragons if set to false.
@@ -1826,7 +1838,7 @@ class Region {
      * @type {boolean}
      */
 
-    this.preventDefault = preventDefault;
+    this.preventDefault = settings.preventDefault;
     /**
      * The internal state object for a Region.  Keeps track of inputs.
      *
@@ -2003,6 +2015,10 @@ class Region {
 
 }
 
+Region.DEFAULTS = Object.freeze({
+  capture: false,
+  preventDefault: true
+});
 module.exports = Region;
 
 },{"./Binding.js":63,"./PHASE.js":66,"./State.js":71}],70:[function(require,module,exports){
@@ -2083,7 +2099,7 @@ const Smoothable = superclass => class Smoothable extends superclass {
    * @memberof module:westures-core.Smoothable
    *
    * @param {object} next - The next batch of data to emit.
-   * @param {string] field - The field to which smoothing should be applied.
+   * @param {string} field - The field to which smoothing should be applied.
    *
    * @return {?object}
    */
