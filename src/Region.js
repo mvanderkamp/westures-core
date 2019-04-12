@@ -51,10 +51,11 @@ class Region {
    * @param {string} [options.source='page'] - One of 'page', 'client', or
    * 'screen'. Determines what the source of (x,y) coordinates will be from the
    * input events. ('X' and 'Y' will be appended, then those are the properties
-   * that will be looked up).
+   * that will be looked up). *** NOT YET IMPLEMENTED ***
    */
-  constructor(element, options = {}) {
-    const settings = { ...Region.DEFAULTS, ...options };
+  // constructor(element, options = {}) {
+  constructor(element, capture = false, preventDefault = true) {
+    // const settings = { ...Region.DEFAULTS, ...options };
 
     /**
      * The list of relations between elements, their gestures, and the handlers.
@@ -94,7 +95,7 @@ class Region {
      * @private
      * @type {boolean}
      */
-    this.capture = settings.capture;
+    this.capture = capture;
 
     /**
      * Whether the default browser functionality should be disabled. This option
@@ -103,7 +104,7 @@ class Region {
      * @private
      * @type {boolean}
      */
-    this.preventDefault = settings.preventDefault;
+    this.preventDefault = preventDefault;
 
     /**
      * The internal state object for a Region.  Keeps track of inputs.
