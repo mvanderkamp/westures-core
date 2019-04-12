@@ -1710,8 +1710,9 @@ class PointerData {
      *
      * @type {westures-core.Point2D}
      */
+    // this.point = new Point2D(eventObj.pageX, eventObj.pageY);
 
-    this.point = new Point2D(eventObj.pageX, eventObj.pageY); // this.point = new Point2D(eventObj.clientX, eventObj.clientY);
+    this.point = new Point2D(eventObj.clientX, eventObj.clientY);
   }
   /**
    * Calculates the angle between this event and the given event.
