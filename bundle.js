@@ -2028,7 +2028,7 @@ module.exports = Region;
 
 require("core-js/modules/es.symbol.description");
 
-const stagedEmit = Symbol('stagedEmit');
+const rolling = Symbol('rolling');
 const smooth = Symbol('smooth');
 /**
  * A Smoothable gesture is one that emits on 'move' events. It provides a
@@ -2060,7 +2060,11 @@ const Smoothable = superclass => class Smoothable extends superclass {
      * The function through which emits are passed.
      *
      * @private
+     * @static
+     * @memberof module:westures-core.Smoothable
+     *
      * @type {function}
+     * @param {object} data - The data to emit.
      */
 
     this.emit = null;
@@ -2071,14 +2075,29 @@ const Smoothable = superclass => class Smoothable extends superclass {
       this.emit = this[smooth].bind(this);
     }
     /**
-     * Stage the emitted data once.
+     * The "identity" value of the data that will be smoothed.
      *
      * @private
-     * @type {object}
+     * @static
+     * @memberof module:westures-core.Smoothable
+     *
+     * @type {*}
      */
 
 
-    this[stagedEmit] = null;
+    this.identity = 0;
+    /**
+     * Stage the emitted data once.
+     *
+     * @private
+     * @static
+     * @memberof module:westures-core.Smoothable
+     *
+     * @alias [@@rolling]
+     * @type {object}
+     */
+
+    this[rolling] = this.identity;
   }
   /**
    * Restart the Smoothable gesture.
@@ -2089,7 +2108,7 @@ const Smoothable = superclass => class Smoothable extends superclass {
 
 
   restart() {
-    this[stagedEmit] = null;
+    this[rolling] = this.identity;
   }
   /**
    * Smooth out the outgoing data.
@@ -2105,17 +2124,10 @@ const Smoothable = superclass => class Smoothable extends superclass {
 
 
   [smooth](next, field) {
-    let result = null;
-
-    if (this[stagedEmit]) {
-      result = this[stagedEmit];
-      const avg = this.smoothingAverage(result[field], next[field]);
-      result[field] = avg;
-      next[field] = avg;
-    }
-
-    this[stagedEmit] = next;
-    return result;
+    const avg = this.smoothingAverage(this[rolling], next[field]);
+    this[rolling] = avg;
+    next[field] = avg;
+    return next;
   }
   /**
    * Average out two values, as part of the smoothing algorithm.
