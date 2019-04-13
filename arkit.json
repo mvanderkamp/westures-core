@@ -20,6 +20,10 @@
         "patterns":  ["index.js"]
       },
       {
+        "type": "westures-core",
+        "patterns": ["src/*.js"]
+      },
+      {
         "components": ["Component", "Entry"]
       }
     ]
