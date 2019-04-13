@@ -1,8 +1,8 @@
 (function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.westuresCore = f()}})(function(){var define,module,exports;return (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
 /**
- * The global API interface for Westures. Exposes a constructor for the
- * {@link Region} and the generic {@link Gesture} class for user gestures to
- * implement, as well as the {@link Point2D} class, which may be useful.
+ * The global API interface for Westures. Exposes a constructor for the Region
+ * and the generic Gesture class for user gestures to implement, as well as the
+ * Point2D class, which may be useful.
  *
  * @namespace westures-core
  */
@@ -1163,13 +1163,15 @@ module.exports = Binding;
 
 },{}],64:[function(require,module,exports){
 /*
- * Contains the {@link Gesture} class
+ * Contains the Gesture class
  */
 'use strict';
 
 let nextGestureNum = 0;
 /**
- * The Gesture class that all gestures inherit from.
+ * The Gesture class that all gestures inherit from. A custom gesture class will
+ * need to override some or all of the four phase "hooks": start, move, end, and
+ * cancel.
  *
  * @memberof westures-core
  */
@@ -1710,8 +1712,9 @@ class PointerData {
      *
      * @type {westures-core.Point2D}
      */
+    // this.point = new Point2D(eventObj.pageX, eventObj.pageY);
 
-    this.point = new Point2D(eventObj.pageX, eventObj.pageY); // this.point = new Point2D(eventObj.clientX, eventObj.clientY);
+    this.point = new Point2D(eventObj.clientX, eventObj.clientY);
   }
   /**
    * Calculates the angle between this event and the given event.
@@ -1750,10 +1753,6 @@ module.exports = PointerData;
  */
 'use strict';
 
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
 const Binding = require('./Binding.js');
 
 const State = require('./State.js');
@@ -1785,18 +1784,18 @@ class Region {
    * @param {string} [options.source='page'] - One of 'page', 'client', or
    * 'screen'. Determines what the source of (x,y) coordinates will be from the
    * input events. ('X' and 'Y' will be appended, then those are the properties
-   * that will be looked up).
+   * that will be looked up). *** NOT YET IMPLEMENTED ***
    */
-  constructor(element, options = {}) {
-    const settings = _objectSpread({}, Region.DEFAULTS, options);
+  // constructor(element, options = {}) {
+  constructor(element, capture = false, preventDefault = true) {
+    // const settings = { ...Region.DEFAULTS, ...options };
+
     /**
      * The list of relations between elements, their gestures, and the handlers.
      *
      * @private
      * @type {Binding[]}
      */
-
-
     this.bindings = [];
     /**
      * The list of active bindings for the current input session.
@@ -1829,7 +1828,7 @@ class Region {
      * @type {boolean}
      */
 
-    this.capture = settings.capture;
+    this.capture = capture;
     /**
      * Whether the default browser functionality should be disabled. This option
      * should most likely be ignored. Here there by dragons if set to false.
@@ -1838,7 +1837,7 @@ class Region {
      * @type {boolean}
      */
 
-    this.preventDefault = settings.preventDefault;
+    this.preventDefault = preventDefault;
     /**
      * The internal state object for a Region.  Keeps track of inputs.
      *
