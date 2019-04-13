@@ -4,7 +4,7 @@
 
 'use strict';
 
-const stagedEmit = Symbol('stagedEmit');
+const rolling = Symbol('rolling');
 const smooth = Symbol('smooth');
 
 /**
@@ -37,7 +37,11 @@ const Smoothable = (superclass) => class Smoothable extends superclass {
      * The function through which emits are passed.
      *
      * @private
+     * @static
+     * @memberof module:westures-core.Smoothable
+     *
      * @type {function}
+     * @param {object} data - The data to emit.
      */
     this.emit = null;
     if (options.hasOwnProperty('smoothing') && !options.smoothing) {
@@ -47,12 +51,27 @@ const Smoothable = (superclass) => class Smoothable extends superclass {
     }
 
     /**
+     * The "identity" value of the data that will be smoothed.
+     *
+     * @private
+     * @static
+     * @memberof module:westures-core.Smoothable
+     *
+     * @type {*}
+     */
+    this.identity = 0;
+
+    /**
      * Stage the emitted data once.
      *
      * @private
+     * @static
+     * @memberof module:westures-core.Smoothable
+     *
+     * @alias [@@rolling]
      * @type {object}
      */
-    this[stagedEmit] = null;
+    this[rolling] = this.identity;
   }
 
   /**
@@ -62,7 +81,7 @@ const Smoothable = (superclass) => class Smoothable extends superclass {
    * @memberof module:westures-core.Smoothable
    */
   restart() {
-    this[stagedEmit] = null;
+    this[rolling] = this.identity;
   }
 
   /**
@@ -77,17 +96,10 @@ const Smoothable = (superclass) => class Smoothable extends superclass {
    * @return {?object}
    */
   [smooth](next, field) {
-    let result = null;
-
-    if (this[stagedEmit]) {
-      result = this[stagedEmit];
-      const avg = this.smoothingAverage(result[field], next[field]);
-      result[field] = avg;
-      next[field] = avg;
-    }
-
-    this[stagedEmit] = next;
-    return result;
+    const avg = this.smoothingAverage(this[rolling], next[field]);
+    this[rolling] = avg;
+    next[field] = avg;
+    return next;
   }
 
   /**
