@@ -32,7 +32,7 @@ class Binding {
      * The gesture to associate with the given element.
      *
      * @private
-     * @type {Gesture}
+     * @type {westures-core.Gesture}
      */
     this.gesture = gesture;
 
@@ -51,8 +51,7 @@ class Binding {
    *
    * @private
    *
-   * @param {string} hook - which gesture hook to call, must be one of 'start',
-   *    'move', or 'end'.
+   * @param {string} hook - Must be one of 'start', 'move', 'end', or 'cancel'.
    * @param {State} state - The current State instance.
    */
   evaluateHook(hook, state) {

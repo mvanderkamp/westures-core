@@ -9,6 +9,9 @@ const PHASE   = require('./PHASE.js');
 
 /**
  * @private
+ * @inner
+ * @memberof PointerData
+ *
  * @return {Event} The Event object which corresponds to the given identifier.
  *    Contains clientX, clientY values.
  */

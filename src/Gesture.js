@@ -21,7 +21,7 @@ class Gesture {
    */
   constructor(type) {
     if (typeof type !== 'string') {
-      throw new TypeError('Gestures require a string type');
+      throw new TypeError('Gestures require a string type / name');
     }
 
     /**
