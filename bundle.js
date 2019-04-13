@@ -1117,7 +1117,7 @@ class Binding {
      * The gesture to associate with the given element.
      *
      * @private
-     * @type {Gesture}
+     * @type {westures-core.Gesture}
      */
 
     this.gesture = gesture;
@@ -1136,8 +1136,7 @@ class Binding {
    *
    * @private
    *
-   * @param {string} hook - which gesture hook to call, must be one of 'start',
-   *    'move', or 'end'.
+   * @param {string} hook - Must be one of 'start', 'move', 'end', or 'cancel'.
    * @param {State} state - The current State instance.
    */
 
@@ -1184,7 +1183,7 @@ class Gesture {
    */
   constructor(type) {
     if (typeof type !== 'string') {
-      throw new TypeError('Gestures require a string type');
+      throw new TypeError('Gestures require a string type / name');
     }
     /**
      * The name of the gesture. (e.g. 'pan' or 'tap' or 'pinch').
@@ -1274,6 +1273,8 @@ const PointerData = require('./PointerData.js');
  * In case event.composedPath() is not available.
  *
  * @private
+ * @inner
+ * @memberof Input
  *
  * @param {Event} event
  *
@@ -1301,6 +1302,8 @@ function getPropagationPath(event) {
  * element they point to is removed from the page.
  *
  * @private
+ * @inner
+ * @memberof Input
  * @return {WeakSet.<Element>} The Elements in the path of the given event.
  */
 
@@ -1398,6 +1401,8 @@ class Input {
     return this.initial.time;
   }
   /**
+   * @private
+   *
    * @param {string} id - The ID of the gesture whose progress is sought.
    *
    * @return {Object} The progress of the gesture.
@@ -1654,6 +1659,9 @@ const Point2D = require('./Point2D.js');
 const PHASE = require('./PHASE.js');
 /**
  * @private
+ * @inner
+ * @memberof PointerData
+ *
  * @return {Event} The Event object which corresponds to the given identifier.
  *    Contains clientX, clientY values.
  */
@@ -2028,7 +2036,7 @@ module.exports = Region;
 
 require("core-js/modules/es.symbol.description");
 
-const rolling = Symbol('rolling');
+const cascade = Symbol('cascade');
 const smooth = Symbol('smooth');
 /**
  * A Smoothable gesture is one that emits on 'move' events. It provides a
@@ -2037,7 +2045,7 @@ const smooth = Symbol('smooth');
  * as a slight amount of drift over gestures sustained for a long period of
  * time.
  *
- * For a gesture to make use of smoothing, it must return `this.emit(data,
+ * For a gesture to make use of smoothing, it must return `this.smooth(data,
  * field)` from the `move` phase, instead of returning the data directly. If the
  * data being smoothed is not a simple number, it must also override the
  * `smoothingAverage(a, b)` method. Also you will probably want to call
@@ -2057,31 +2065,28 @@ const Smoothable = superclass => class Smoothable extends superclass {
   constructor(name, options = {}) {
     super(name, options);
     /**
-     * The function through which emits are passed.
+     * The function through which smoothed emits are passed.
      *
-     * @private
-     * @static
      * @memberof westures-core.Smoothable
      *
      * @type {function}
      * @param {object} data - The data to emit.
      */
 
-    this.emit = null;
+    this.smooth = null;
 
     if (options.hasOwnProperty('smoothing') && !options.smoothing) {
-      this.emit = data => data;
+      this.smooth = data => data;
     } else {
-      this.emit = this[smooth].bind(this);
+      this.smooth = this[smooth].bind(this);
     }
     /**
      * The "identity" value of the data that will be smoothed.
      *
-     * @private
-     * @static
      * @memberof westures-core.Smoothable
      *
      * @type {*}
+     * @default 0
      */
 
 
@@ -2093,22 +2098,21 @@ const Smoothable = superclass => class Smoothable extends superclass {
      * @static
      * @memberof westures-core.Smoothable
      *
-     * @alias [@@rolling]
+     * @alias [@@cascade]
      * @type {object}
      */
 
-    this[rolling] = this.identity;
+    this[cascade] = this.identity;
   }
   /**
    * Restart the Smoothable gesture.
    *
-   * @private
    * @memberof westures-core.Smoothable
    */
 
 
   restart() {
-    this[rolling] = this.identity;
+    this[cascade] = this.identity;
   }
   /**
    * Smooth out the outgoing data.
@@ -2124,8 +2128,8 @@ const Smoothable = superclass => class Smoothable extends superclass {
 
 
   [smooth](next, field) {
-    const avg = this.smoothingAverage(this[rolling], next[field]);
-    this[rolling] = avg;
+    const avg = this.smoothingAverage(this[cascade], next[field]);
+    this[cascade] = avg;
     next[field] = avg;
     return next;
   }
@@ -2174,6 +2178,8 @@ const symbols = Object.freeze({
  * Must be called with a bound 'this', via bind(), or call(), or apply().
  *
  * @private
+ * @inner
+ * @memberof State
  */
 
 const update_fns = {
@@ -2201,6 +2207,8 @@ const update_fns = {
 class State {
   /**
    * Constructor for the State class.
+   *
+   * @param {Element} element - The element underpinning the associated Region.
    */
   constructor(element) {
     /**
@@ -2214,7 +2222,9 @@ class State {
      * Keeps track of the current Input objects.
      *
      * @private
-     * @type {Map}
+     * @alias [@@inputs]
+     * @type {Map.<Input>}
+     * @memberof State
      */
 
     this[symbols.inputs] = new Map();
