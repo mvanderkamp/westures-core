@@ -4,7 +4,7 @@
 
 'use strict';
 
-const rolling = Symbol('rolling');
+const cascade = Symbol('cascade');
 const smooth = Symbol('smooth');
 
 /**
@@ -14,7 +14,7 @@ const smooth = Symbol('smooth');
  * as a slight amount of drift over gestures sustained for a long period of
  * time.
  *
- * For a gesture to make use of smoothing, it must return `this.emit(data,
+ * For a gesture to make use of smoothing, it must return `this.smooth(data,
  * field)` from the `move` phase, instead of returning the data directly. If the
  * data being smoothed is not a simple number, it must also override the
  * `smoothingAverage(a, b)` method. Also you will probably want to call
@@ -34,30 +34,27 @@ const Smoothable = (superclass) => class Smoothable extends superclass {
     super(name, options);
 
     /**
-     * The function through which emits are passed.
+     * The function through which smoothed emits are passed.
      *
-     * @private
-     * @static
      * @memberof westures-core.Smoothable
      *
      * @type {function}
      * @param {object} data - The data to emit.
      */
-    this.emit = null;
+    this.smooth = null;
     if (options.hasOwnProperty('smoothing') && !options.smoothing) {
-      this.emit = data => data;
+      this.smooth = data => data;
     } else {
-      this.emit = this[smooth].bind(this);
+      this.smooth = this[smooth].bind(this);
     }
 
     /**
      * The "identity" value of the data that will be smoothed.
      *
-     * @private
-     * @static
      * @memberof westures-core.Smoothable
      *
      * @type {*}
+     * @default 0
      */
     this.identity = 0;
 
@@ -68,20 +65,19 @@ const Smoothable = (superclass) => class Smoothable extends superclass {
      * @static
      * @memberof westures-core.Smoothable
      *
-     * @alias [@@rolling]
+     * @alias [@@cascade]
      * @type {object}
      */
-    this[rolling] = this.identity;
+    this[cascade] = this.identity;
   }
 
   /**
    * Restart the Smoothable gesture.
    *
-   * @private
    * @memberof westures-core.Smoothable
    */
   restart() {
-    this[rolling] = this.identity;
+    this[cascade] = this.identity;
   }
 
   /**
@@ -96,8 +92,8 @@ const Smoothable = (superclass) => class Smoothable extends superclass {
    * @return {?object}
    */
   [smooth](next, field) {
-    const avg = this.smoothingAverage(this[rolling], next[field]);
-    this[rolling] = avg;
+    const avg = this.smoothingAverage(this[cascade], next[field]);
+    this[cascade] = avg;
     next[field] = avg;
     return next;
   }
