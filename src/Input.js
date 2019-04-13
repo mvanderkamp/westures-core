@@ -10,6 +10,8 @@ const PointerData = require('./PointerData.js');
  * In case event.composedPath() is not available.
  *
  * @private
+ * @inner
+ * @memberof Input
  *
  * @param {Event} event
  *
@@ -35,6 +37,8 @@ function getPropagationPath(event) {
  * element they point to is removed from the page.
  *
  * @private
+ * @inner
+ * @memberof Input
  * @return {WeakSet.<Element>} The Elements in the path of the given event.
  */
 function getElementsInPath(event) {
@@ -124,6 +128,8 @@ class Input {
   get startTime() { return this.initial.time; }
 
   /**
+   * @private
+   *
    * @param {string} id - The ID of the gesture whose progress is sought.
    *
    * @return {Object} The progress of the gesture.

@@ -17,6 +17,8 @@ const symbols = Object.freeze({
  * Must be called with a bound 'this', via bind(), or call(), or apply().
  *
  * @private
+ * @inner
+ * @memberof State
  */
 const update_fns = {
   TouchEvent: function TouchEvent(event) {
@@ -45,6 +47,8 @@ const update_fns = {
 class State {
   /**
    * Constructor for the State class.
+   *
+   * @param {Element} element - The element underpinning the associated Region.
    */
   constructor(element) {
     /**
@@ -59,7 +63,9 @@ class State {
      * Keeps track of the current Input objects.
      *
      * @private
-     * @type {Map}
+     * @alias [@@inputs]
+     * @type {Map.<Input>}
+     * @memberof State
      */
     this[symbols.inputs] = new Map();
 

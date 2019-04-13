@@ -15,17 +15,24 @@ on a touch device.
 
 Westures is a fork of [ZingTouch](https://github.com/zingchart/zingtouch). 
 
-## Advisory
+## Quick Example
 
-This is an alpha release of this library. Browser compatability has not been
-tested except in the newest stable releases of Chrome and Firefox. Likewise, it
-has only been tested on a very small selection of devices. Updates may be
-frequent at times, but check back here and in the documentation to see what's
-new and what breaking changes might have occurred.
+```javascript
+// Import the module.
+const wes = require('westures-core');
 
-That said, please do give it a try, and if something breaks, please let me know!
-Or, even better, figure out why it broke, figure out a solution, and submit a
-pull request!
+// Declare a region.
+const region = new wes.Region(document.body);
+
+// Add a gesture to an element within the region. 
+// Assumes a Pan gesture is available.
+const pannable = document.querySelector('#pannable');
+region.addGesture(pannable, new Pan(), (data) => {
+  // data.translation.x ...
+  // data.translation.y ...
+  // and so on, depending on the Gesture
+});
+```
 
 ## Table of Contents
 
@@ -37,7 +44,7 @@ pull request!
 
 ## Overview
 
-There are seven classes defined in this module:
+There are eight classes defined in this module:
 
 - _Binding:_ Bind a Gesture to an element within a Region.
 - _Gesture:_ Respond to input phase "hooks" to define a gesture.
@@ -48,19 +55,14 @@ There are seven classes defined in this module:
     single pointer.
 - _Region:_ Listen for user input events and respond appropriately.
 - _State:_ Track all active Inputs within a Region.
+- _Smoothable:_ Adds optional smoothing to Gestures. (Extension of Gesture,
+  currently implemented as a mixin, but that will likely change).
 
 These classes are structured as follows:
 
-```text
-Region
-  \-Binding
-  |  \-Gesture
-  |
-  \-State
-     \-Input
-        \-PointerData
-           \-Point2D
-```
+![Graph of westures-core module](
+https://raw.githubusercontent.com/mvanderkamp/westures-core/master/arkit.svg?sanitize=true)
+
 ## Basic Usage
 
 ### Importing the module
@@ -71,29 +73,20 @@ const wes = require('westures-core');
 
 ### Declaring a Region
 
-First, decide what region should listen for events. If you want elements to
-continue to respond to input events from the `move` and `end` phases even if the
-pointer moves outside the element, you should use a region that contains the
-element. This can even be the window object if you want these events to fire
-event if the pointer goes outside the browser window.
+First, decide what region should listen for events. This could be the
+interactable element itself, or a larger region (possibly containing many
+interactable elements). Behaviour may differ slightly based on the approach you
+take, as a Region will perform locking operations on its interactable elements
+and their bound gestures so as to limit interference between elements during
+gestures, and no such locking occurs between Regions.
 
-For example:
-
-```javascript
-const region = new wes.Region(window);
-```
-
-Of course, if you have lots of interactable elements on your page, you may want
-to consider using smaller elements as regions, or event the interactable element
-itself. Test it out in any case, and see what works better for you.
-
-For example, if you have a canvas element with id `draw-struff` that you want to
-interact with, you could do:
+If you have lots of interactable elements on your page, you may find it
+convenient to use smaller elements as regions. Test it out in case, and see what
+works better for you.
 
 ```javascript
-const region = new wes.Region(document.querySelector('#draw-stuff'));
+const region = new wes.Region(document.body);
 ```
-
 ### Binding an element within a Region
 
 When you add a gesture to a region, you need to provide a handler as well as an
@@ -116,20 +109,20 @@ data. The data returned by the hook will be available inside `panner` as such:
 
 ```javascript
 function panner(data) {
-  // data.x ...
-  // data.y ...
-  // and so on, depending on the Gesture
+  // data.translation.x ...
+  // data.translation.y ...
+  // and so on, depending on the gesture
 }
 ```
 
 ## Implementing Custom Gestures
 
 The core technique used by Westures (originally conceived for ZingTouch) is to
-process all user inputs and filter them through three key lifecycle phases:
-`start`, `move`, and `end`. Gestures are defined by how they respond to these
-phases.  To respond to the phases, a gesture extends the `Gesture` class
+process all user inputs and filter them through four key lifecycle phases:
+`start`, `move`, `end`, and `cancel`. Gestures are defined by how they respond
+to these phases. To respond to the phases, a gesture extends the `Gesture` class
 provided by this module and overrides the method (a.k.a. "hook") corresponding
-to the name of the phase. 
+to the name of the phase.
 
 The hook, when called, will receive the current State object of the region. To
 maintain responsiveness, the functionality within a hook should be short and as
@@ -146,14 +139,13 @@ class Tap extends Gesture {
   }
 
   end(state) {
-    const {x,y} = state.getInputsInPhase('end')[0].current.point;
-    return {x,y};
+    return state.getInputsInPhase('end')[0].current.point;
   }
 }
 ```
 
-There are problems with this example, so I don't recommend using it as an actual
-Tap gesture, but it gives you the basic idea.
+There are problems with this example, and it should not be used as an actual Tap
+gesture, it is merely to illustrate the basid idea.
 
 The default hooks for all Gestures simply return null. Data will only be
 forwarded to bound handlers when a non-null value is returned by a hook.
@@ -162,49 +154,6 @@ For information about what data is accessible via the State object, see the full
 documentation [here](https://mvanderkamp.github.io/westures-core/State.html).
 Note that his documentation was generated with `jsdoc`.
 
-### Storing the "progress" of a Gesture
-
-One of the key facilities made available via the `state` object that a hook
-receives is the ability to store intermediate progress on a per-gesture and
-per-input basis. This is done via the `getProgressOfGesture` method on any given
-input. 
-
-Here is a simple Pan example, where we keep track of what data was last emitted
-using this progress capability.
-
-```javascript
-const { Gesture } = require('westures-core');
-
-class Pan extends Gesture {
-  constructor() {
-    super('pan');
-  }
-
-  start(state) {
-    const progress = state.active[0].getProgressOfGesture(this.id);
-    progress.lastEmit = state.centroid;
-  }
-
-  move(state) {
-    const progress = state.active[0].getProgressOfGesture(this.id);
-    const change = state.centroid.minus(progress.lastEmit);
-    progress.lastEmit = state.centroid;
-    return {
-      change,
-      centroid: state.centroid,
-    };
-  }
-
-  end(state) {
-    const progress = state.active[0].getProgressOfGesture(this.id);
-    progress.lastEmit = state.centroid;
-  }
-}
-```
-
-In fact, this example is very close to the Pan implementation that is included
-in the `westures` module.
-
 ### Data Passed to Handlers
 
 As you can see from above, it is the gesture which decides when data gets passed
@@ -212,12 +161,13 @@ to handlers, and for the most part what that data will be. Note though that a
 few propertiess will get added to the outgoing data object before the handler is
 called. Those properties are:
 
-Name   | Type    | Value
--------|---------|-------
-event  | Event   | The input event which caused the gesture to be recognized
-phase  | String  | 'start', 'move', or 'end'
-type   | String  | The name of the gesture as specified by its designer.
-target | Element | The Element that is associated with the recognized gesture.
+Name     | Type    | Value
+---------|---------|-------
+centroid | Point2D | The centroid of the input points.
+event    | Event   | The input event which caused the gesture to be recognized
+phase    | String  | 'start', 'move', or 'end'
+type     | String  | The name of the gesture as specified by its designer.
+target   | Element | The Element that is associated with the recognized gesture.
 
 ## Changes From ZingTouch
 
@@ -249,6 +199,19 @@ gesture support. Beyond that, here are some spefic changes:
   as the callback for an event, the parameters do not need to be wrapped up
   inside the 'details' property of an event object.
 - Renamed 'bind' to 'addGesture' and 'unbind' to 'removeGestures'.
+- Implemented a Smoothable mixin to be used for movement-based gestures.
+
+## Advisory
+
+This is an alpha release of this library. Browser compatability has not been
+tested except in the newest stable releases of Chrome and Firefox. Likewise, it
+has only been tested on a very small selection of devices. Updates may be
+frequent at times, but check back here and in the documentation to see what's
+new and what breaking changes might have occurred.
+
+That said, please do give it a try, and if something breaks, please let me know!
+Or, even better, figure out why it broke, figure out a solution, and submit a
+pull request!
 
 ## Links
 

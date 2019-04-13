@@ -9,6 +9,9 @@ const PHASE   = require('./PHASE.js');
 
 /**
  * @private
+ * @inner
+ * @memberof PointerData
+ *
  * @return {Event} The Event object which corresponds to the given identifier.
  *    Contains clientX, clientY values.
  */
@@ -64,6 +67,7 @@ class PointerData {
      *
      * @type {westures-core.Point2D}
      */
+    // this.point = new Point2D(eventObj.pageX, eventObj.pageY);
     this.point = new Point2D(eventObj.clientX, eventObj.clientY);
   }
 

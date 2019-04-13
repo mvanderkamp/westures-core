@@ -1,8 +1,8 @@
 (function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.westuresCore = f()}})(function(){var define,module,exports;return (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
 /**
- * The global API interface for Westures. Exposes a constructor for the
- * {@link Region} and the generic {@link Gesture} class for user gestures to
- * implement, as well as the {@link Point2D} class, which may be useful.
+ * The global API interface for Westures. Exposes a constructor for the Region
+ * and the generic Gesture class for user gestures to implement, as well as the
+ * Point2D class, which may be useful.
  *
  * @namespace westures-core
  */
@@ -1117,7 +1117,7 @@ class Binding {
      * The gesture to associate with the given element.
      *
      * @private
-     * @type {Gesture}
+     * @type {westures-core.Gesture}
      */
 
     this.gesture = gesture;
@@ -1136,8 +1136,7 @@ class Binding {
    *
    * @private
    *
-   * @param {string} hook - which gesture hook to call, must be one of 'start',
-   *    'move', or 'end'.
+   * @param {string} hook - Must be one of 'start', 'move', 'end', or 'cancel'.
    * @param {State} state - The current State instance.
    */
 
@@ -1163,13 +1162,15 @@ module.exports = Binding;
 
 },{}],64:[function(require,module,exports){
 /*
- * Contains the {@link Gesture} class
+ * Contains the Gesture class
  */
 'use strict';
 
 let nextGestureNum = 0;
 /**
- * The Gesture class that all gestures inherit from.
+ * The Gesture class that all gestures inherit from. A custom gesture class will
+ * need to override some or all of the four phase "hooks": start, move, end, and
+ * cancel.
  *
  * @memberof westures-core
  */
@@ -1182,7 +1183,7 @@ class Gesture {
    */
   constructor(type) {
     if (typeof type !== 'string') {
-      throw new TypeError('Gestures require a string type');
+      throw new TypeError('Gestures require a string type / name');
     }
     /**
      * The name of the gesture. (e.g. 'pan' or 'tap' or 'pinch').
@@ -1272,6 +1273,8 @@ const PointerData = require('./PointerData.js');
  * In case event.composedPath() is not available.
  *
  * @private
+ * @inner
+ * @memberof Input
  *
  * @param {Event} event
  *
@@ -1299,6 +1302,8 @@ function getPropagationPath(event) {
  * element they point to is removed from the page.
  *
  * @private
+ * @inner
+ * @memberof Input
  * @return {WeakSet.<Element>} The Elements in the path of the given event.
  */
 
@@ -1396,6 +1401,8 @@ class Input {
     return this.initial.time;
   }
   /**
+   * @private
+   *
    * @param {string} id - The ID of the gesture whose progress is sought.
    *
    * @return {Object} The progress of the gesture.
@@ -1652,6 +1659,9 @@ const Point2D = require('./Point2D.js');
 const PHASE = require('./PHASE.js');
 /**
  * @private
+ * @inner
+ * @memberof PointerData
+ *
  * @return {Event} The Event object which corresponds to the given identifier.
  *    Contains clientX, clientY values.
  */
@@ -1710,6 +1720,7 @@ class PointerData {
      *
      * @type {westures-core.Point2D}
      */
+    // this.point = new Point2D(eventObj.pageX, eventObj.pageY);
 
     this.point = new Point2D(eventObj.clientX, eventObj.clientY);
   }
@@ -1772,13 +1783,21 @@ class Region {
    * Constructor function for the Region class.
    *
    * @param {Element} element - The element which should listen to input events.
-   * @param {boolean} capture - Whether the region uses the capture phase of
-   *    input events. If false, uses the bubbling phase.
-   * @param {boolean} preventDefault - Whether the default browser functionality
-   *    should be disabled. This option should most likely be ignored. Here
-   *    there by dragons if set to false.
+   * @param {object} [options]
+   * @param {boolean} [options.capture=false] - Whether the region uses the
+   * capture phase of input events. If false, uses the bubbling phase.
+   * @param {boolean} [options.preventDefault=true] - Whether the default
+   * browser functionality should be disabled. This option should most likely be
+   * ignored. Here there by dragons if set to false.
+   * @param {string} [options.source='page'] - One of 'page', 'client', or
+   * 'screen'. Determines what the source of (x,y) coordinates will be from the
+   * input events. ('X' and 'Y' will be appended, then those are the properties
+   * that will be looked up). *** NOT YET IMPLEMENTED ***
    */
+  // constructor(element, options = {}) {
   constructor(element, capture = false, preventDefault = true) {
+    // const settings = { ...Region.DEFAULTS, ...options };
+
     /**
      * The list of relations between elements, their gestures, and the handlers.
      *
@@ -2003,6 +2022,10 @@ class Region {
 
 }
 
+Region.DEFAULTS = Object.freeze({
+  capture: false,
+  preventDefault: true
+});
 module.exports = Region;
 
 },{"./Binding.js":63,"./PHASE.js":66,"./State.js":71}],70:[function(require,module,exports){
@@ -2013,7 +2036,7 @@ module.exports = Region;
 
 require("core-js/modules/es.symbol.description");
 
-const stagedEmit = Symbol('stagedEmit');
+const cascade = Symbol('cascade');
 const smooth = Symbol('smooth');
 /**
  * A Smoothable gesture is one that emits on 'move' events. It provides a
@@ -2022,7 +2045,7 @@ const smooth = Symbol('smooth');
  * as a slight amount of drift over gestures sustained for a long period of
  * time.
  *
- * For a gesture to make use of smoothing, it must return `this.emit(data,
+ * For a gesture to make use of smoothing, it must return `this.smooth(data,
  * field)` from the `move` phase, instead of returning the data directly. If the
  * data being smoothed is not a simple number, it must also override the
  * `smoothingAverage(a, b)` method. Also you will probably want to call
@@ -2042,71 +2065,79 @@ const Smoothable = superclass => class Smoothable extends superclass {
   constructor(name, options = {}) {
     super(name, options);
     /**
-     * The function through which emits are passed.
+     * The function through which smoothed emits are passed.
      *
-     * @private
+     * @memberof westures-core.Smoothable
+     *
      * @type {function}
+     * @param {object} data - The data to emit.
      */
 
-    this.emit = null;
+    this.smooth = null;
 
     if (options.hasOwnProperty('smoothing') && !options.smoothing) {
-      this.emit = data => data;
+      this.smooth = data => data;
     } else {
-      this.emit = this[smooth].bind(this);
+      this.smooth = this[smooth].bind(this);
     }
+    /**
+     * The "identity" value of the data that will be smoothed.
+     *
+     * @memberof westures-core.Smoothable
+     *
+     * @type {*}
+     * @default 0
+     */
+
+
+    this.identity = 0;
     /**
      * Stage the emitted data once.
      *
      * @private
+     * @static
+     * @memberof westures-core.Smoothable
+     *
+     * @alias [@@cascade]
      * @type {object}
      */
 
-
-    this[stagedEmit] = null;
+    this[cascade] = this.identity;
   }
   /**
    * Restart the Smoothable gesture.
    *
-   * @private
-   * @memberof module:westures-core.Smoothable
+   * @memberof westures-core.Smoothable
    */
 
 
   restart() {
-    this[stagedEmit] = null;
+    this[cascade] = this.identity;
   }
   /**
    * Smooth out the outgoing data.
    *
    * @private
-   * @memberof module:westures-core.Smoothable
+   * @memberof westures-core.Smoothable
    *
    * @param {object} next - The next batch of data to emit.
-   * @param {string] field - The field to which smoothing should be applied.
+   * @param {string} field - The field to which smoothing should be applied.
    *
    * @return {?object}
    */
 
 
   [smooth](next, field) {
-    let result = null;
-
-    if (this[stagedEmit]) {
-      result = this[stagedEmit];
-      const avg = this.smoothingAverage(result[field], next[field]);
-      result[field] = avg;
-      next[field] = avg;
-    }
-
-    this[stagedEmit] = next;
-    return result;
+    const avg = this.smoothingAverage(this[cascade], next[field]);
+    this[cascade] = avg;
+    next[field] = avg;
+    return next;
   }
   /**
    * Average out two values, as part of the smoothing algorithm.
    *
    * @private
-   * @memberof module:westures-core.Smoothable
+   * @memberof westures-core.Smoothable
    *
    * @param {number} a
    * @param {number} b
@@ -2147,6 +2178,8 @@ const symbols = Object.freeze({
  * Must be called with a bound 'this', via bind(), or call(), or apply().
  *
  * @private
+ * @inner
+ * @memberof State
  */
 
 const update_fns = {
@@ -2174,6 +2207,8 @@ const update_fns = {
 class State {
   /**
    * Constructor for the State class.
+   *
+   * @param {Element} element - The element underpinning the associated Region.
    */
   constructor(element) {
     /**
@@ -2187,7 +2222,9 @@ class State {
      * Keeps track of the current Input objects.
      *
      * @private
-     * @type {Map}
+     * @alias [@@inputs]
+     * @type {Map.<Input>}
+     * @memberof State
      */
 
     this[symbols.inputs] = new Map();

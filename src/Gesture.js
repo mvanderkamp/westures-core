@@ -1,5 +1,5 @@
 /*
- * Contains the {@link Gesture} class
+ * Contains the Gesture class
  */
 
 'use strict';
@@ -7,7 +7,9 @@
 let nextGestureNum = 0;
 
 /**
- * The Gesture class that all gestures inherit from.
+ * The Gesture class that all gestures inherit from. A custom gesture class will
+ * need to override some or all of the four phase "hooks": start, move, end, and
+ * cancel.
  *
  * @memberof westures-core
  */
@@ -19,7 +21,7 @@ class Gesture {
    */
   constructor(type) {
     if (typeof type !== 'string') {
-      throw new TypeError('Gestures require a string type');
+      throw new TypeError('Gestures require a string type / name');
     }
 
     /**
