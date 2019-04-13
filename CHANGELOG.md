@@ -2,11 +2,23 @@
 
 ## Releases
 
+- [0.6.2](#062)
 - [0.6.1](#061)
 - [0.6.0](#060)
 - [0.5.3](#053)
 - [0.5.2](#052)
 - [0.5.0](#050)
+
+## 0.6.2
+
+- [POSSIBLE BREAKING] But only for those who have implemented their own
+  Smoothable gesture with a non-zero identity value (e.g. Rotate has an identity
+  of 0, as that represents no change, and Pinch has an identity of 1, as that
+  represents no change). Such gestures will now need to declare their own
+  identity value *after* calling super() in the constructor.
+- The smoothing algorithm used by the Smoothable mixin has been simplified.
+  There is no delay to emits, as analysis of the data revealed this really only
+  occurred for the first emit. Instead a simple rolling average is maintained.
 
 ## 0.6.1
 
