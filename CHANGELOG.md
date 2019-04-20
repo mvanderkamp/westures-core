@@ -2,12 +2,18 @@
 
 ## Releases
 
+- [0.6.3](#063)
 - [0.6.2](#062)
 - [0.6.1](#061)
 - [0.6.0](#060)
 - [0.5.3](#053)
 - [0.5.2](#052)
 - [0.5.0](#050)
+
+## 0.6.3
+
+- Add a check that ensures smoothing will only ever be applied on devices that
+  need it. That is, devices with 'coarse' pointers.
 
 ## 0.6.2
 
