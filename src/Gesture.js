@@ -12,13 +12,10 @@ let nextGestureNum = 0;
  * cancel.
  *
  * @memberof westures-core
+ *
+ * @param {string} type - The name of the gesture.
  */
 class Gesture {
-  /**
-   * Constructor function for the Gesture class.
-   *
-   * @param {string} type - The name of the gesture.
-   */
   constructor(type) {
     if (typeof type !== 'string') {
       throw new TypeError('Gestures require a string type / name');

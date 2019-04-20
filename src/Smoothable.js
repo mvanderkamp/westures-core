@@ -51,14 +51,13 @@ function smoothingIsApplicable(isRequested = true) {
  *
  * @memberof westures-core
  * @mixin
+ *
+ * @param {string} name - The name of the gesture.
+ * @param {Object} [options]
+ * @param {boolean} [options.smoothing=true] Whether to apply smoothing to
+ * emitted data.
  */
 const Smoothable = (superclass) => class Smoothable extends superclass {
-  /**
-   * @param {string} name - The name of the gesture.
-   * @param {Object} [options]
-   * @param {boolean} [options.smoothing=true] Whether to apply smoothing to
-   * emitted data.
-   */
   constructor(name, options = {}) {
     super(name, options);
 

@@ -28,15 +28,10 @@ function getEventObject(event, identifier) {
  * Low-level storage of pointer data based on incoming data from an interaction
  * event.
  *
- * @hideconstructor
+ * @param {Event} event - The event object being wrapped.
+ * @param {number} identifier - The index of touch if applicable
  */
 class PointerData {
-  /**
-   * @constructor
-   *
-   * @param {Event} event - The event object being wrapped.
-   * @param {number} identifier - The index of touch if applicable
-   */
   constructor(event, identifier) {
     /**
      * The original event object.

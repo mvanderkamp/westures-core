@@ -9,14 +9,11 @@
  * x and y coordinates.
  *
  * @memberof westures-core
+ *
+ * @param {number} [ x=0 ] - The x coordinate of the point.
+ * @param {number} [ y=0 ] - The y coordinate of the point.
  */
 class Point2D {
-  /**
-   * Constructor function for the Point2D class.
-   *
-   * @param {number} [ x=0 ] - The x coordinate of the point.
-   * @param {number} [ y=0 ] - The y coordinate of the point.
-   */
   constructor(x = 0, y = 0) {
     /**
      * The x coordinate of the point.

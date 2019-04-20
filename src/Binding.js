@@ -8,17 +8,12 @@
  * A Binding associates a gesture with an element and a handler function that
  * will be called when the gesture is recognized.
  *
- * @private
+ * @param {Element} element - The element to which to associate the gesture.
+ * @param {westures-core.Gesture} gesture - A instance of the Gesture type.
+ * @param {Function} handler - The function handler to execute when a gesture
+ *    is recognized on the associated element.
  */
 class Binding {
-  /**
-   * Constructor function for the Binding class.
-   *
-   * @param {Element} element - The element to which to associate the gesture.
-   * @param {westures-core.Gesture} gesture - A instance of the Gesture type.
-   * @param {Function} handler - The function handler to execute when a gesture
-   *    is recognized on the associated element.
-   */
   constructor(element, gesture, handler) {
     /**
      * The element to which to associate the gesture.

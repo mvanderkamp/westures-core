@@ -42,14 +42,9 @@ const update_fns = {
  * Keeps track of currently active and ending input points on the interactive
  * surface.
  *
- * @hideconstructor
+ * @param {Element} element - The element underpinning the associated Region.
  */
 class State {
-  /**
-   * Constructor for the State class.
-   *
-   * @param {Element} element - The element underpinning the associated Region.
-   */
   constructor(element) {
     /**
      * Keep a reference to the element for the associated region.

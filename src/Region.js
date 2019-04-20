@@ -36,23 +36,20 @@ const CANCEL_EVENTS = [
  * input events.
  *
  * @memberof westures-core
+ *
+ * @param {Element} element - The element which should listen to input events.
+ * @param {object} [options]
+ * @param {boolean} [options.capture=false] - Whether the region uses the
+ * capture phase of input events. If false, uses the bubbling phase.
+ * @param {boolean} [options.preventDefault=true] - Whether the default
+ * browser functionality should be disabled. This option should most likely be
+ * ignored. Here there by dragons if set to false.
+ * @param {string} [options.source='page'] - One of 'page', 'client', or
+ * 'screen'. Determines what the source of (x,y) coordinates will be from the
+ * input events. ('X' and 'Y' will be appended, then those are the properties
+ * that will be looked up). *** NOT YET IMPLEMENTED ***
  */
 class Region {
-  /**
-   * Constructor function for the Region class.
-   *
-   * @param {Element} element - The element which should listen to input events.
-   * @param {object} [options]
-   * @param {boolean} [options.capture=false] - Whether the region uses the
-   * capture phase of input events. If false, uses the bubbling phase.
-   * @param {boolean} [options.preventDefault=true] - Whether the default
-   * browser functionality should be disabled. This option should most likely be
-   * ignored. Here there by dragons if set to false.
-   * @param {string} [options.source='page'] - One of 'page', 'client', or
-   * 'screen'. Determines what the source of (x,y) coordinates will be from the
-   * input events. ('X' and 'Y' will be appended, then those are the properties
-   * that will be looked up). *** NOT YET IMPLEMENTED ***
-   */
   // constructor(element, options = {}) {
   constructor(element, capture = false, preventDefault = true) {
     // const settings = { ...Region.DEFAULTS, ...options };
