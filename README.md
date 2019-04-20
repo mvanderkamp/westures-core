@@ -39,7 +39,7 @@ region.addGesture(pannable, new Pan(), (data) => {
 - [Overview](#overview)
 - [Basic Usage](#basic-usage)
 - [Implementing Custom Gestures](#implementing-custom-gestures)
-- [What's Changed](#changes-from-zingtouch)
+- [What's Changed](#changes)
 - [Links](#links)
 
 ## Overview
@@ -169,7 +169,13 @@ phase    | String  | 'start', 'move', or 'end'
 type     | String  | The name of the gesture as specified by its designer.
 target   | Element | The Element that is associated with the recognized gesture.
 
-## Changes From ZingTouch
+## Changes
+
+See the [changelog](
+https://github.com/mvanderkamp/westures-core/blob/master/CHANGELOG.md) for the
+most recent updates.
+
+### Changes From ZingTouch
 
 The fundamental idea of ZingTouch, the three-phase hook structure, remains more
 or less the same. Most of the changes have to do with streamlining and
