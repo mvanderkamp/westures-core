@@ -158,15 +158,15 @@ class State {
       this[symbols.inputs].set(identifier, new Input(event, identifier));
       try {
         this.element.setPointerCapture(identifier);
-      } catch (e) { 
-        console.warn(e); 
+      } catch (e) {
+        console.warn(e);
       }
       break;
     case 'end':
       try {
         this.element.releasePointerCapture(identifier);
-      } catch (e) { 
-        console.warn(e); 
+      } catch (e) {
+        console.warn(e);
       }
     case 'move':
     case 'cancel':
