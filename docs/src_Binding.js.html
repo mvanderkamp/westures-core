@@ -4,7 +4,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Source: src/Region.js | westures-core</title>
+    <title>Source: src/Binding.js | westures-core</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -53,87 +53,24 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>/*
- * Contains the {@link Region} class
+ * Contains the Binding class.
  */
 
 'use strict';
 
-const Binding = require('./Binding.js');
-const State   = require('./State.js');
-const PHASE   = require('./PHASE.js');
-
-const POINTER_EVENTS = [
-  'pointerdown',
-  'pointermove',
-  'pointerup',
-];
-
-const MOUSE_EVENTS = [
-  'mousedown',
-  'mousemove',
-  'mouseup',
-];
-
-const TOUCH_EVENTS = [
-  'touchstart',
-  'touchmove',
-  'touchend',
-];
-
-const CANCEL_EVENTS = [
-  'pointercancel',
-  'touchcancel',
-];
-
 /**
- * Allows the user to specify the control region which will listen for user
- * input events.
+ * A Binding associates a gesture with an element and a handler function that
+ * will be called when the gesture is recognized.
  *
- * @memberof westures-core
- *
- * @param {Element} element - The element which should listen to input events.
- * @param {object} [options]
- * @param {boolean} [options.capture=false] - Whether the region uses the
- * capture phase of input events. If false, uses the bubbling phase.
- * @param {boolean} [options.preventDefault=true] - Whether the default
- * browser functionality should be disabled. This option should most likely be
- * ignored. Here there by dragons if set to false.
- * @param {string} [options.source='page'] - One of 'page', 'client', or
- * 'screen'. Determines what the source of (x,y) coordinates will be from the
- * input events. ('X' and 'Y' will be appended, then those are the properties
- * that will be looked up). *** NOT YET IMPLEMENTED ***
+ * @param {Element} element - The element to which to associate the gesture.
+ * @param {westures-core.Gesture} gesture - A instance of the Gesture type.
+ * @param {Function} handler - The function handler to execute when a gesture
+ *    is recognized on the associated element.
  */
-class Region {
-  // constructor(element, options = {}) {
-  constructor(element, capture = false, preventDefault = true) {
-    // const settings = { ...Region.DEFAULTS, ...options };
-
+class Binding {
+  constructor(element, gesture, handler) {
     /**
-     * The list of relations between elements, their gestures, and the handlers.
-     *
-     * @private
-     * @type {Binding[]}
-     */
-    this.bindings = [];
-
-    /**
-     * The list of active bindings for the current input session.
-     *
-     * @private
-     * @type {Binding[]}
-     */
-    this.activeBindings = [];
-
-    /**
-     * Whether an input session is currently active.
-     *
-     * @private
-     * @type {boolean}
-     */
-    this.isWaiting = true;
-
-    /**
-     * The element being bound to.
+     * The element to which to associate the gesture.
      *
      * @private
      * @type {Element}
@@ -141,196 +78,48 @@ class Region {
     this.element = element;
 
     /**
-     * Whether the region listens for captures or bubbles.
+     * The gesture to associate with the given element.
      *
      * @private
-     * @type {boolean}
+     * @type {westures-core.Gesture}
      */
-    this.capture = capture;
+    this.gesture = gesture;
 
     /**
-     * Whether the default browser functionality should be disabled. This option
-     * should most likely be ignored. Here there by dragons if set to false.
+     * The function handler to execute when the gesture is recognized on the
+     * associated element.
      *
      * @private
-     * @type {boolean}
+     * @type {Function}
      */
-    this.preventDefault = preventDefault;
-
-    /**
-     * The internal state object for a Region.  Keeps track of inputs.
-     *
-     * @private
-     * @type {State}
-     */
-    this.state = new State(this.element);
-
-    // Begin operating immediately.
-    this.activate();
+    this.handler = handler;
   }
 
   /**
-   * Activates the region by adding event listeners for all appropriate input
-   * events to the region's element.
+   * Evalutes the given gesture hook, and dispatches any data that is produced.
    *
    * @private
-   */
-  activate() {
-    /*
-     * Having to listen to both mouse and touch events is annoying, but
-     * necessary due to conflicting standards and browser implementations.
-     * Pointer is a fallback for now instead of the primary, until I figure out
-     * all the details to do with pointer-events and touch-action and their
-     * cross browser compatibility.
-     *
-     * Listening to both mouse and touch comes with the difficulty that
-     * preventDefault() must be called to prevent both events from iterating
-     * through the system. However I have left it as an option to the end user,
-     * which defaults to calling preventDefault(), in case there's a use-case I
-     * haven't considered or am not aware of.
-     *
-     * It is also a good idea to keep regions small in large pages.
-     *
-     * See:
-     *  https://www.html5rocks.com/en/mobile/touchandmouse/
-     *  https://developer.mozilla.org/en-US/docs/Web/API/Touch_events
-     *  https://developer.mozilla.org/en-US/docs/Web/API/Pointer_events
-     */
-    let eventNames = [];
-    if (window.TouchEvent || window.MouseEvent) {
-      eventNames = MOUSE_EVENTS.concat(TOUCH_EVENTS);
-    } else {
-      eventNames = POINTER_EVENTS;
-    }
-
-    // Bind detected browser events to the region element.
-    const arbiter = this.arbitrate.bind(this);
-    eventNames.forEach(eventName => {
-      this.element.addEventListener(eventName, arbiter, {
-        capture: this.capture,
-        once:    false,
-        passive: false,
-      });
-    });
-
-    ['blur'].concat(CANCEL_EVENTS).forEach(eventname => {
-      window.addEventListener(eventname, (e) => {
-        e.preventDefault();
-        this.state = new State(this.element);
-        this.resetActiveBindings();
-      });
-    });
-  }
-
-  /**
-   * Resets the active bindings.
    *
-   * @private
+   * @param {string} hook - Must be one of 'start', 'move', 'end', or 'cancel'.
+   * @param {State} state - The current State instance.
    */
-  resetActiveBindings() {
-    this.activeBindings = [];
-    this.isWaiting = true;
-  }
-
-  /**
-   * Selects the bindings that are active for the current input sequence.
-   *
-   * @private
-   */
-  updateActiveBindings() {
-    if (this.isWaiting &amp;&amp; this.state.inputs.length > 0) {
-      const input = this.state.inputs[0];
-      this.activeBindings = this.bindings.filter(b => {
-        return input.wasInitiallyInside(b.element);
-      });
-      this.isWaiting = false;
-    }
-  }
-
-  /**
-   * Evaluates whether the current input session has completed.
-   *
-   * @private
-   */
-  pruneActiveBindings() {
-    if (this.state.hasNoActiveInputs()) {
-      this.resetActiveBindings();
-    }
-  }
-
-  /**
-   * All input events flow through this function. It makes sure that the input
-   * state is maintained, determines which bindings to analyze based on the
-   * initial position of the inputs, calls the relevant gesture hooks, and
-   * dispatches gesture data.
-   *
-   * @private
-   * @param {Event} event - The event emitted from the window object.
-   */
-  arbitrate(event) {
-    this.state.updateAllInputs(event);
-    this.updateActiveBindings();
-
-    if (this.activeBindings.length > 0) {
-      if (this.preventDefault) event.preventDefault();
-
-      this.activeBindings.forEach(binding => {
-        binding.evaluateHook(PHASE[event.type], this.state);
+  evaluateHook(hook, state) {
+    const data = this.gesture[hook](state);
+    if (data) {
+      this.handler({
+        centroid: state.centroid,
+        event:    state.event,
+        phase:    hook,
+        radius:   state.radius,
+        type:     this.gesture.type,
+        target:   this.element,
+        ...data,
       });
     }
-
-    this.state.clearEndedInputs();
-    this.pruneActiveBindings();
-  }
-
-  /**
-   * Bind an element to a gesture with an associated handler.
-   *
-   * @param {Element} element - The element object.
-   * @param {westures-core.Gesture} gesture - Gesture type with which to bind.
-   * @param {Function} handler - The function to execute when a gesture is
-   *    recognized.
-   */
-  addGesture(element, gesture, handler) {
-    this.bindings.push(new Binding(element, gesture, handler));
-  }
-
-  /**
-   * Retrieves Bindings by their associated element.
-   *
-   * @private
-   *
-   * @param {Element} element - The element for which to find bindings.
-   *
-   * @return {Binding[]} Bindings to which the element is bound.
-   */
-  getBindingsByElement(element) {
-    return this.bindings.filter(b => b.element === element);
-  }
-
-  /**
-   * Unbinds an element from either the specified gesture or all if no gesture
-   * is specified.
-   *
-   * @param {Element} element - The element to unbind.
-   * @param {westures-core.Gesture} [ gesture ] - The gesture to unbind. If
-   * undefined, will unbind all Bindings associated with the given element.
-   */
-  removeGestures(element, gesture) {
-    this.getBindingsByElement(element).forEach(b => {
-      if (gesture == null || b.gesture === gesture) {
-        this.bindings.splice(this.bindings.indexOf(b), 1);
-      }
-    });
   }
 }
 
-Region.DEFAULTS = Object.freeze({
-  capture:        false,
-  preventDefault: true,
-});
-
-module.exports = Region;
+module.exports = Binding;
 
 </code></pre>
         </article>
