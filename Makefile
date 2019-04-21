@@ -12,7 +12,7 @@ fix:
 bundle:
 	npx browserify 'index.js' \
 		--standalone westures-core \
-		--outfile 'bundle.js';
+		--outfile 'dist/bundle.js';
 
 docs:
 	npx jsdoc -c .jsdocrc.json;
@@ -28,8 +28,8 @@ tags:
 	ctags -R src;
 
 min:
-	npx terser bundle.js \
+	npx terser 'dist/bundle.js' \
 		--compress \
 		--mangle \
-		--output bundle.min.js;
+		--output 'dist/bundle.min.js';
 
