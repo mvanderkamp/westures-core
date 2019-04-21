@@ -32,7 +32,7 @@
     <div class="title">
         <h1><a href="index.html" class="link">westures-core</a></h1>
         
-            <span class="version">v0.6.3</span>
+            <span class="version">v0.6.4</span>
         
     </div>
     <div class="search-container" id="search-container">
@@ -66,7 +66,7 @@ const symbols = Object.freeze({
   inputs: Symbol.for('inputs'),
 });
 
-/*
+/**
  * Set of helper functions for updating inputs based on type of input.
  * Must be called with a bound 'this', via bind(), or call(), or apply().
  *
@@ -208,15 +208,17 @@ class State {
       try {
         this.element.setPointerCapture(identifier);
       } catch (e) {
-        console.warn(e);
+        // NOP: Optional operation failed.
       }
       break;
     case 'end':
       try {
         this.element.releasePointerCapture(identifier);
       } catch (e) {
-        console.warn(e);
+        // NOP: Optional operation failed.
       }
+      // All of 'end', 'move', and 'cancel' perform updates, hence the
+      // following fall-throughs
     case 'move':
     case 'cancel':
       if (this[symbols.inputs].has(identifier)) {
@@ -250,6 +252,7 @@ class State {
     this.active = this.getInputsNotInPhase('end');
     this.activePoints = this.active.map(i => i.current.point);
     this.centroid = Point2D.centroid(this.activePoints);
+    // XXX: Delete this.radius for next released. It is not generally useful.
     this.radius = this.activePoints.reduce((acc, cur) => {
       const dist = cur.distanceTo(this.centroid);
       return dist > acc ? dist : acc;

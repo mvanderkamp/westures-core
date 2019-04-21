@@ -2037,10 +2037,8 @@ function smoothingIsApplicable(isRequested = true) {
     try {
       return window.matchMedia('(pointer: coarse)').matches;
     } catch (e) {
-      console.warn(e);
+      return true;
     }
-
-    return true;
   }
 
   return false;
@@ -2180,7 +2178,7 @@ const Point2D = require('./Point2D.js');
 const symbols = Object.freeze({
   inputs: Symbol.for('inputs')
 });
-/*
+/**
  * Set of helper functions for updating inputs based on type of input.
  * Must be called with a bound 'this', via bind(), or call(), or apply().
  *
@@ -2326,8 +2324,7 @@ class State {
 
         try {
           this.element.setPointerCapture(identifier);
-        } catch (e) {
-          console.warn(e);
+        } catch (e) {// NOP: Optional operation failed.
         }
 
         break;
@@ -2335,9 +2332,10 @@ class State {
       case 'end':
         try {
           this.element.releasePointerCapture(identifier);
-        } catch (e) {
-          console.warn(e);
-        }
+        } catch (e) {} // NOP: Optional operation failed.
+        // All of 'end', 'move', and 'cancel' perform updates, hence the
+        // following fall-throughs
+
 
       case 'move':
       case 'cancel':
@@ -2375,7 +2373,8 @@ class State {
     this.inputs = Array.from(this[symbols.inputs].values());
     this.active = this.getInputsNotInPhase('end');
     this.activePoints = this.active.map(i => i.current.point);
-    this.centroid = Point2D.centroid(this.activePoints);
+    this.centroid = Point2D.centroid(this.activePoints); // XXX: Delete this.radius for next released. It is not generally useful.
+
     this.radius = this.activePoints.reduce((acc, cur) => {
       const dist = cur.distanceTo(this.centroid);
       return dist > acc ? dist : acc;
