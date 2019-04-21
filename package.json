@@ -3,19 +3,22 @@
   "version": "0.6.4",
   "description": "The core engine of the Westures gesture library.",
   "keywords": [
+    "multitouch",
     "gesture",
+    "libary",
     "tap",
-    "pinch",
     "pan",
+    "pinch",
     "rotate",
+    "press",
     "swipe",
     "swivel",
     "track",
     "simultaneous",
+    "gestures",
     "touch",
     "mouse",
-    "pointer",
-    "multitouch"
+    "pointer"
   ],
   "browser": "index.js",
   "browserify": {
