@@ -29,9 +29,8 @@ function smoothingIsApplicable(isRequested = true) {
     try {
       return window.matchMedia('(pointer: coarse)').matches;
     } catch (e) {
-      console.warn(e);
+      return true;
     }
-    return true;
   }
   return false;
 }
