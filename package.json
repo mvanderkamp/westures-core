@@ -1,6 +1,6 @@
 {
   "name": "westures-core",
-  "version": "0.6.3",
+  "version": "0.6.4",
   "description": "The core engine of the Westures gesture library.",
   "keywords": [
     "gesture",
