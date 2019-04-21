@@ -1653,8 +1653,8 @@ const PHASE = require('./PHASE.js');
 
 function getEventObject(event, identifier) {
   if (event.changedTouches) {
-    return Array.from(event.changedTouches).find(t => {
-      return t.identifier === identifier;
+    return Array.from(event.changedTouches).find(touch => {
+      return touch.identifier === identifier;
     });
   }
 
