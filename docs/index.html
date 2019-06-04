@@ -71,7 +71,7 @@ library. It is intended for use as a lighter-weight module to use if you do not
 intend on using the base gestures included with the standard <a href="https://mvanderkamp.github.io/westures/">westures</a> module.</p>
 <p>Visit this page for an example of the system in action: <a href="https://mvanderkamp.github.io/westures-example/">Westures Example</a>. Note that this is best viewed
 on a touch device.</p>
-<p>Westures is a fork of <a href="https://github.com/zingchart/zingtouch">ZingTouch</a>. </p>
+<p>Westures is a fork of <a href="https://github.com/zingchart/zingtouch">ZingTouch</a>.</p>
 <h2 id="quick-example">Quick Example</h2>
 <pre class="prettyprint source lang-javascript"><code>// Import the module.
 const wes = require('westures-core');
@@ -86,7 +86,9 @@ region.addGesture(pannable, new Pan(), (data) => {
   // data.translation.x ...
   // data.translation.y ...
   // and so on, depending on the Gesture
-});</code></pre><h2 id="table-of-contents">Table of Contents</h2>
+});
+</code></pre>
+<h2 id="table-of-contents">Table of Contents</h2>
 <ul>
 <li><a href="#overview">Overview</a></li>
 <li><a href="#basic-usage">Basic Usage</a></li>
@@ -100,10 +102,10 @@ region.addGesture(pannable, new Pan(), (data) => {
 <li><em>Binding:</em> Bind a Gesture to an element within a Region.</li>
 <li><em>Gesture:</em> Respond to input phase &quot;hooks&quot; to define a gesture.</li>
 <li><em>Input:</em> Track a single pointer through its lifetime, and store the progress
-  of gestures associated with that input.</li>
+of gestures associated with that input.</li>
 <li><em>Point2D:</em> Store and act on a 2-dimensional point.</li>
 <li><em>PointerData:</em> Record data pertaining to a single user input event for a
-  single pointer.</li>
+single pointer.</li>
 <li><em>Region:</em> Listen for user input events and respond appropriately.</li>
 <li><em>State:</em> Track all active Inputs within a Region.</li>
 <li><em>Smoothable:</em> Adds optional smoothing to Gestures. (Extension of Gesture,
@@ -113,7 +115,9 @@ currently implemented as a mixin, but that will likely change).</li>
 <p><img src="https://raw.githubusercontent.com/mvanderkamp/westures-core/master/arkit.svg?sanitize=true" alt="Graph of westures-core module"></p>
 <h2 id="basic-usage">Basic Usage</h2>
 <h3 id="importing-the-module">Importing the module</h3>
-<pre class="prettyprint source lang-javascript"><code>const wes = require('westures-core');</code></pre><h3 id="declaring-a-region">Declaring a Region</h3>
+<pre class="prettyprint source lang-javascript"><code>const wes = require('westures-core');
+</code></pre>
+<h3 id="declaring-a-region">Declaring a Region</h3>
 <p>First, decide what region should listen for events. This could be the
 interactable element itself, or a larger region (possibly containing many
 interactable elements). Behaviour may differ slightly based on the approach you
@@ -123,7 +127,9 @@ gestures, and no such locking occurs between Regions.</p>
 <p>If you have lots of interactable elements on your page, you may find it
 convenient to use smaller elements as regions. Test it out in case, and see what
 works better for you.</p>
-<pre class="prettyprint source lang-javascript"><code>const region = new wes.Region(document.body);</code></pre><h3 id="binding-an-element-within-a-region">Binding an element within a Region</h3>
+<pre class="prettyprint source lang-javascript"><code>const region = new wes.Region(document.body);
+</code></pre>
+<h3 id="binding-an-element-within-a-region">Binding an element within a Region</h3>
 <p>When you add a gesture to a region, you need to provide a handler as well as an
 Element along with the gesture. The gesture will only be recognized when the
 first pointer to interact with the region was inside the given Element.
@@ -133,13 +139,17 @@ element.</p>
 <p>Now for an example. Suppose you have a div (id 'pannable') within which you want
 to detect a Pan gesture (assume that such a gesture is available). Your handler
 is called <code>panner</code>.</p>
-<pre class="prettyprint source lang-javascript"><code>region.addGesture(document.querySelector('#pannable'), new Pan(), panner);</code></pre><p>The <code>panner</code> function will now be called whenever a Pan hook returns non-null
+<pre class="prettyprint source lang-javascript"><code>region.addGesture(document.querySelector('#pannable'), new Pan(), panner);
+</code></pre>
+<p>The <code>panner</code> function will now be called whenever a Pan hook returns non-null
 data. The data returned by the hook will be available inside <code>panner</code> as such:</p>
 <pre class="prettyprint source lang-javascript"><code>function panner(data) {
   // data.translation.x ...
   // data.translation.y ...
   // and so on, depending on the gesture
-}</code></pre><h2 id="implementing-custom-gestures">Implementing Custom Gestures</h2>
+}
+</code></pre>
+<h2 id="implementing-custom-gestures">Implementing Custom Gestures</h2>
 <p>The core technique used by Westures (originally conceived for ZingTouch) is to
 process all user inputs and filter them through four key lifecycle phases:
 <code>start</code>, <code>move</code>, <code>end</code>, and <code>cancel</code>. Gestures are defined by how they respond
@@ -160,7 +170,9 @@ class Tap extends Gesture {
   end(state) {
     return state.getInputsInPhase('end')[0].current.point;
   }
-}</code></pre><p>There are problems with this example, and it should not be used as an actual Tap
+}
+</code></pre>
+<p>There are problems with this example, and it should not be used as an actual Tap
 gesture, it is merely to illustrate the basid idea.</p>
 <p>The default hooks for all Gestures simply return null. Data will only be
 forwarded to bound handlers when a non-null value is returned by a hook.</p>
@@ -218,8 +230,10 @@ simplifying the code such that it is easier to use and has a wider range of
 capabilities. The most significant of these is full simultaneous multi-touch
 gesture support. Beyond that, here are some spefic changes:</p>
 <ul>
-<li>Reorganized and simplified code structure.<ul>
-<li>The arbiter-interpreter-dispatcher scheme has been significantly simplified.<ul>
+<li>Reorganized and simplified code structure.
+<ul>
+<li>The arbiter-interpreter-dispatcher scheme has been significantly simplified.
+<ul>
 <li>There is no arbiter. instead the Region class has an 'arbitrate' function.</li>
 <li>There is no interpreter. Instead the Binding class has an 'evaluateHook'
 function.</li>
@@ -262,7 +276,7 @@ pull request!</p>
 <li><a href="https://github.com/mvanderkamp/westures">github</a></li>
 <li><a href="https://mvanderkamp.github.io/westures/">documentation</a></li>
 </ul>
-<h3 id="westures-core">westures-core</h3>
+<h3 id="westures-core-2">westures-core</h3>
 <ul>
 <li><a href="https://www.npmjs.com/package/westures-core">npm</a></li>
 <li><a href="https://github.com/mvanderkamp/westures-core">github</a></li>
