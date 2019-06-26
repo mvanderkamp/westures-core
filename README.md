@@ -16,7 +16,7 @@ Visit this page for an example of the system in action: [Westures Example](
 https://mvanderkamp.github.io/westures-example/). Note that this is best viewed
 on a touch device.
 
-Westures is a fork of [ZingTouch](https://github.com/zingchart/zingtouch). 
+Westures is a fork of [ZingTouch](https://github.com/zingchart/zingtouch).
 
 ## Quick Example
 
@@ -27,7 +27,7 @@ const wes = require('westures-core');
 // Declare a region.
 const region = new wes.Region(document.body);
 
-// Add a gesture to an element within the region. 
+// Add a gesture to an element within the region.
 // Assumes a Pan gesture is available.
 const pannable = document.querySelector('#pannable');
 region.addGesture(pannable, new Pan(), (data) => {

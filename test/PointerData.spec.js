@@ -10,7 +10,7 @@ const Point2D     = require('../src/Point2D.js');
 describe('PointerData', () => {
   let mouseevent, touchevent, pointerevent, pointerangle, pointerdist;
   let mdata, tdata, id, element, childElement;
-  
+
   beforeAll(() => {
     element = document.createElement('div');
     childElement = document.createElement('div');
@@ -28,7 +28,7 @@ describe('PointerData', () => {
     touchevent = {
       type: 'touchstart',
       target: childElement,
-      changedTouches: [ 
+      changedTouches: [
         {
           identifier: 17,
           clientX: -2,
@@ -68,19 +68,19 @@ describe('PointerData', () => {
 
     id = 42;
   });
-  
+
   describe('constructor(event, identifier)', () => {
     test('Requires an event object', () => {
       expect(() => mdata = new PointerData()).toThrow();
     });
-  
+
     test('Instanties a PointerData when passed valid data', () => {
       expect(() => mdata = new PointerData(mouseevent, id)).not.toThrow();
       expect(mdata).toBeInstanceOf(PointerData);
       expect(() => tdata = new PointerData(touchevent, id)).not.toThrow();
       expect(tdata).toBeInstanceOf(PointerData);
     });
-  
+
     test('Records the original event', () => {
       expect(mdata.originalEvent).toBe(mouseevent);
       expect(tdata.originalEvent).toBe(touchevent);

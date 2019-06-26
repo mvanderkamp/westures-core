@@ -96,7 +96,7 @@ describe('Prototype methods', () => {
   describe('totalDistanceTo(points)', () => {
     let left = new Point2D(3,4);
     let right = new Point2D(-3,-4);
-  
+
     test('gives the correct distance', () => {
       expect(origin.totalDistanceTo([left,right])).toBe(10);
     });
@@ -140,7 +140,7 @@ describe('Static methods', () => {
     test('Returns null if given an empty array', () => {
       expect(Point2D.centroid([])).toBe(null);
     });
-    
+
     test('Returns the point if given an array of one point', () => {
       const p = new Point2D(42,43);
       expect(Point2D.centroid([p])).toEqual(p);
