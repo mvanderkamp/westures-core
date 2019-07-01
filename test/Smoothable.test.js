@@ -4,5 +4,5 @@
 
 'use strict';
 
-const Smoothable = require('Smoothable');
+const Smoothable = require('../src/Smoothable');
 

@@ -5,7 +5,6 @@
 'use strict';
 
 const Binding = require('../src/Binding.js');
-const Gesture = require('../src/Gesture.js');
 
 describe('Binding', () => {
   let element, gesture, handler;
@@ -34,42 +33,43 @@ describe('Binding', () => {
     });
   });
 
-  describe('evaluateHook(hook, state, events)', () => {
-    let events, state;
+  describe('prototype methods', () => {
+    describe('evaluateHook(hook, state)', () => {
+      let state;
 
-    beforeEach(() => {
-      events = ['hello', 'world'];
-      state = 42;
-      binding = new Binding(element, gesture, handler);
-    });
-
-    describe.each([['start'], ['move'], ['end']])('%s', (hook) => {
-      test('Calls the appropriate hook', () => {
-        binding.evaluateHook(hook, state);
-        expect(binding.gesture[hook]).toHaveBeenCalledTimes(1);
+      beforeEach(() => {
+        state = 42;
+        binding = new Binding(element, gesture, handler);
       });
 
-      test('Passes the state as an argument to the hook', () => {
-        binding.evaluateHook(hook, state);
-        expect(binding.gesture[hook]).toHaveBeenCalledWith(state);
-      });
+      describe.each([['start'], ['move'], ['end']])('%s', (hook) => {
+        test('Calls the appropriate hook', () => {
+          binding.evaluateHook(hook, state);
+          expect(binding.gesture[hook]).toHaveBeenCalledTimes(1);
+        });
 
-      test('Does not call the handler if null returned by hook', () => {
-        binding.evaluateHook(hook, state);
-        expect(handler).toHaveBeenCalledTimes(0);
-      });
+        test('Passes the state as an argument to the hook', () => {
+          binding.evaluateHook(hook, state);
+          expect(binding.gesture[hook]).toHaveBeenCalledWith(state);
+        });
 
-      test('Calls the handler if non-null value returned by hook', () => {
-        binding.gesture[hook].mockReturnValue({ x: 91 });
-        binding.evaluateHook(hook, state);
-        expect(handler).toHaveBeenCalledTimes(1);
-      });
+        test('Does not call the handler if null returned by hook', () => {
+          binding.evaluateHook(hook, state);
+          expect(handler).toHaveBeenCalledTimes(0);
+        });
 
-      test('Handler is called with data returned by hook', () => {
-        binding.gesture[hook].mockReturnValue({ x: 91 });
-        binding.evaluateHook(hook, state);
-        expect(handler.mock.calls[0][0]).toMatchObject({
-          x: 91,
+        test('Calls the handler if non-null value returned by hook', () => {
+          binding.gesture[hook].mockReturnValue({ x: 91 });
+          binding.evaluateHook(hook, state);
+          expect(handler).toHaveBeenCalledTimes(1);
+        });
+
+        test('Handler is called with data returned by hook', () => {
+          binding.gesture[hook].mockReturnValue({ x: 91 });
+          binding.evaluateHook(hook, state);
+          expect(handler.mock.calls[0][0]).toMatchObject({
+            x: 91,
+          });
         });
       });
     });
