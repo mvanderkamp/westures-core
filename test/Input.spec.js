@@ -25,17 +25,17 @@ describe('Input', () => {
     document.body.appendChild(outerdiv);
 
     mousedown = {
-      type: 'mousedown',
+      type:    'mousedown',
       clientX: 42,
       clientY: 43,
-      target: activediv,
+      target:  activediv,
     };
 
     mousemove = {
-      type: 'mousemove',
+      type:    'mousemove',
       clientX: 45,
       clientY: 41,
-      target: document
+      target:  document,
     };
   });
 
@@ -92,19 +92,19 @@ describe('Input', () => {
 
     test('can store progress objects for many gestures', () => {
       const nums = {
-        tap: 42,
-        pinch: 812,
+        tap:    42,
+        pinch:  812,
         rotate: 9157,
       };
       const gestures = ['tap', 'pinch', 'rotate'];
 
-      gestures.forEach( id => {
+      gestures.forEach(id => {
         expect(input.getProgressOfGesture(id)).toEqual({});
         input.getProgressOfGesture(id).num = nums[id];
         expect(input.getProgressOfGesture(id).num).toEqual(nums[id]);
       });
 
-      gestures.forEach( id => {
+      gestures.forEach(id => {
         expect(input.getProgressOfGesture(id).num).toEqual(nums[id]);
       });
     });
@@ -135,11 +135,11 @@ describe('Input', () => {
     });
 
     test('Continues measuring from initial after more updates', () => {
-      let mousenext = {
-        type: 'mousedown',
+      const mousenext = {
+        type:    'mousedown',
         clientX: 46,
         clientY: 40,
-        target: document
+        target:  document,
       };
       input.update(mousenext);
       expect(input.totalDistance()).toBeCloseTo(Math.sqrt(25));

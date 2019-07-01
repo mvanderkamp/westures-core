@@ -8,14 +8,14 @@ const Binding = require('../src/Binding.js');
 const Gesture = require('../src/Gesture.js');
 
 describe('Binding', () => {
-  let gesture, element, handler;
+  let element, gesture, handler;
   let binding;
 
   beforeEach(() => {
     gesture = {
-      start: jest.fn(),
-      move: jest.fn(),
-      end: jest.fn(),
+      start:  jest.fn(),
+      move:   jest.fn(),
+      end:    jest.fn(),
       cancel: jest.fn(),
     };
     element = document.createElement('div');

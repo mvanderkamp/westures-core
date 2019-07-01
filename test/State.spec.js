@@ -116,7 +116,7 @@ describe('State', () => {
         });
 
         test('All retrieved inputs are starts', () => {
-          state.getInputsInPhase('start').forEach( s => {
+          state.getInputsInPhase('start').forEach(s => {
             expect(s.phase).toBe('start');
           });
         });
@@ -140,7 +140,7 @@ describe('State', () => {
         });
 
         test('All retrieved inputs are moves', () => {
-          moves.forEach( m => {
+          moves.forEach(m => {
             expect(m.phase).toBe('move');
           });
         });
@@ -162,7 +162,7 @@ describe('State', () => {
         });
 
         test('All retrieved inputs are ends', () => {
-          ends.forEach( m => {
+          ends.forEach(m => {
             expect(m.phase).toBe('end');
           });
         });
@@ -186,7 +186,7 @@ describe('State', () => {
         });
 
         test('All retrieved inputs are not starts', () => {
-          starts.forEach( s => {
+          starts.forEach(s => {
             expect(s.phase).not.toBe('start');
           });
         });
@@ -210,7 +210,7 @@ describe('State', () => {
         });
 
         test('All retrieved inputs are not moves', () => {
-          moves.forEach( m => {
+          moves.forEach(m => {
             expect(m.phase).not.toBe('move');
           });
         });
@@ -235,7 +235,7 @@ describe('State', () => {
         });
 
         test('All retrieved inputs are not ends', () => {
-          ends.forEach( m => {
+          ends.forEach(m => {
             expect(m.phase).not.toBe('end');
           });
         });
