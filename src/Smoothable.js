@@ -23,7 +23,7 @@ const smooth = Symbol('smooth');
  *
  * @returns {boolean} Whether to apply smoothing.
  */
-function smoothingIsApplicable(isRequested = true) {
+function smoothingIsApplicable(isRequested) {
   if (isRequested) {
     try {
       return window.matchMedia('(pointer: coarse)').matches;
