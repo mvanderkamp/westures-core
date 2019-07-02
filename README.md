@@ -24,17 +24,20 @@ Westures is a fork of [ZingTouch](https://github.com/zingchart/zingtouch).
 // Import the module.
 const wes = require('westures-core');
 
-// Declare a region.
+// Declare a region. The document body is probably a good one to use.
 const region = new wes.Region(document.body);
 
-// Add a gesture to an element within the region.
+// Instantiate a Gesture for an element within the region.
 // Assumes a Pan gesture is available.
 const pannable = document.querySelector('#pannable');
-region.addGesture(pannable, new Pan(), (data) => {
+const pan = new Pan(pannable, (data) => {
   // data.translation.x ...
   // data.translation.y ...
   // and so on, depending on the Gesture
 });
+
+// Add the gesture to the region.
+region.addGesture(pan);
 ```
 
 ## Table of Contents
@@ -49,7 +52,6 @@ region.addGesture(pannable, new Pan(), (data) => {
 
 There are eight classes defined in this module:
 
-- _Binding:_ Bind a Gesture to an element within a Region.
 - _Gesture:_ Respond to input phase "hooks" to define a gesture.
 - _Input:_ Track a single pointer through its lifetime, and store the progress
     of gestures associated with that input.

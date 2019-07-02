@@ -4,7 +4,7 @@
 
 'use strict';
 
-let nextGestureNum = 0;
+let g_id = 0;
 
 /**
  * The Gesture class that all gestures inherit from. A custom gesture class will
@@ -14,9 +14,12 @@ let nextGestureNum = 0;
  * @memberof westures-core
  *
  * @param {string} type - The name of the gesture.
+ * @param {Element} element - The element to which to associate the gesture.
+ * @param {Function} handler - The function handler to execute when a gesture
+ *    is recognized on the associated element.
  */
 class Gesture {
-  constructor(type) {
+  constructor(type, element, handler) {
     if (typeof type !== 'string') {
       throw new TypeError('Gestures require a string type / name');
     }
@@ -35,7 +38,22 @@ class Gesture {
      *
      * @type {string}
      */
-    this.id = `gesture-${this.type}-${nextGestureNum++}`;
+    this.id = `gesture-${this.type}-${g_id++}`;
+
+    /**
+     * The element to which to associate the gesture.
+     *
+     * @type {Element}
+     */
+    this.element = element;
+
+    /**
+     * The function handler to execute when the gesture is recognized on the
+     * associated element.
+     *
+     * @type {Function}
+     */
+    this.handler = handler;
   }
 
   /**
@@ -84,6 +102,29 @@ class Gesture {
    */
   cancel() {
     return null;
+  }
+
+  /**
+   * Evalutes the given gesture hook, and dispatches any data that is produced.
+   *
+   * @private
+   *
+   * @param {string} hook - Must be one of 'start', 'move', 'end', or 'cancel'.
+   * @param {State} state - The current State instance.
+   */
+  evaluateHook(hook, state) {
+    const data = this[hook](state);
+    if (data) {
+      this.handler({
+        centroid: state.centroid,
+        event:    state.event,
+        phase:    hook,
+        radius:   state.radius,
+        type:     this.type,
+        target:   this.element,
+        ...data,
+      });
+    }
   }
 }
 
