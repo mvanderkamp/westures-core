@@ -13,7 +13,7 @@ const PHASE   = require('./PHASE.js');
  * @memberof PointerData
  *
  * @return {Event} The Event object which corresponds to the given identifier.
- *    Contains clientX, clientY values.
+ *    Contains pageX, pageY values (or whichever X/Y source was selected).
  */
 function getEventObject(event, identifier) {
   if (event.changedTouches) {
@@ -30,9 +30,13 @@ function getEventObject(event, identifier) {
  *
  * @param {Event} event - The event object being wrapped.
  * @param {number} identifier - The index of touch if applicable
+ * @param {string} [source='page'] - One of 'page', 'client', or 'screen'.
+ * Determines what the source of (x,y) coordinates will be from the input
+ * events. ('X' and 'Y' will be appended, then those are the properties that
+ * will be looked up).
  */
 class PointerData {
-  constructor(event, identifier) {
+  constructor(event, identifier, source='page') {
     /**
      * The original event object.
      *
@@ -62,8 +66,8 @@ class PointerData {
      *
      * @type {westures-core.Point2D}
      */
-    // this.point = new Point2D(eventObj.pageX, eventObj.pageY);
-    this.point = new Point2D(eventObj.clientX, eventObj.clientY);
+    this.point = new Point2D(eventObj[source + 'X'], eventObj[source + 'Y']);
+    // this.point = new Point2D(eventObj.clientX, eventObj.clientY);
   }
 
   /**

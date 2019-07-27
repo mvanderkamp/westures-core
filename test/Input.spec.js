@@ -26,15 +26,15 @@ describe('Input', () => {
 
     mousedown = {
       type: 'mousedown',
-      clientX: 42,
-      clientY: 43,
+      pageX: 42,
+      pageY: 43,
       target: activediv,
     };
 
     mousemove = {
       type: 'mousemove',
-      clientX: 45,
-      clientY: 41,
+      pageX: 45,
+      pageY: 41,
       target: document
     };
   });
@@ -137,8 +137,8 @@ describe('Input', () => {
     test('Continues measuring from initial after more updates', () => {
       let mousenext = {
         type: 'mousedown',
-        clientX: 46,
-        clientY: 40,
+        pageX: 46,
+        pageY: 40,
         target: document
       };
       input.update(mousenext);

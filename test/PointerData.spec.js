@@ -21,8 +21,8 @@ describe('PointerData', () => {
     mouseevent = {
       type: 'mousemove',
       target: element,
-      clientX: 89,
-      clientY: 53,
+      pageX: 89,
+      pageY: 53,
     };
 
     touchevent = {
@@ -31,13 +31,13 @@ describe('PointerData', () => {
       changedTouches: [
         {
           identifier: 17,
-          clientX: -2,
-          clientY: -12,
+          pageX: -2,
+          pageY: -12,
         },
         {
           identifier: 42,
-          clientX: 343,
-          clientY: 117,
+          pageX: 343,
+          pageY: 117,
         },
       ],
     };
@@ -46,24 +46,24 @@ describe('PointerData', () => {
       type: 'pointermove',
       target: childElement,
       pointerId: 3,
-      clientX: 0,
-      clientY: 0,
+      pageX: 0,
+      pageY: 0,
     };
 
     pointerangle = {
       type: 'pointermove',
       target: childElement,
       pointerId: 3,
-      clientX: 3,
-      clientY: 3,
+      pageX: 3,
+      pageY: 3,
     };
 
     pointerdist = {
       type: 'pointermove',
       target: childElement,
       pointerId: 3,
-      clientX: 3,
-      clientY: 4,
+      pageX: 3,
+      pageY: 4,
     };
 
     id = 42;
@@ -96,14 +96,14 @@ describe('PointerData', () => {
       expect(mdata.time / 1000).toBeCloseTo(Date.now() / 1000, 1);
     });
 
-    test('Saves the correct clientX and clientY as a Point2D', () => {
+    test('Saves the correct pageX and pageY as a Point2D', () => {
       expect(mdata.point).toBeInstanceOf(Point2D);
-      expect(mdata.point.x).toBe(mouseevent.clientX);
-      expect(mdata.point.y).toBe(mouseevent.clientY);
+      expect(mdata.point.x).toBe(mouseevent.pageX);
+      expect(mdata.point.y).toBe(mouseevent.pageY);
 
       expect(tdata.point).toBeInstanceOf(Point2D);
-      expect(tdata.point.x).toBe(touchevent.changedTouches[1].clientX);
-      expect(tdata.point.y).toBe(touchevent.changedTouches[1].clientY);
+      expect(tdata.point.x).toBe(touchevent.changedTouches[1].pageX);
+      expect(tdata.point.y).toBe(touchevent.changedTouches[1].pageY);
     });
   });
 
