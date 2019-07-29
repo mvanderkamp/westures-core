@@ -4,7 +4,6 @@
 
 'use strict';
 
-const Gesture = require('./Gesture.js');
 const State   = require('./State.js');
 const PHASE   = require('./PHASE.js');
 
