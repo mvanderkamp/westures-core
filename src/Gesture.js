@@ -7,6 +7,13 @@
 let g_id = 0;
 
 /**
+ * One of ['ctrlKey', 'altKey', 'shiftKey', 'metaKey']
+ *
+ * @typedef {string} StateKey
+ * @memberof westures-core.Gesture
+ */
+
+/**
  * The Gesture class that all gestures inherit from. A custom gesture class will
  * need to override some or all of the four phase "hooks": start, move, end, and
  * cancel.
@@ -17,9 +24,22 @@ let g_id = 0;
  * @param {Element} element - The element to which to associate the gesture.
  * @param {Function} handler - The function handler to execute when a gesture
  *    is recognized on the associated element.
+ * @param {object} [options] - Generic gesture options
+ * @param {westures-core.Gesture.StateKey[]} [options.enableKeys] - List of keys
+ * which will enable the gesture. The gesture will not be recognized unless one
+ * of these keys is pressed while the interaction occurs. If not specified or an
+ * empty list, the gesture is treated as though the enable key is always down.
+ * @param {westures-core.Gesture.StateKey[]} [options.disableKeys] - List of
+ * keys whicyh will disable the gesture. The gesture will not be recognized if
+ * one of these keys is pressed. If not specified or an empty list, the gesture
+ * is treated as though the disable key is never down.
+ * @param {number} [options.minInputs] - The minimum number of pointers that
+ * must be active for the gesture to be recognized. Uses >=.
+ * @param {number} [options.maxInputs] - The maximum number of pointers that
+ * may be active for the gesture to be recognized. Uses <=.
  */
 class Gesture {
-  constructor(type, element, handler) {
+  constructor(type, element, handler, options = {}) {
     if (typeof type !== 'string') {
       throw new TypeError('Gestures require a string type / name');
     }
@@ -54,6 +74,30 @@ class Gesture {
      * @type {Function}
      */
     this.handler = handler;
+
+    /**
+     * The options settings.
+     *
+     * @type {object}
+     */
+    this.options = { ...Gesture.DEFAULTS, ...options };
+  }
+
+  /**
+   * Determines whether this gesture is enabled.
+   *
+   * @param {State} state - The input state object of the current region.
+   *
+   * @return {boolean} true if enabled, false otherwise.
+   */
+  isEnabled(state) {
+    const count = state.active.length;
+    const event = state.event;
+    const { enableKeys, disableKeys, minInputs, maxInputs } = this.options;
+
+    return (minInputs <= count) && (maxInputs >= count) &&
+      (enableKeys.length === 0 || enableKeys.some(k => event[k])) &&
+      !disableKeys.some(k => event[k]);
   }
 
   /**
@@ -127,6 +171,13 @@ class Gesture {
     }
   }
 }
+
+Gesture.DEFAULTS = Object.freeze({
+  enableKeys:  [],
+  disableKeys: [],
+  minInputs:   1,
+  maxInputs:   Number.MAX_VALUE,
+});
 
 module.exports = Gesture;
 
