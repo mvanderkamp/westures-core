@@ -9,7 +9,7 @@
  *
  * @private
  * @memberof westures-core
- * @enum
+ * @enum {string}
  */
 const CANCEL_EVENTS = Object.freeze([
   'blur',
@@ -22,7 +22,7 @@ const CANCEL_EVENTS = Object.freeze([
  *
  * @private
  * @memberof westures-core
- * @enum
+ * @enum {string}
  */
 const KEYBOARD_EVENTS = Object.freeze([
   'keydown',
@@ -34,7 +34,7 @@ const KEYBOARD_EVENTS = Object.freeze([
  *
  * @private
  * @memberof westures-core
- * @enum
+ * @enum {string}
  */
 const MOUSE_EVENTS = Object.freeze([
   'mousedown',
@@ -47,7 +47,7 @@ const MOUSE_EVENTS = Object.freeze([
  *
  * @private
  * @memberof westures-core
- * @enum
+ * @enum {string}
  */
 const POINTER_EVENTS = Object.freeze([
   'pointerdown',
@@ -60,7 +60,7 @@ const POINTER_EVENTS = Object.freeze([
  *
  * @private
  * @memberof westures-core
- * @enum
+ * @enum {string}
  */
 const TOUCH_EVENTS = Object.freeze([
   'touchend',
@@ -73,7 +73,7 @@ const TOUCH_EVENTS = Object.freeze([
  *
  * @private
  * @memberof westures-core
- * @enum
+ * @enum {string}
  */
 const STATE_KEYS = Object.freeze([
   'altKey',

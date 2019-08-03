@@ -24,6 +24,9 @@ const {
  * Performs an array minus operation.
  *
  * @private
+ * @inner
+ * @memberof westures-core.Region
+ *
  * @param {Array} left
  * @param {Array} right
  *
@@ -39,6 +42,9 @@ function arrayMinus(left, right) {
  * last call.
  *
  * @private
+ * @inner
+ * @memberof westures-core.Region
+ *
  * @param {Event} event - The event with STATE_KEYS properties to analyze.
  */
 const stateKeysWereChanged = (function stateKeyFunctionFactory() {
