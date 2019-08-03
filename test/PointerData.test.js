@@ -8,8 +8,8 @@ const PointerData = require('../src/PointerData.js');
 const Point2D     = require('../src/Point2D.js');
 
 describe('PointerData', () => {
-  let mouseevent, touchevent, pointerevent, pointerangle, pointerdist;
-  let mdata, tdata, id, element, childElement;
+  let mouseevent, pointerangle, pointerdist, pointerevent, touchevent;
+  let childElement, element, id, mdata, tdata;
 
   beforeAll(() => {
     element = document.createElement('div');
@@ -19,51 +19,51 @@ describe('PointerData', () => {
     element.appendChild(childElement);
 
     mouseevent = {
-      type: 'mousemove',
-      target: element,
+      type:    'mousemove',
+      target:  element,
       clientX: 89,
       clientY: 53,
     };
 
     touchevent = {
-      type: 'touchstart',
-      target: childElement,
+      type:           'touchstart',
+      target:         childElement,
       changedTouches: [
         {
           identifier: 17,
-          clientX: -2,
-          clientY: -12,
+          clientX:    -2,
+          clientY:    -12,
         },
         {
           identifier: 42,
-          clientX: 343,
-          clientY: 117,
+          clientX:    343,
+          clientY:    117,
         },
       ],
     };
 
     pointerevent = {
-      type: 'pointermove',
-      target: childElement,
+      type:      'pointermove',
+      target:    childElement,
       pointerId: 3,
-      clientX: 0,
-      clientY: 0,
+      clientX:   0,
+      clientY:   0,
     };
 
     pointerangle = {
-      type: 'pointermove',
-      target: childElement,
+      type:      'pointermove',
+      target:    childElement,
       pointerId: 3,
-      clientX: 3,
-      clientY: 3,
+      clientX:   3,
+      clientY:   3,
     };
 
     pointerdist = {
-      type: 'pointermove',
-      target: childElement,
+      type:      'pointermove',
+      target:    childElement,
       pointerId: 3,
-      clientX: 3,
-      clientY: 4,
+      clientX:   3,
+      clientY:   4,
     };
 
     id = 42;
@@ -71,13 +71,19 @@ describe('PointerData', () => {
 
   describe('constructor(event, identifier)', () => {
     test('Requires an event object', () => {
-      expect(() => mdata = new PointerData()).toThrow();
+      expect(() => {
+        mdata = new PointerData();
+      }).toThrow();
     });
 
     test('Instanties a PointerData when passed valid data', () => {
-      expect(() => mdata = new PointerData(mouseevent, id)).not.toThrow();
+      expect(() => {
+        mdata = new PointerData(mouseevent, id);
+      }).not.toThrow();
       expect(mdata).toBeInstanceOf(PointerData);
-      expect(() => tdata = new PointerData(touchevent, id)).not.toThrow();
+      expect(() => {
+        tdata = new PointerData(touchevent, id);
+      }).not.toThrow();
       expect(tdata).toBeInstanceOf(PointerData);
     });
 
@@ -111,7 +117,7 @@ describe('PointerData', () => {
     test('gives the correct angle', () => {
       const pdata = new PointerData(pointerevent, id);
       const pangle = new PointerData(pointerangle, id);
-      expect(pdata.angleTo(pangle)).toBeCloseTo(Math.PI/4);
+      expect(pdata.angleTo(pangle)).toBeCloseTo(Math.PI / 4);
       expect(pdata.angleTo(pdata)).toBe(0);
     });
   });

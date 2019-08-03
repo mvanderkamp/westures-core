@@ -9,14 +9,13 @@ const smooth = Symbol('smooth');
 
 /**
  * Determines whether to apply smoothing. Smoothing is on by default but turned
- * off if either:
- *  1. The user explicitly requests that it be turned off.
- *  2. The active poiner is not "coarse".
+ * off if either:<br>
+ *  1. The user explicitly requests that it be turned off.<br>
+ *  2. The active pointer is not "coarse".<br>
  *
  * @see {@link
  * https://developer.mozilla.org/en-US/docs/Web/API/Window/matchMedia}
  *
- * @private
  * @inner
  * @memberof westures-core.Smoothable
  *
@@ -24,7 +23,7 @@ const smooth = Symbol('smooth');
  *
  * @returns {boolean} Whether to apply smoothing.
  */
-function smoothingIsApplicable(isRequested = true) {
+function smoothingIsApplicable(isRequested) {
   if (isRequested) {
     try {
       return window.matchMedia('(pointer: coarse)').matches;
@@ -36,62 +35,61 @@ function smoothingIsApplicable(isRequested = true) {
 }
 
 /**
- * A Smoothable gesture is one that emits on 'move' events. It provides a
- * 'smoothing' option through its constructor, and will apply smoothing before
- * emitting. There will be a tiny, ~1/60th of a second delay to emits, as well
- * as a slight amount of drift over gestures sustained for a long period of
- * time.
+ * A Smoothable datatype is one that is capable of smoothing out a series of
+ * values as they come in, one at a time, providing a more consistent series. It
+ * does this by creating some inertia in the values using a cascading average.
+ * (For those who are interested in such things, this effectively means that it
+ * provides a practical application of Zeno's Dichotomy).
  *
- * For a gesture to make use of smoothing, it must return `this.smooth(data,
- * field)` from the `move` phase, instead of returning the data directly. If the
- * data being smoothed is not a simple number, it must also override the
- * `smoothingAverage(a, b)` method. Also you will probably want to call
- * `super.restart()` at some point in the `start`, `end`, and `cancel` phases.
+ * @example
+ * const x = new Smoothable({ identity: 1 });
+ * const a = x.next(1);   // 1.0
+ * const b = x.next(1.2); // 1.1
+ * const c = x.next(0.9); // 1.0
+ * const d = x.next(0.6); // 0.8
+ * const e = x.next(1.2); // 1.0
+ * const f = x.next(1.6); // 1.3
+ * x.restart();
+ * const g = x.next(0);   // 0.5
  *
  * @memberof westures-core
- * @mixin
  *
- * @param {string} name - The name of the gesture.
  * @param {Object} [options]
- * @param {boolean} [options.smoothing=true] Whether to apply smoothing to
- * emitted data.
+ * @param {boolean} [options.applySmoothing=true] Whether to apply smoothing to
+ * the data.
+ * @param {*} [options.identity=0] The identity value of this smoothable data.
  */
-const Smoothable = (superclass) => class Smoothable extends superclass {
-  constructor(name, options = {}) {
-    super(name, options);
+class Smoothable {
+  constructor(options = {}) {
+    const final_options = { ...Smoothable.DEFAULTS, ...options };
 
     /**
      * The function through which smoothed emits are passed.
      *
-     * @memberof westures-core.Smoothable
+     * @method
+     * @param {*} data - The data to emit.
      *
-     * @type {function}
-     * @param {object} data - The data to emit.
+     * @return {*} The smoothed out data.
      */
-    this.smooth = null;
-    if (smoothingIsApplicable(options.smoothing)) {
-      this.smooth = this[smooth].bind(this);
+    this.next = null;
+    if (smoothingIsApplicable(final_options.applySmoothing)) {
+      this.next = this[smooth].bind(this);
     } else {
-      this.smooth = data => data;
+      this.next = data => data;
     }
 
     /**
      * The "identity" value of the data that will be smoothed.
      *
-     * @memberof westures-core.Smoothable
-     *
      * @type {*}
      * @default 0
      */
-    this.identity = 0;
+    this.identity = final_options.identity;
 
     /**
-     * Stage the emitted data once.
+     * The cascading average of outgoing values.
      *
-     * @private
-     * @static
      * @memberof westures-core.Smoothable
-     *
      * @alias [@@cascade]
      * @type {object}
      */
@@ -100,8 +98,6 @@ const Smoothable = (superclass) => class Smoothable extends superclass {
 
   /**
    * Restart the Smoothable gesture.
-   *
-   * @memberof westures-core.Smoothable
    */
   restart() {
     this[cascade] = this.identity;
@@ -110,36 +106,36 @@ const Smoothable = (superclass) => class Smoothable extends superclass {
   /**
    * Smooth out the outgoing data.
    *
-   * @private
    * @memberof westures-core.Smoothable
-   *
-   * @param {object} next - The next batch of data to emit.
-   * @param {string} field - The field to which smoothing should be applied.
+   * @alias [@@smooth]
+   * @param {object} data - The next batch of data to emit.
    *
    * @return {?object}
    */
-  [smooth](next, field) {
-    const avg = this.smoothingAverage(this[cascade], next[field]);
-    this[cascade] = avg;
-    next[field] = avg;
-    return next;
+  [smooth](data) {
+    const average = this.average(this[cascade], data);
+    this[cascade] = average;
+    return average;
   }
 
   /**
-   * Average out two values, as part of the smoothing algorithm.
-   *
-   * @private
-   * @memberof westures-core.Smoothable
+   * Average out two values, as part of the smoothing algorithm. Override this
+   * method if the data being smoothed is not a Number.
    *
    * @param {number} a
    * @param {number} b
    *
    * @return {number} The average of 'a' and 'b'
    */
-  smoothingAverage(a, b) {
+  average(a, b) {
     return (a + b) / 2;
   }
-};
+}
+
+Smoothable.DEFAULTS = Object.freeze({
+  applySmoothing: true,
+  identity:       0,
+});
 
 module.exports = Smoothable;
 
