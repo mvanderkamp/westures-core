@@ -4,8 +4,8 @@
 
 'use strict';
 
-const Point2D = require('./Point2D.js');
-const PHASE   = require('./PHASE.js');
+const Point2D   = require('./Point2D.js');
+const { PHASE } = require('./constants.js');
 
 /**
  * @private

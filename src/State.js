@@ -4,9 +4,15 @@
 
 'use strict';
 
-const Input   = require('./Input.js');
-const PHASE   = require('./PHASE.js');
-const Point2D = require('./Point2D.js');
+const {
+  CANCEL,
+  END,
+  MOVE,
+  PHASE,
+  START,
+} = require('./constants.js');
+const Input     = require('./Input.js');
+const Point2D   = require('./Point2D.js');
 
 const symbols = Object.freeze({
   inputs: Symbol.for('inputs'),
@@ -149,7 +155,7 @@ class State {
    */
   updateInput(event, identifier) {
     switch (PHASE[event.type]) {
-    case PHASE.START:
+    case START:
       this[symbols.inputs].set(identifier, new Input(event, identifier));
       try {
         this.element.setPointerCapture(identifier);
@@ -157,7 +163,7 @@ class State {
         // NOP: Optional operation failed.
       }
       break;
-    case PHASE.END:
+    case END:
       try {
         this.element.releasePointerCapture(identifier);
       } catch (e) {
@@ -165,8 +171,8 @@ class State {
       }
       // All of 'end', 'move', and 'cancel' perform updates, hence the
       // following fall-throughs
-    case PHASE.CANCEL:
-    case PHASE.MOVE:
+    case CANCEL:
+    case MOVE:
       if (this[symbols.inputs].has(identifier)) {
         this[symbols.inputs].get(identifier).update(event);
       }
