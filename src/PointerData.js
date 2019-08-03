@@ -4,8 +4,8 @@
 
 'use strict';
 
-const Point2D = require('./Point2D.js');
-const PHASE   = require('./PHASE.js');
+const Point2D   = require('./Point2D.js');
+const { PHASE } = require('./constants.js');
 
 /**
  * @private
@@ -46,7 +46,7 @@ class PointerData {
 
     /**
      * The type or 'phase' of this batch of pointer data. 'start' or 'move' or
-     * 'end'.
+     * 'end' or 'cancel'
      *
      * @type {string}
      */

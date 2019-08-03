@@ -122,7 +122,7 @@ class Input {
   }
 
   /**
-   * The phase of the input: 'start' or 'move' or 'end'
+   * The phase of the input: 'start' or 'move' or 'end' or 'cancel'
    *
    * @type {string}
    */

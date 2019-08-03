@@ -24,17 +24,20 @@ Westures is a fork of [ZingTouch](https://github.com/zingchart/zingtouch).
 // Import the module.
 const wes = require('westures-core');
 
-// Declare a region.
+// Declare a region. The document body is probably a good one to use.
 const region = new wes.Region(document.body);
 
-// Add a gesture to an element within the region.
+// Instantiate a Gesture for an element within the region.
 // Assumes a Pan gesture is available.
 const pannable = document.querySelector('#pannable');
-region.addGesture(pannable, new Pan(), (data) => {
+const pan = new Pan(pannable, (data) => {
   // data.translation.x ...
   // data.translation.y ...
   // and so on, depending on the Gesture
 });
+
+// Add the gesture to the region.
+region.addGesture(pan);
 ```
 
 ## Table of Contents
@@ -49,7 +52,6 @@ region.addGesture(pannable, new Pan(), (data) => {
 
 There are eight classes defined in this module:
 
-- _Binding:_ Bind a Gesture to an element within a Region.
 - _Gesture:_ Respond to input phase "hooks" to define a gesture.
 - _Input:_ Track a single pointer through its lifetime, and store the progress
     of gestures associated with that input.
@@ -90,25 +92,26 @@ works better for you.
 ```javascript
 const region = new wes.Region(document.body);
 ```
-### Binding an element within a Region
+### Instantiating a Gesture
 
-When you add a gesture to a region, you need to provide a handler as well as an
-Element along with the gesture. The gesture will only be recognized when the
-first pointer to interact with the region was inside the given Element.
-Therefore unless you want to try something fancy the gesture element should
-probably be contained inside the region element. It could even be the region
-element.
+When you instantiate a gesture, you need to provide a handler as well as an
+Element. The gesture will only be recognized when the first pointer to interact
+with the region was inside the given Element. Therefore unless you want to try
+something fancy the gesture element should probably be contained inside the
+region element. It could even be the region element.
 
 Now for an example. Suppose you have a div (id 'pannable') within which you want
 to detect a Pan gesture (assume that such a gesture is available). Your handler
 is called `panner`.
 
 ```javascript
-region.addGesture(document.querySelector('#pannable'), new Pan(), panner);
+// Assumes a Pan gesture is available.
+const pannable = document.querySelector('#pannable');
+const pan = new Pan(pannable, panner);
 ```
 
-The `panner` function will now be called whenever a Pan hook returns non-null
-data. The data returned by the hook will be available inside `panner` as such:
+The `panner` function will be called whenever a Pan hook returns non-null data.
+The data returned by the hook will be available inside `panner` as such:
 
 ```javascript
 function panner(data) {
@@ -117,6 +120,20 @@ function panner(data) {
   // and so on, depending on the gesture
 }
 ```
+
+That said, none of this will actually work until you add the gesture to the
+region.
+
+### Adding a Gesture to a Region
+
+Simple:
+
+```javascript
+region.addGesture(pan);
+```
+
+Now the `panner` function will be called whenever a `pan` gesture is detected on
+the `#pannable` element inside the region.
 
 ## Implementing Custom Gestures
 
@@ -148,10 +165,12 @@ class Tap extends Gesture {
 ```
 
 There are problems with this example, and it should not be used as an actual Tap
-gesture, it is merely to illustrate the basid idea.
+gesture, it is merely to illustrate the basic idea.
 
 The default hooks for all Gestures simply return null. Data will only be
 forwarded to bound handlers when a non-null value is returned by a hook.
+Returned values should be packed inside an object. For example, instead of just
+`return 42;`, a custom hook should do `return { value: 42 };`
 
 For information about what data is accessible via the State object, see the full
 documentation [here](https://mvanderkamp.github.io/westures-core/State.html).

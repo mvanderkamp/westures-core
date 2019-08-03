@@ -4,9 +4,15 @@
 
 'use strict';
 
-const Input   = require('./Input.js');
-const PHASE   = require('./PHASE.js');
-const Point2D = require('./Point2D.js');
+const {
+  CANCEL,
+  END,
+  MOVE,
+  PHASE,
+  START,
+} = require('./constants.js');
+const Input     = require('./Input.js');
+const Point2D   = require('./Point2D.js');
 
 const symbols = Object.freeze({
   inputs: Symbol.for('inputs'),
@@ -127,7 +133,7 @@ class State {
   }
 
   /**
-   * @param {string} phase - One of 'start', 'move', or 'end'.
+   * @param {string} phase - One of 'start', 'move', 'end', or 'cancel'.
    *
    * @return {Input[]} Inputs in the given phase.
    */
@@ -136,7 +142,7 @@ class State {
   }
 
   /**
-   * @param {string} phase - One of 'start', 'move', or 'end'.
+   * @param {string} phase - One of 'start', 'move', 'end', or 'cancel'.
    *
    * @return {Input[]} Inputs <b>not</b> in the given phase.
    */
@@ -162,7 +168,7 @@ class State {
    */
   updateInput(event, identifier) {
     switch (PHASE[event.type]) {
-    case 'start':
+    case START:
       this[symbols.inputs].set(
         identifier,
         new Input(event, identifier, this.source)
@@ -173,7 +179,7 @@ class State {
         // NOP: Optional operation failed.
       }
       break;
-    case 'end':
+    case END:
       try {
         this.element.releasePointerCapture(identifier);
       } catch (e) {
@@ -181,8 +187,8 @@ class State {
       }
       // All of 'end', 'move', and 'cancel' perform updates, hence the
       // following fall-throughs
-    case 'move':
-    case 'cancel':
+    case CANCEL:
+    case MOVE:
       if (this[symbols.inputs].has(identifier)) {
         this[symbols.inputs].get(identifier).update(event);
       }

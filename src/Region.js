@@ -1,35 +1,62 @@
 /*
- * Contains the {@link Region} class
+ * Contains the Region class
  */
 
 'use strict';
 
-const Binding = require('./Binding.js');
-const State   = require('./State.js');
-const PHASE   = require('./PHASE.js');
+const State     = require('./State.js');
+const {
+  CANCEL_EVENTS,
+  KEYBOARD_EVENTS,
+  MOUSE_EVENTS,
+  POINTER_EVENTS,
+  TOUCH_EVENTS,
 
-const POINTER_EVENTS = [
-  'pointerdown',
-  'pointermove',
-  'pointerup',
-];
+  STATE_KEYS,
 
-const MOUSE_EVENTS = [
-  'mousedown',
-  'mousemove',
-  'mouseup',
-];
+  PHASE,
 
-const TOUCH_EVENTS = [
-  'touchstart',
-  'touchmove',
-  'touchend',
-];
+  START,
+  END,
+} = require('./constants.js');
 
-const CANCEL_EVENTS = [
-  'pointercancel',
-  'touchcancel',
-];
+/**
+ * Performs an array minus operation.
+ *
+ * @private
+ * @param {Array} left
+ * @param {Array} right
+ *
+ * @return {Array} Array consisting of elements in 'left' that are not in
+ * 'right'.
+ */
+function arrayMinus(left, right) {
+  return left.filter(p => right.indexOf(p) < 0);
+}
+
+/**
+ * Determines whether the state of any of the STATE_KEYS has changed since the
+ * last call.
+ *
+ * @private
+ * @param {Event} event - The event with STATE_KEYS properties to analyze.
+ */
+const stateKeysWereChanged = (function stateKeyFunctionFactory() {
+  function stateKeysArray(event) {
+    return STATE_KEYS.map(k => event[k]);
+  }
+
+  let currentKeys = stateKeysArray({});
+
+  function stateKeysWereChanged(event) {
+    const newKeys = stateKeysArray(event);
+    const diff = newKeys.map((k, i) => k != currentKeys[i]);
+    currentKeys = newKeys;
+    return diff.some(k => k);
+  }
+
+  return stateKeysWereChanged;
+}());
 
 /**
  * Allows the user to specify the control region which will listen for user
@@ -57,25 +84,26 @@ class Region {
      * The list of relations between elements, their gestures, and the handlers.
      *
      * @private
-     * @type {Binding[]}
+     * @type {Gesture[]}
      */
-    this.bindings = [];
+    this.gestures = [];
 
     /**
-     * The list of active bindings for the current input session.
+     * The list of active gestures for the current input session.
      *
      * @private
-     * @type {Binding[]}
+     * @type {Gesture[]}
      */
-    this.activeBindings = [];
+    this.activeGestures = [];
 
     /**
-     * Whether an input session is currently active.
+     * The base list of potentially active gestures for the current input
+     * session.
      *
      * @private
-     * @type {boolean}
+     * @type {Gesture[]}
      */
-    this.isWaiting = true;
+    this.potentialGestures = [];
 
     /**
      * The element being bound to.
@@ -158,46 +186,101 @@ class Region {
     }
 
     // Bind detected browser events to the region element.
-    const arbiter = this.arbitrate.bind(this);
+    const arbitrate = this.arbitrate.bind(this);
     eventNames.forEach(eventName => {
-      this.element.addEventListener(eventName, arbiter, {
+      this.element.addEventListener(eventName, arbitrate, {
         capture: this.capture,
         once:    false,
         passive: false,
       });
     });
 
-    ['blur'].concat(CANCEL_EVENTS).forEach(eventname => {
-      window.addEventListener(eventname, (e) => {
-        e.preventDefault();
-        this.state = new State(this.element);
-        this.resetActiveBindings();
+    const cancel = this.cancel.bind(this);
+    CANCEL_EVENTS.forEach(eventName => {
+      window.addEventListener(eventName, cancel);
+    });
+
+    KEYBOARD_EVENTS.forEach(eventName => {
+      window.addEventListener(eventName, () => {
+        this.setActiveGestures();
+        this.activeGestures.forEach(gesture => {
+          gesture.evaluateHook(START, this.state);
+        });
       });
     });
   }
 
   /**
-   * Resets the active bindings.
+   * Handles a cancel event. Resets the state and the active / potential gesture
+   * lists.
    *
    * @private
+   * @param {Event} event - The event emitted from the window object.
    */
-  resetActiveBindings() {
-    this.activeBindings = [];
-    this.isWaiting = true;
+  cancel(event) {
+    event.preventDefault();
+    this.state = new State(this.element);
+    this.resetActiveGestures();
   }
 
   /**
-   * Selects the bindings that are active for the current input sequence.
+   * Handles a keyboard event, triggering a restart of any gestures that need
+   * it.
+   *
+   * @private
+   * @param {KeyboardEvent} event - The keyboard event.
+   */
+  handleKeyboardEvent(event) {
+    if (stateKeysWereChanged(event)) {
+      this.state.event = event;
+      const oldActiveGestures = this.activeGestures.slice();
+      this.setActiveGestures();
+
+      arrayMinus(oldActiveGestures, this.activeGestures).forEach(gesture => {
+        gesture.evaluateHook(END, this.state);
+      });
+      arrayMinus(this.activeGestures, oldActiveGestures).forEach(gesture => {
+        gesture.evaluateHook(START, this.state);
+      });
+    }
+  }
+
+  /**
+   * Resets the active gestures.
    *
    * @private
    */
-  updateActiveBindings() {
-    if (this.isWaiting && this.state.inputs.length > 0) {
-      const input = this.state.inputs[0];
-      this.activeBindings = this.bindings.filter(b => {
-        return input.wasInitiallyInside(b.element);
-      });
-      this.isWaiting = false;
+  resetActiveGestures() {
+    this.potentialGestures = [];
+    this.activeGestures = [];
+  }
+
+  /**
+   * Selects active gestures from the list of potentially active gestures.
+   *
+   * @private
+   */
+  setActiveGestures() {
+    this.activeGestures = this.potentialGestures.filter(gesture => {
+      return gesture.isEnabled(this.state);
+    });
+  }
+
+  /**
+   * Selects the gestures that are active for the current input sequence.
+   *
+   * @private
+   * @param {Event} event - The event emitted from the window object.
+   */
+  updateActiveGestures(event) {
+    if (PHASE[event.type] === START) {
+      if (this.state.inputs.length > 0) {
+        const input = this.state.inputs[0];
+        this.potentialGestures = this.gestures.filter(gesture => {
+          return input.wasInitiallyInside(gesture.element);
+        });
+      }
+      this.setActiveGestures();
     }
   }
 
@@ -205,16 +288,21 @@ class Region {
    * Evaluates whether the current input session has completed.
    *
    * @private
+   * @param {Event} event - The event emitted from the window object.
    */
-  pruneActiveBindings() {
-    if (this.state.hasNoActiveInputs()) {
-      this.resetActiveBindings();
+  pruneActiveGestures(event) {
+    if (PHASE[event.type] === END) {
+      if (this.state.hasNoActiveInputs()) {
+        this.resetActiveGestures();
+      } else {
+        this.setActiveGestures();
+      }
     }
   }
 
   /**
    * All input events flow through this function. It makes sure that the input
-   * state is maintained, determines which bindings to analyze based on the
+   * state is maintained, determines which gestures to analyze based on the
    * initial position of the inputs, calls the relevant gesture hooks, and
    * dispatches gesture data.
    *
@@ -223,43 +311,40 @@ class Region {
    */
   arbitrate(event) {
     this.state.updateAllInputs(event);
-    this.updateActiveBindings();
+    this.updateActiveGestures(event);
 
-    if (this.activeBindings.length > 0) {
+    if (this.activeGestures.length > 0) {
       if (this.preventDefault) event.preventDefault();
 
-      this.activeBindings.forEach(binding => {
-        binding.evaluateHook(PHASE[event.type], this.state);
+      this.activeGestures.forEach(gesture => {
+        gesture.evaluateHook(PHASE[event.type], this.state);
       });
     }
 
     this.state.clearEndedInputs();
-    this.pruneActiveBindings();
+    this.pruneActiveGestures();
   }
 
   /**
    * Bind an element to a gesture with an associated handler.
    *
-   * @param {Element} element - The element object.
-   * @param {westures-core.Gesture} gesture - Gesture type with which to bind.
-   * @param {Function} handler - The function to execute when a gesture is
-   *    recognized.
+   * @param {westures-core.Gesture} gesture - Instantiated gesture to add.
    */
-  addGesture(element, gesture, handler) {
-    this.bindings.push(new Binding(element, gesture, handler));
+  addGesture(gesture) {
+    this.gestures.push(gesture);
   }
 
   /**
-   * Retrieves Bindings by their associated element.
+   * Retrieves Gestures by their associated element.
    *
    * @private
    *
-   * @param {Element} element - The element for which to find bindings.
+   * @param {Element} element - The element for which to find gestures.
    *
-   * @return {Binding[]} Bindings to which the element is bound.
+   * @return {Gesture[]} Gestures to which the element is bound.
    */
-  getBindingsByElement(element) {
-    return this.bindings.filter(b => b.element === element);
+  getGesturesByElement(element) {
+    return this.gestures.filter(b => b.element === element);
   }
 
   /**
@@ -268,12 +353,12 @@ class Region {
    *
    * @param {Element} element - The element to unbind.
    * @param {westures-core.Gesture} [ gesture ] - The gesture to unbind. If
-   * undefined, will unbind all Bindings associated with the given element.
+   * undefined, will unbind all Gestures associated with the given element.
    */
   removeGestures(element, gesture) {
-    this.getBindingsByElement(element).forEach(b => {
+    this.getGesturesByElement(element).forEach(b => {
       if (gesture == null || b.gesture === gesture) {
-        this.bindings.splice(this.bindings.indexOf(b), 1);
+        this.gestures.splice(this.gestures.indexOf(b), 1);
       }
     });
   }
