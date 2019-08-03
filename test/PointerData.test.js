@@ -8,8 +8,8 @@ const PointerData = require('../src/PointerData.js');
 const Point2D     = require('../src/Point2D.js');
 
 describe('PointerData', () => {
-  let mouseevent, touchevent, pointerevent, pointerangle, pointerdist;
-  let mdata, tdata, id, element, childElement;
+  let mouseevent, pointerangle, pointerdist, pointerevent, touchevent;
+  let childElement, element, id, mdata, tdata;
 
   beforeAll(() => {
     element = document.createElement('div');
@@ -19,10 +19,10 @@ describe('PointerData', () => {
     element.appendChild(childElement);
 
     mouseevent = {
-      type: 'mousemove',
+      type:   'mousemove',
       target: element,
-      pageX: 89,
-      pageY: 53,
+      pageX:  89,
+      pageY:  53,
     };
 
     touchevent = {
@@ -31,13 +31,13 @@ describe('PointerData', () => {
       changedTouches: [
         {
           identifier: 17,
-          pageX: -2,
-          pageY: -12,
+          pageX:      -2,
+          pageY:      -12,
         },
         {
           identifier: 42,
-          pageX: 343,
-          pageY: 117,
+          pageX:      343,
+          pageY:      117,
         },
       ],
     };
@@ -46,24 +46,24 @@ describe('PointerData', () => {
       type:      'pointermove',
       target:    childElement,
       pointerId: 3,
-      pageX: 0,
-      pageY: 0,
+      pageX:     0,
+      pageY:     0,
     };
 
     pointerangle = {
       type:      'pointermove',
       target:    childElement,
       pointerId: 3,
-      pageX: 3,
-      pageY: 3,
+      pageX:     3,
+      pageY:     3,
     };
 
     pointerdist = {
       type:      'pointermove',
       target:    childElement,
       pointerId: 3,
-      pageX: 3,
-      pageY: 4,
+      pageX:     3,
+      pageY:     4,
     };
 
     id = 42;

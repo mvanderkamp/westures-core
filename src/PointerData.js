@@ -36,7 +36,7 @@ function getEventObject(event, identifier) {
  * will be looked up).
  */
 class PointerData {
-  constructor(event, identifier, source='page') {
+  constructor(event, identifier, source = 'page') {
     /**
      * The original event object.
      *
@@ -66,7 +66,7 @@ class PointerData {
      *
      * @type {westures-core.Point2D}
      */
-    this.point = new Point2D(eventObj[source + 'X'], eventObj[source + 'Y']);
+    this.point = new Point2D(eventObj[`${source}X`], eventObj[`${source}Y`]);
     // this.point = new Point2D(eventObj.clientX, eventObj.clientY);
   }
 
