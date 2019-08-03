@@ -5,27 +5,37 @@
 
 'use strict';
 
+const CANCEL = 'cancel';
+const END    = 'end';
+const MOVE   = 'move';
+const START  = 'start';
+
 /**
- * Normalizes window events to be either of type start, move, or end.
+ * Normalizes window events to be either of type start, move, end, or cancel.
  *
  * @private
  * @enum {string}
  */
 const PHASE = Object.freeze({
-  mousedown:   'start',
-  touchstart:  'start',
-  pointerdown: 'start',
+  pointercancel: CANCEL,
+  touchcancel:   CANCEL,
 
-  mousemove:   'move',
-  touchmove:   'move',
-  pointermove: 'move',
+  mouseup:       END,
+  pointerup:     END,
+  touchend:      END,
 
-  mouseup:       'end',
-  touchend:      'end',
-  pointerup:     'end',
+  mousemove:   MOVE,
+  pointermove: MOVE,
+  touchmove:   MOVE,
 
-  touchcancel:   'cancel',
-  pointercancel: 'cancel',
+  mousedown:   START,
+  pointerdown: START,
+  touchstart:  START,
+
+  CANCEL,
+  END,
+  MOVE,
+  START,
 });
 
 module.exports = PHASE;
