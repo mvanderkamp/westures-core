@@ -114,7 +114,7 @@ class State {
   }
 
   /**
-   * @param {string} phase - One of 'start', 'move', or 'end'.
+   * @param {string} phase - One of 'start', 'move', 'end', or 'cancel'.
    *
    * @return {Input[]} Inputs in the given phase.
    */
@@ -123,7 +123,7 @@ class State {
   }
 
   /**
-   * @param {string} phase - One of 'start', 'move', or 'end'.
+   * @param {string} phase - One of 'start', 'move', 'end', or 'cancel'.
    *
    * @return {Input[]} Inputs <b>not</b> in the given phase.
    */
@@ -149,7 +149,7 @@ class State {
    */
   updateInput(event, identifier) {
     switch (PHASE[event.type]) {
-    case 'start':
+    case PHASE.START:
       this[symbols.inputs].set(identifier, new Input(event, identifier));
       try {
         this.element.setPointerCapture(identifier);
@@ -157,7 +157,7 @@ class State {
         // NOP: Optional operation failed.
       }
       break;
-    case 'end':
+    case PHASE.END:
       try {
         this.element.releasePointerCapture(identifier);
       } catch (e) {
@@ -165,8 +165,8 @@ class State {
       }
       // All of 'end', 'move', and 'cancel' perform updates, hence the
       // following fall-throughs
-    case 'move':
-    case 'cancel':
+    case PHASE.CANCEL:
+    case PHASE.MOVE:
       if (this[symbols.inputs].has(identifier)) {
         this[symbols.inputs].get(identifier).update(event);
       }

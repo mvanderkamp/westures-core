@@ -42,7 +42,7 @@ class PointerData {
 
     /**
      * The type or 'phase' of this batch of pointer data. 'start' or 'move' or
-     * 'end'.
+     * 'end' or 'cancel'
      *
      * @type {string}
      */
