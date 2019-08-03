@@ -25,26 +25,24 @@ describe('Input', () => {
     document.body.appendChild(outerdiv);
 
     mousedown = {
-      type:    'mousedown',
-      clientX: 42,
-      clientY: 43,
-      target:  activediv,
+      type: 'mousedown',
+      pageX: 42,
+      pageY: 43,
+      target: activediv,
     };
 
     mousemove = {
-      type:    'mousemove',
-      clientX: 45,
-      clientY: 41,
-      target:  document,
+      type: 'mousemove',
+      pageX: 45,
+      pageY: 41,
+      target: document
     };
   });
 
   describe('constructor', () => {
     let input;
     test('Can be instantiated', () => {
-      expect(() => {
-        input = new Input(mousedown, 1234);
-      }).not.toThrow();
+      expect(() => input = new Input(mousedown, 1234)).not.toThrow();
     });
 
     test('stores initial pointer data', () => {
@@ -137,11 +135,11 @@ describe('Input', () => {
     });
 
     test('Continues measuring from initial after more updates', () => {
-      const mousenext = {
-        type:    'mousedown',
-        clientX: 46,
-        clientY: 40,
-        target:  document,
+      let mousenext = {
+        type: 'mousedown',
+        pageX: 46,
+        pageY: 40,
+        target: document
       };
       input.update(mousenext);
       expect(input.totalDistance()).toBeCloseTo(Math.sqrt(25));

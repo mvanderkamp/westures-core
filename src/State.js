@@ -43,9 +43,13 @@ const update_fns = {
  * surface.
  *
  * @param {Element} element - The element underpinning the associated Region.
+ * @param {string} [source='page'] - One of 'page', 'client', or 'screen'.
+ * Determines what the source of (x,y) coordinates will be from the input
+ * events. ('X' and 'Y' will be appended, then those are the properties that
+ * will be looked up).
  */
 class State {
-  constructor(element) {
+  constructor(element, source) {
     /**
      * Keep a reference to the element for the associated region.
      *
@@ -53,6 +57,15 @@ class State {
      * @type {Element}
      */
     this.element = element;
+
+    /**
+     * Which X/Y attributes of input events to look up for determining input
+     * location.
+     *
+     * @private
+     * @type {string}
+     */
+    this.source = source;
 
     /**
      * Keeps track of the current Input objects.
@@ -150,7 +163,10 @@ class State {
   updateInput(event, identifier) {
     switch (PHASE[event.type]) {
     case 'start':
-      this[symbols.inputs].set(identifier, new Input(event, identifier));
+      this[symbols.inputs].set(
+        identifier,
+        new Input(event, identifier, this.source)
+      );
       try {
         this.element.setPointerCapture(identifier);
       } catch (e) {
