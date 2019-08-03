@@ -1,18 +1,24 @@
 /*
- * Contains the {@link Region} class
+ * Contains the Region class
  */
 
 'use strict';
 
-const State   = require('./State.js');
-const PHASE   = require('./PHASE.js');
+const State     = require('./State.js');
 const {
   CANCEL_EVENTS,
-  KEY_EVENTS,
+  KEYBOARD_EVENTS,
   MOUSE_EVENTS,
   POINTER_EVENTS,
   TOUCH_EVENTS,
-} = require('./events.js');
+
+  STATE_KEYS,
+
+  PHASE,
+
+  START,
+  END,
+} = require('./constants.js');
 
 /**
  * Allows the user to specify the control region which will listen for user
@@ -143,22 +149,54 @@ class Region {
       });
     });
 
-    CANCEL_EVENTS.forEach(eventname => {
-      window.addEventListener(eventname, (e) => {
-        e.preventDefault();
-        this.state = new State(this.element);
-        this.resetActiveGestures();
-      });
+    const cancel = this.cancel.bind(this);
+    CANCEL_EVENTS.forEach(eventName => {
+      window.addEventListener(eventName, cancel);
     });
 
-    KEY_EVENTS.forEach(eventName => {
+    KEYBOARD_EVENTS.forEach(eventName => {
       window.addEventListener(eventName, () => {
         this.setActiveGestures();
         this.activeGestures.forEach(gesture => {
-          gesture.evaluateHook(PHASE.START, this.state);
+          gesture.evaluateHook(START, this.state);
         });
       });
     });
+  }
+
+  /**
+   * Handles a cancel event. Resets the state and the active / potential gesture
+   * lists.
+   *
+   * @private
+   * @param {Event} event - The event emitted from the window object.
+   */
+  cancel(event) {
+    event.preventDefault();
+    this.state = new State(this.element);
+    this.resetActiveGestures();
+  }
+
+  /**
+   * Handles a keyboard event, triggering a restart of any gestures that need
+   * it.
+   *
+   * @private
+   * @param {KeyboardEvent} event - The keyboard event.
+   */
+  handleKeyboardEvent(event) {
+    if (stateKeysWereChanged(event)) {
+      this.state.event = event;
+      const oldActiveGestures = this.activeGestures.slice();
+      this.setActiveGestures();
+
+      arrayMinus(oldActiveGestures, this.activeGestures).forEach(gesture => {
+        gesture.evaluateHook(END, this.state);
+      });
+      arrayMinus(this.activeGestures, oldActiveGestures).forEach(gesture => {
+        gesture.evaluateHook(START, this.state);
+      });
+    }
   }
 
   /**
@@ -189,7 +227,7 @@ class Region {
    * @param {Event} event - The event emitted from the window object.
    */
   updateActiveGestures(event) {
-    if (PHASE[event.type] === PHASE.START) {
+    if (PHASE[event.type] === START) {
       if (this.state.inputs.length > 0) {
         const input = this.state.inputs[0];
         this.potentialGestures = this.gestures.filter(gesture => {
@@ -207,7 +245,7 @@ class Region {
    * @param {Event} event - The event emitted from the window object.
    */
   pruneActiveGestures(event) {
-    if (PHASE[event.type] === PHASE.END) {
+    if (PHASE[event.type] === END) {
       if (this.state.hasNoActiveInputs()) {
         this.resetActiveGestures();
       } else {
@@ -279,6 +317,44 @@ class Region {
     });
   }
 }
+
+/**
+ * Performs an array minus operation.
+ *
+ * @private
+ * @param {Array} left
+ * @param {Array} right
+ *
+ * @return {Array} Array consisting of elements in 'left' that are not in
+ * 'right'.
+ */
+function arrayMinus(left, right) {
+  return left.filter(p => right.indexOf(p) < 0);
+}
+
+/**
+ * Determines whether the state of any of the STATE_KEYS has changed since the
+ * last call.
+ *
+ * @private
+ * @param {Event} event - The event with STATE_KEYS properties to analyze.
+ */
+const stateKeysWereChanged = (function stateKeyFunctionFactory() {
+  function stateKeysArray(event) {
+    return STATE_KEYS.map(k => event[k]);
+  }
+
+  let currentKeys = stateKeysArray({});
+
+  function stateKeysWereChanged(event) {
+    const newKeys = stateKeysArray(event);
+    const diff = newKeys.map((k, i) => k != currentKeys[i]);
+    currentKeys = newKeys;
+    return diff.some(k => k);
+  }
+
+  return stateKeysWereChanged;
+})();
 
 Region.DEFAULTS = Object.freeze({
   capture:        false,
