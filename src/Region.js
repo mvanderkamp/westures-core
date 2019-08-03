@@ -54,12 +54,13 @@ class Region {
     this.activeGestures = [];
 
     /**
-     * Whether an input session is currently active.
+     * The base list of potentially active gestures for the current input
+     * session.
      *
      * @private
-     * @type {boolean}
+     * @type {Gesture[]}
      */
-    this.isWaiting = true;
+    this.potentialGestures = [];
 
     /**
      * The element being bound to.
@@ -133,20 +134,29 @@ class Region {
     }
 
     // Bind detected browser events to the region element.
-    const arbiter = this.arbitrate.bind(this);
+    const arbitrate = this.arbitrate.bind(this);
     eventNames.forEach(eventName => {
-      this.element.addEventListener(eventName, arbiter, {
+      this.element.addEventListener(eventName, arbitrate, {
         capture: this.capture,
         once:    false,
         passive: false,
       });
     });
 
-    ['blur'].concat(CANCEL_EVENTS).forEach(eventname => {
+    CANCEL_EVENTS.forEach(eventname => {
       window.addEventListener(eventname, (e) => {
         e.preventDefault();
         this.state = new State(this.element);
         this.resetActiveGestures();
+      });
+    });
+
+    KEY_EVENTS.forEach(eventName => {
+      window.addEventListener(eventName, () => {
+        this.setActiveGestures();
+        this.activeGestures.forEach(gesture => {
+          gesture.evaluateHook(PHASE.START, this.state);
+        });
       });
     });
   }
@@ -157,22 +167,36 @@ class Region {
    * @private
    */
   resetActiveGestures() {
+    this.potentialGestures = [];
     this.activeGestures = [];
-    this.isWaiting = true;
+  }
+
+  /**
+   * Selects active gestures from the list of potentially active gestures.
+   *
+   * @private
+   */
+  setActiveGestures() {
+    this.activeGestures = this.potentialGestures.filter(gesture => {
+      return gesture.isEnabled(this.state);
+    });
   }
 
   /**
    * Selects the gestures that are active for the current input sequence.
    *
    * @private
+   * @param {Event} event - The event emitted from the window object.
    */
-  updateActiveGestures() {
-    if (this.isWaiting && this.state.inputs.length > 0) {
-      const input = this.state.inputs[0];
-      this.activeGestures = this.gestures.filter(b => {
-        return input.wasInitiallyInside(b.element);
-      });
-      this.isWaiting = false;
+  updateActiveGestures(event) {
+    if (PHASE[event.type] === PHASE.START) {
+      if (this.state.inputs.length > 0) {
+        const input = this.state.inputs[0];
+        this.potentialGestures = this.gestures.filter(gesture => {
+          return input.wasInitiallyInside(gesture.element);
+        });
+      }
+      this.setActiveGestures();
     }
   }
 
@@ -180,10 +204,15 @@ class Region {
    * Evaluates whether the current input session has completed.
    *
    * @private
+   * @param {Event} event - The event emitted from the window object.
    */
-  pruneActiveGestures() {
-    if (this.state.hasNoActiveInputs()) {
-      this.resetActiveGestures();
+  pruneActiveGestures(event) {
+    if (PHASE[event.type] === PHASE.END) {
+      if (this.state.hasNoActiveInputs()) {
+        this.resetActiveGestures();
+      } else {
+        this.setActiveGestures();
+      }
     }
   }
 
@@ -198,7 +227,7 @@ class Region {
    */
   arbitrate(event) {
     this.state.updateAllInputs(event);
-    this.updateActiveGestures();
+    this.updateActiveGestures(event);
 
     if (this.activeGestures.length > 0) {
       if (this.preventDefault) event.preventDefault();
