@@ -265,7 +265,7 @@ class Region {
    */
   pruneActiveGestures(event) {
     if (PHASE[event.type] === END) {
-      if (this.state.hasNoActiveInputs()) {
+      if (this.state.hasNoInputs()) {
         this.resetActiveGestures();
       } else {
         this.setActiveGestures();
@@ -283,7 +283,7 @@ class Region {
    * @param {Event} event - The event emitted from the window object.
    */
   arbitrate(event) {
-    const isInitial = this.state.hasNoActiveInputs();
+    const isInitial = this.state.hasNoInputs();
     this.state.updateAllInputs(event);
     this.updateActiveGestures(event, isInitial);
 

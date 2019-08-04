@@ -154,7 +154,7 @@ class State {
    * @private
    * @return {boolean} True if there are no active inputs. False otherwise.
    */
-  hasNoActiveInputs() {
+  hasNoInputs() {
     return this[symbols.inputs].size === 0;
   }
 
