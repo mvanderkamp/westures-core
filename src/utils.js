@@ -5,23 +5,6 @@
 'use strict';
 
 /**
- * Performs a set difference operation.
- *
- * @private
- * @inner
- * @memberof westures-core.Region
- *
- * @param {Set} left
- * @param {Set} right
- *
- * @return {Set} Set consisting of elements in 'left' that are not in
- * 'right'.
- */
-function setDifference(left, right) {
-  return setFilter(left, element => !right.has(element));
-}
-
-/**
  * Performs a set filter operation.
  *
  * @private
@@ -43,6 +26,23 @@ function setFilter(set, predicate) {
     }
   });
   return result;
+}
+
+/**
+ * Performs a set difference operation.
+ *
+ * @private
+ * @inner
+ * @memberof westures-core.Region
+ *
+ * @param {Set} left
+ * @param {Set} right
+ *
+ * @return {Set} Set consisting of elements in 'left' that are not in
+ * 'right'.
+ */
+function setDifference(left, right) {
+  return setFilter(left, element => !right.has(element));
 }
 
 module.exports = Object.freeze({
