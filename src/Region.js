@@ -13,6 +13,7 @@ const {
   TOUCH_EVENTS,
 
   STATE_KEYS,
+  STATE_KEY_STRINGS,
 
   PHASE,
 
@@ -36,33 +37,6 @@ const {
 function arrayMinus(left, right) {
   return left.filter(p => right.indexOf(p) < 0);
 }
-
-/**
- * Determines whether the state of any of the STATE_KEYS has changed since the
- * last call.
- *
- * @private
- * @inner
- * @memberof westures-core.Region
- *
- * @param {Event} event - The event with STATE_KEYS properties to analyze.
- */
-const stateKeysWereChanged = (function stateKeyFunctionFactory() {
-  function stateKeysArray(event) {
-    return STATE_KEYS.map(k => event[k]);
-  }
-
-  let currentKeys = stateKeysArray({});
-
-  function stateKeysWereChanged(event) {
-    const newKeys = stateKeysArray(event);
-    const diff = newKeys.map((k, i) => k != currentKeys[i]);
-    currentKeys = newKeys;
-    return diff.some(k => k);
-  }
-
-  return stateKeysWereChanged;
-}());
 
 /**
  * Allows the user to specify the control region which will listen for user
@@ -233,7 +207,7 @@ class Region {
    * @param {KeyboardEvent} event - The keyboard event.
    */
   handleKeyboardEvent(event) {
-    if (stateKeysWereChanged(event)) {
+    if (STATE_KEY_STRINGS.indexOf(event.key) >= 0) {
       this.state.event = event;
       const oldActiveGestures = this.activeGestures.slice();
       this.setActiveGestures();
