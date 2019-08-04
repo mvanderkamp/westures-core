@@ -83,6 +83,21 @@ const STATE_KEYS = Object.freeze([
 ]);
 
 /**
+ * List of the 'key' values on KeyboardEvent objects of the potentially
+ * state-modifying keys.
+ *
+ * @private
+ * @memberof westures-core
+ * @enum {string}
+ */
+const STATE_KEY_STRINGS = Object.freeze([
+  'Alt',
+  'Control',
+  'Meta',
+  'Shift',
+]);
+
+/**
  * The cancel phase.
  *
  * @private
@@ -150,6 +165,7 @@ module.exports = {
   TOUCH_EVENTS,
 
   STATE_KEYS,
+  STATE_KEY_STRINGS,
 
   CANCEL,
   END,
