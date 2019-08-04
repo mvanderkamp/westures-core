@@ -4,7 +4,7 @@
 
 'use strict';
 
-const State     = require('./State.js');
+const State = require('./State.js');
 const {
   CANCEL_EVENTS,
   KEYBOARD_EVENTS,
@@ -20,23 +20,10 @@ const {
   START,
   END,
 } = require('./constants.js');
-
-/**
- * Performs an array minus operation.
- *
- * @private
- * @inner
- * @memberof westures-core.Region
- *
- * @param {Array} left
- * @param {Array} right
- *
- * @return {Array} Array consisting of elements in 'left' that are not in
- * 'right'.
- */
-function arrayMinus(left, right) {
-  return left.filter(p => right.indexOf(p) < 0);
-}
+const {
+  setDifference,
+  setFilter,
+} = require('./utils.js');
 
 /**
  * Allows the user to specify the control region which will listen for user
@@ -64,26 +51,26 @@ class Region {
      * The list of relations between elements, their gestures, and the handlers.
      *
      * @private
-     * @type {Gesture[]}
+     * @type {Set.<Gesture>}
      */
-    this.gestures = [];
+    this.gestures = new Set();
 
     /**
      * The list of active gestures for the current input session.
      *
      * @private
-     * @type {Gesture[]}
+     * @type {Set.<Gesture>}
      */
-    this.activeGestures = [];
+    this.activeGestures = new Set();
 
     /**
      * The base list of potentially active gestures for the current input
      * session.
      *
      * @private
-     * @type {Gesture[]}
+     * @type {Set.<Gesture>}
      */
-    this.potentialGestures = [];
+    this.potentialGestures = new Set();
 
     /**
      * The element being bound to.
@@ -209,13 +196,13 @@ class Region {
   handleKeyboardEvent(event) {
     if (STATE_KEY_STRINGS.indexOf(event.key) >= 0) {
       this.state.event = event;
-      const oldActiveGestures = this.activeGestures.slice();
+      const oldActiveGestures = new Set(this.activeGestures);
       this.setActiveGestures();
 
-      arrayMinus(oldActiveGestures, this.activeGestures).forEach(gesture => {
+      setDifference(oldActiveGestures, this.activeGestures).forEach(gesture => {
         gesture.evaluateHook(END, this.state);
       });
-      arrayMinus(this.activeGestures, oldActiveGestures).forEach(gesture => {
+      setDifference(this.activeGestures, oldActiveGestures).forEach(gesture => {
         gesture.evaluateHook(START, this.state);
       });
     }
@@ -227,8 +214,8 @@ class Region {
    * @private
    */
   resetActiveGestures() {
-    this.potentialGestures = [];
-    this.activeGestures = [];
+    this.potentialGestures = new Set();
+    this.activeGestures = new Set();
   }
 
   /**
@@ -237,8 +224,20 @@ class Region {
    * @private
    */
   setActiveGestures() {
-    this.activeGestures = this.potentialGestures.filter(gesture => {
+    this.activeGestures = setFilter(this.potentialGestures, gesture => {
       return gesture.isEnabled(this.state);
+    });
+  }
+
+  /**
+   * Selects the potentially active gestures.
+   *
+   * @private
+   */
+  setPotentialGestures() {
+    const input = this.state.inputs[0];
+    this.potentialGestures = setFilter(this.gestures, gesture => {
+      return input.wasInitiallyInside(gesture.element);
     });
   }
 
@@ -247,14 +246,12 @@ class Region {
    *
    * @private
    * @param {Event} event - The event emitted from the window object.
+   * @param {boolean} isInitial - Whether this is an initial contact.
    */
-  updateActiveGestures(event) {
+  updateActiveGestures(event, isInitial) {
     if (PHASE[event.type] === START) {
-      if (this.state.inputs.length > 0) {
-        const input = this.state.inputs[0];
-        this.potentialGestures = this.gestures.filter(gesture => {
-          return input.wasInitiallyInside(gesture.element);
-        });
+      if (isInitial) {
+        this.setPotentialGestures();
       }
       this.setActiveGestures();
     }
@@ -286,10 +283,11 @@ class Region {
    * @param {Event} event - The event emitted from the window object.
    */
   arbitrate(event) {
+    const isInitial = this.state.hasNoActiveInputs();
     this.state.updateAllInputs(event);
-    this.updateActiveGestures(event);
+    this.updateActiveGestures(event, isInitial);
 
-    if (this.activeGestures.length > 0) {
+    if (this.activeGestures.size > 0) {
       if (this.preventDefault) event.preventDefault();
 
       this.activeGestures.forEach(gesture => {
@@ -307,7 +305,7 @@ class Region {
    * @param {westures-core.Gesture} gesture - Instantiated gesture to add.
    */
   addGesture(gesture) {
-    this.gestures.push(gesture);
+    this.gestures.add(gesture);
   }
 
   /**
@@ -320,7 +318,7 @@ class Region {
    * @return {Gesture[]} Gestures to which the element is bound.
    */
   getGesturesByElement(element) {
-    return this.gestures.filter(b => b.element === element);
+    return setFilter(this.gestures, gesture => gesture.element === element);
   }
 
   /**
@@ -332,11 +330,13 @@ class Region {
    * undefined, will unbind all Gestures associated with the given element.
    */
   removeGestures(element, gesture) {
-    this.getGesturesByElement(element).forEach(b => {
-      if (gesture == null || b.gesture === gesture) {
-        this.gestures.splice(this.gestures.indexOf(b), 1);
+    this.getGesturesByElement(element).forEach(g => {
+      if (gesture == null || g === gesture) {
+        this.gestures.delete(g);
       }
     });
+    this.setPotentialGestures();
+    this.setActiveGestures();
   }
 }
 
