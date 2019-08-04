@@ -300,12 +300,23 @@ class Region {
   }
 
   /**
-   * Bind an element to a gesture with an associated handler.
+   * Adds the given gesture to the region.
    *
    * @param {westures-core.Gesture} gesture - Instantiated gesture to add.
    */
   addGesture(gesture) {
     this.gestures.add(gesture);
+  }
+
+  /**
+   * Removes the given gesture from the region.
+   *
+   * @param {westures-core.Gesture} gesture - Instantiated gesture to add.
+   */
+  removeGesture(gesture) {
+    this.gestures.delete(gesture);
+    this.potentialGestures.delete(gesture);
+    this.activeGestures.delete(gesture);
   }
 
   /**
@@ -322,21 +333,12 @@ class Region {
   }
 
   /**
-   * Unbinds an element from either the specified gesture or all if no gesture
-   * is specified.
+   * Remove all gestures bound to the given element.
    *
    * @param {Element} element - The element to unbind.
-   * @param {westures-core.Gesture} [ gesture ] - The gesture to unbind. If
-   * undefined, will unbind all Gestures associated with the given element.
    */
-  removeGestures(element, gesture) {
-    this.getGesturesByElement(element).forEach(g => {
-      if (gesture == null || g === gesture) {
-        this.gestures.delete(g);
-      }
-    });
-    this.setPotentialGestures();
-    this.setActiveGestures();
+  removeGesturesByElement(element) {
+    this.getGesturesByElement(element).forEach(g => this.removeGesture(g));
   }
 }
 
