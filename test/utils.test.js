@@ -42,7 +42,7 @@ describe('setDifference(left, right)', () => {
 
   test('Throws TypeError if left not provided', () => {
     expect(() => setDifference()).toThrow(TypeError);
-    expect(() => setDifference(undefined, right)).toThrow(TypeError);
+    expect(() => setDifference(null, right)).toThrow(TypeError);
   });
 
   test('Throws TypeError if right not provided', () => {

@@ -42,7 +42,9 @@ describe('Input', () => {
   describe('constructor', () => {
     let input;
     test('Can be instantiated', () => {
-      expect(() => input = new Input(mousedown, 1234)).not.toThrow();
+      expect(() => {
+        input = new Input(mousedown, 1234);
+      }).not.toThrow();
     });
 
     test('stores initial pointer data', () => {

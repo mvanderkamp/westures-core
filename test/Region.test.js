@@ -9,7 +9,6 @@ const Region = require('../src/Region.js');
 
 let emptySet;
 let element, options, region;
-let input, input2;
 let gesture, gesture_element, handler;
 let gesture2, gesture_element2, handler2;
 let touchend, touchmove, touchstart;

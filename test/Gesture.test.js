@@ -86,7 +86,7 @@ describe('Gesture', () => {
     });
 
     describe('isEnabled(state)', () => {
-      let element, event, gesture, handler, options, state;
+      let element, gesture, handler, state;
 
       beforeEach(() => {
         element = document.createElement('div');
