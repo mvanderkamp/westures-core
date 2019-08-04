@@ -206,13 +206,9 @@ class Region {
       window.addEventListener(eventName, cancel);
     });
 
+    const handleKeyboardEvent = this.handleKeyboardEvent.bind(this);
     KEYBOARD_EVENTS.forEach(eventName => {
-      window.addEventListener(eventName, () => {
-        this.setActiveGestures();
-        this.activeGestures.forEach(gesture => {
-          gesture.evaluateHook(START, this.state);
-        });
-      });
+      window.addEventListener(eventName, handleKeyboardEvent);
     });
   }
 
