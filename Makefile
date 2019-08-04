@@ -3,14 +3,19 @@
 
 lint:
 	npx eslint src;
-	npx eslint test --global jest,expect,test,describe,beforeEach,beforeAll;
+	npx eslint test \
+	--global jest,expect,test,describe,beforeEach,beforeAll \
+	--rule 'init-declarations: off';
 	npx eslint index.js;
 
 release: lint parcel docs tags
 
 fix:
 	npx eslint src --fix;
-	npx eslint test --global jest,expect,test,describe,beforeEach,beforeAll --fix;
+	npx eslint test \
+	--global jest,expect,test,describe,beforeEach,beforeAll \
+	--rule 'init-declarations: off' \
+	--fix;
 	npx eslint index.js --fix;
 
 parcel:

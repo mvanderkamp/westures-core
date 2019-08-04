@@ -63,7 +63,9 @@ describe('Region', () => {
     });
 
     test('Instantiates a Region if an element is provided', () => {
-      expect(() => region = new Region(element)).not.toThrow();
+      expect(() => {
+        region = new Region(element);
+      }).not.toThrow();
       expect(region).toBeInstanceOf(Region);
     });
 

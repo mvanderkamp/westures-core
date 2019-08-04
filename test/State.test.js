@@ -83,17 +83,25 @@ describe('State', () => {
     });
 
     describe('updateAllInputs', () => {
+      function doUpdateStarts(i) {
+        state.updateAllInputs(startevents[i]);
+      }
+
+      function doUpdateTests(i) {
+        state.updateAllInputs(testevents[i]);
+      }
+
       test('Instantiates new inputs for "start" phase events', () => {
         for (let i = 2; i < startevents.length; i++) {
           expect(state[inputSymbol].get(i)).toBeFalsy();
-          expect(() => state.updateAllInputs(startevents[i])).not.toThrow();
+          expect(() => doUpdateStarts(i)).not.toThrow();
           expect(state[inputSymbol].get(i)).toBeInstanceOf(Input);
         }
       });
 
       test('Updates old inputs for "move" or "end" phase events', () => {
         for (let i = 1; i < testevents.length; i++) {
-          expect(() => state.updateAllInputs(testevents[i])).not.toThrow();
+          expect(() => doUpdateTests(i)).not.toThrow();
         }
         expect(state[inputSymbol].get(2).phase).toBe('move');
         expect(state[inputSymbol].get(3).phase).toBe('move');
