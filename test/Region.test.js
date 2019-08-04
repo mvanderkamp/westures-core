@@ -578,7 +578,6 @@ describe('Region', () => {
         expect(region.potentialGestures).toMatchObject(gesture_set);
         expect(region.activeGestures).toMatchObject(gesture_set);
       });
-
     });
 
     describe('arbitrate(event)', () => {
