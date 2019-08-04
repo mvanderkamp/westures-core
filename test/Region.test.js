@@ -6,6 +6,11 @@
 
 const Gesture = require('../src/Gesture.js');
 const Region = require('../src/Region.js');
+const {
+  KEYBOARD_EVENTS,
+  STATE_KEYS,
+  STATE_KEY_STRINGS,
+} = require('../src/constants.js');
 
 let emptySet;
 let element, options, region;
@@ -87,7 +92,7 @@ describe('Region', () => {
       region = new Region(element);
 
       handler = jest.fn();
-      gesture = new Gesture('dummy', gesture_element, handler);
+      gesture = new Gesture('one', gesture_element, handler);
       Object.assign(gesture, {
         start:  jest.fn(),
         move:   jest.fn(),
@@ -97,7 +102,7 @@ describe('Region', () => {
 
       handler2 = jest.fn();
       options = { minInputs: 2 };
-      gesture2 = new Gesture('dummy', gesture_element2, handler2, options);
+      gesture2 = new Gesture('two', gesture_element2, handler2, options);
       Object.assign(gesture2, {
         start:  jest.fn(),
         move:   jest.fn(),
@@ -339,9 +344,6 @@ describe('Region', () => {
         region.state.updateAllInputs(touchstart);
         region.updateActiveGestures(touchstart, false);
 
-        expect(region.gestures).toMatchObject(gesture_both_set);
-        expect(region.potentialGestures).toMatchObject(gesture_both_set);
-        expect(region.activeGestures).toMatchObject(gesture_both_set);
         expect(region.state.inputs.length).toBe(2);
 
         expect(() => region.cancel(new MouseEvent('down'))).not.toThrow();
@@ -357,7 +359,6 @@ describe('Region', () => {
         expect(region.gestures).toMatchObject(gesture_both_set);
         expect(region.potentialGestures).toMatchObject(gesture_both_set);
         expect(region.activeGestures).toMatchObject(gesture_both_set);
-        expect(region.state.inputs.length).toBe(2);
 
         expect(() => region.cancel(new MouseEvent('down'))).not.toThrow();
 
@@ -367,6 +368,199 @@ describe('Region', () => {
     });
 
     describe('handleKeyboardEvent(event)', () => {
+      // [0] is 'key' for event, [1] is for boolean property
+      // TODO: Should this be changed to an object?
+      const zippedKeys = STATE_KEY_STRINGS.map((e, i) => [e, STATE_KEYS[i]]);
+
+      describe.each(zippedKeys)('%s', (key, keyCheck) => {
+        describe('keydown', () => {
+          let event;
+
+          beforeEach(() => {
+            event = new KeyboardEvent('keydown', {
+              key,
+              [keyCheck]: true,
+            });
+
+            Object.assign(gesture.options, {
+              enableKeys: [keyCheck],
+            });
+
+            Object.assign(gesture2.options, {
+              minInputs:   1,
+              disableKeys: [keyCheck],
+            });
+          });
+
+          test(`If ${keyCheck} is in enableKeys, activates the gesture`, () => {
+            region.addGesture(gesture);
+            region.state.updateAllInputs(touchstart);
+            region.updateActiveGestures(touchstart, true);
+
+            expect(region.gestures).toMatchObject(gesture_set);
+            expect(region.potentialGestures).toMatchObject(gesture_set);
+            expect(region.activeGestures).toMatchObject(emptySet);
+
+            expect(() => region.handleKeyboardEvent(event)).not.toThrow();
+
+            expect(region.gestures).toMatchObject(gesture_set);
+            expect(region.potentialGestures).toMatchObject(gesture_set);
+            expect(region.activeGestures).toMatchObject(gesture_set);
+          });
+
+          test(`If ${keyCheck} is in disableKeys, deactivates the gesture`,
+            () => {
+              region.addGesture(gesture2);
+              region.state.updateAllInputs(touchstart2);
+              region.updateActiveGestures(touchstart2, true);
+
+              expect(region.gestures).toMatchObject(gesture2_set);
+              expect(region.potentialGestures).toMatchObject(gesture2_set);
+              expect(region.activeGestures).toMatchObject(gesture2_set);
+
+              expect(() => region.handleKeyboardEvent(event)).not.toThrow();
+
+              expect(region.gestures).toMatchObject(gesture2_set);
+              expect(region.potentialGestures).toMatchObject(gesture2_set);
+              expect(region.activeGestures).toMatchObject(emptySet);
+            }
+          );
+
+          test('Calls "start" hook of activated gestures', () => {
+            region.addGesture(gesture);
+            region.state.updateAllInputs(touchstart);
+            region.updateActiveGestures(touchstart, true);
+
+            expect(gesture.start).not.toHaveBeenCalled();
+            expect(() => region.handleKeyboardEvent(event)).not.toThrow();
+            expect(gesture.start).toHaveBeenCalled();
+          });
+
+          test('Calls "end" hook of deactivated gestures', () => {
+            region.addGesture(gesture2);
+            region.state.updateAllInputs(touchstart2);
+            region.updateActiveGestures(touchstart2, true);
+
+            expect(gesture2.end).not.toHaveBeenCalled();
+            expect(() => region.handleKeyboardEvent(event)).not.toThrow();
+            expect(gesture2.end).toHaveBeenCalled();
+          });
+
+        });
+
+        describe('keyup', () => {
+          let event, keydown;
+
+          beforeEach(() => {
+            keydown = new KeyboardEvent('keydown', {
+              key,
+              [keyCheck]: true,
+            });
+
+            event = new KeyboardEvent('keyup', {
+              key,
+              [keyCheck]: false,
+            });
+
+            Object.assign(gesture.options, {
+              enableKeys: [keyCheck],
+            });
+
+            Object.assign(gesture2.options, {
+              minInputs:   1,
+              disableKeys: [keyCheck],
+            });
+          });
+
+          test(`If ${keyCheck} is in enableKeys, deactivates the gesture`,
+            () => {
+              region.addGesture(gesture);
+              region.state.updateAllInputs(touchstart);
+              region.updateActiveGestures(touchstart, true);
+
+              expect(() => region.handleKeyboardEvent(keydown)).not.toThrow();
+
+              expect(region.gestures).toMatchObject(gesture_set);
+              expect(region.potentialGestures).toMatchObject(gesture_set);
+              expect(region.activeGestures).toMatchObject(gesture_set);
+
+              expect(() => region.handleKeyboardEvent(event)).not.toThrow();
+
+              expect(region.gestures).toMatchObject(gesture_set);
+              expect(region.potentialGestures).toMatchObject(gesture_set);
+              expect(region.activeGestures).toMatchObject(emptySet);
+            }
+          );
+
+          test(`If ${keyCheck} is in disableKeys, activates the gesture`,
+            () => {
+              region.addGesture(gesture2);
+              region.state.updateAllInputs(touchstart2);
+              region.updateActiveGestures(touchstart2, true);
+
+              expect(() => region.handleKeyboardEvent(keydown)).not.toThrow();
+
+              expect(region.gestures).toMatchObject(gesture2_set);
+              expect(region.potentialGestures).toMatchObject(gesture2_set);
+              expect(region.activeGestures).toMatchObject(emptySet);
+
+              expect(() => region.handleKeyboardEvent(event)).not.toThrow();
+
+              expect(region.gestures).toMatchObject(gesture2_set);
+              expect(region.potentialGestures).toMatchObject(gesture2_set);
+              expect(region.activeGestures).toMatchObject(gesture2_set);
+            }
+          );
+
+          test('Calls "start" hook of activated gestures', () => {
+            region.addGesture(gesture2);
+            region.state.updateAllInputs(touchstart2);
+            region.updateActiveGestures(touchstart2, true);
+
+            expect(() => region.handleKeyboardEvent(keydown)).not.toThrow();
+            expect(gesture2.start).not.toHaveBeenCalled();
+            expect(() => region.handleKeyboardEvent(event)).not.toThrow();
+            expect(gesture2.start).toHaveBeenCalled();
+          });
+
+          test('Calls "end" hook of deactivated gestures', () => {
+            region.addGesture(gesture);
+            region.state.updateAllInputs(touchstart);
+            region.updateActiveGestures(touchstart, true);
+
+            expect(() => region.handleKeyboardEvent(keydown)).not.toThrow();
+            expect(gesture.end).not.toHaveBeenCalled();
+            expect(() => region.handleKeyboardEvent(event)).not.toThrow();
+            expect(gesture.end).toHaveBeenCalled();
+          });
+        });
+      });
+
+      test('Is a no-op if "event.key" is not in STATE_KEY_STRINGS', () => {
+        const event = new KeyboardEvent('keyup', {
+          key:     'K',
+          ctrlKey: true,
+        });
+
+        Object.assign(gesture.options, {
+          disableKeys: ['ctrlKey'],
+        });
+
+        region.addGesture(gesture);
+        region.state.updateAllInputs(touchstart);
+        region.updateActiveGestures(touchstart, true);
+
+        expect(region.gestures).toMatchObject(gesture_set);
+        expect(region.potentialGestures).toMatchObject(gesture_set);
+        expect(region.activeGestures).toMatchObject(gesture_set);
+
+        expect(() => region.handleKeyboardEvent(event)).not.toThrow();
+
+        expect(region.gestures).toMatchObject(gesture_set);
+        expect(region.potentialGestures).toMatchObject(gesture_set);
+        expect(region.activeGestures).toMatchObject(gesture_set);
+      });
+
     });
 
     describe('arbitrate(event)', () => {
