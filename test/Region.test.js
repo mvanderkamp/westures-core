@@ -8,12 +8,12 @@ const Gesture = require('../src/Gesture.js');
 const Region = require('../src/Region.js');
 
 let emptySet;
-let element, region, options;
+let element, options, region;
 let input, input2;
 let gesture, gesture_element, handler;
 let gesture2, gesture_element2, handler2;
-let touchstart, touchmove, touchend;
-let touchstart2, touchmove2, touchend2;
+let touchend, touchmove, touchstart;
+let touchend2, touchmove2, touchstart2;
 
 function addGestures() {
   region.addGesture(gesture);
@@ -25,9 +25,9 @@ class TouchEvent {
     this.type = type;
     this.target = target;
     this.changedTouches = [{
-      pageX : x,
-      pageY : y,
-      identifier : identifier,
+      pageX:      x,
+      pageY:      y,
+      identifier: identifier,
     }];
     this.preventDefault = jest.fn();
   }
@@ -80,17 +80,29 @@ describe('Region', () => {
   });
 
   describe('prototype methods', () => {
-    let gesture_set, gesture2_set, gesture_both_set;
+    let gesture2_set, gesture_both_set, gesture_set;
 
     beforeEach(() => {
       region = new Region(element);
 
       handler = jest.fn();
       gesture = new Gesture('dummy', gesture_element, handler);
+      Object.assign(gesture, {
+        start:  jest.fn(),
+        move:   jest.fn(),
+        end:    jest.fn(),
+        cancel: jest.fn(),
+      });
 
       handler2 = jest.fn();
       options = { minInputs: 2 };
       gesture2 = new Gesture('dummy', gesture_element2, handler2, options);
+      Object.assign(gesture2, {
+        start:  jest.fn(),
+        move:   jest.fn(),
+        end:    jest.fn(),
+        cancel: jest.fn(),
+      });
 
       gesture_set = new Set([gesture]);
       gesture2_set = new Set([gesture2]);
@@ -205,7 +217,6 @@ describe('Region', () => {
         // Otherwise gestures would never receive their 'end' phase.
         expect(region.activeGestures).toMatchObject(gesture_both_set);
       });
-
     });
 
     describe('pruneActiveGestures(event)', () => {
@@ -229,7 +240,8 @@ describe('Region', () => {
         expect(region.activeGestures).toMatchObject(gesture_set);
       });
 
-      test('Resets active and potential lists if there are no active inputs',
+      test(
+        'Resets active and potential lists if there are no active inputs',
         () => {
           region.state.updateAllInputs(touchstart2);
           region.updateActiveGestures(touchstart2, true);

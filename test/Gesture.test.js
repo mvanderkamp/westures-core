@@ -13,7 +13,7 @@ const {
   STATE_KEYS,
 } = require('../src/constants.js');
 
-const PHASES = [ START, MOVE, END, CANCEL ];
+const PHASES = [START, MOVE, END, CANCEL];
 
 describe('Gesture', () => {
   describe('constructor', () => {
@@ -86,7 +86,7 @@ describe('Gesture', () => {
     });
 
     describe('isEnabled(state)', () => {
-      let gesture, state, event, options, element, handler;
+      let element, event, gesture, handler, options, state;
 
       beforeEach(() => {
         element = document.createElement('div');
@@ -143,12 +143,12 @@ describe('Gesture', () => {
             state.active = [1];
           });
 
-          test(`Returns true if pressed`, () => {
+          test('Returns true if pressed', () => {
             state.event[key] = true;
             expect(gesture.isEnabled(state)).toBe(true);
           });
 
-          test(`Returns false if not pressed`, () => {
+          test('Returns false if not pressed', () => {
             state.event[key] = false;
             expect(gesture.isEnabled(state)).toBe(false);
           });
@@ -162,12 +162,12 @@ describe('Gesture', () => {
             state.active = [1];
           });
 
-          test(`Returns false if pressed`, () => {
+          test('Returns false if pressed', () => {
             state.event[key] = true;
             expect(gesture.isEnabled(state)).toBe(false);
           });
 
-          test(`Returns true if not pressed`, () => {
+          test('Returns true if not pressed', () => {
             state.event[key] = false;
             expect(gesture.isEnabled(state)).toBe(true);
           });

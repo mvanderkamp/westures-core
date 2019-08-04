@@ -13,7 +13,7 @@ describe('setFilter(set, predicate)', () => {
   let set;
 
   beforeAll(() => {
-    set = new Set([1,2,3,42,'blah',1]);
+    set = new Set([1, 2, 3, 42, 'blah', 1]);
   });
 
   test('Throws TypeError if no set provided', () => {
@@ -25,19 +25,19 @@ describe('setFilter(set, predicate)', () => {
   });
 
   test('Returns a filtered set of elements matching the predicate', () => {
-    const match = new Set([2,42]);
+    const match = new Set([2, 42]);
     const predicate = e => e % 2 == 0;
     expect(setFilter(set, predicate)).toMatchObject(match);
   });
 });
 
 describe('setDifference(left, right)', () => {
-  let left, right, match;
+  let left, match, right;
 
   beforeAll(() => {
-    left = new Set([1,2,3,42,'blah',1]);
-    right = new Set([1,2,42]);
-    match = new Set([3,'blah']);
+    left = new Set([1, 2, 3, 42, 'blah', 1]);
+    right = new Set([1, 2, 42]);
+    match = new Set([3, 'blah']);
   });
 
   test('Throws TypeError if left not provided', () => {
