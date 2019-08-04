@@ -195,7 +195,7 @@ class Region {
   handleKeyboardEvent(event) {
     if (STATE_KEY_STRINGS.indexOf(event.key) >= 0) {
       this.state.event = event;
-      const oldActiveGestures = new Set(this.activeGestures);
+      const oldActiveGestures = this.activeGestures;
       this.setActiveGestures();
 
       setDifference(oldActiveGestures, this.activeGestures).forEach(gesture => {
