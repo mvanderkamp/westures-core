@@ -228,6 +228,24 @@ describe('Region', () => {
     describe('pruneActiveGestures(event)', () => {
       beforeEach(addGestures);
 
+      test('Is a no-op if event phase is not "end"', () => {
+        region.state.updateAllInputs(touchstart2);
+        region.updateActiveGestures(touchstart2, true);
+        region.state.updateAllInputs(touchstart);
+        region.updateActiveGestures(touchstart, false);
+
+        expect(region.potentialGestures).toMatchObject(gesture_both_set);
+        expect(region.activeGestures).toMatchObject(gesture_both_set);
+
+        region.state.updateAllInputs(touchmove);
+        region.state.clearEndedInputs();
+        expect(region.state.hasNoInputs()).toBe(false);
+        expect(() => region.pruneActiveGestures(touchend)).not.toThrow();
+
+        expect(region.potentialGestures).toMatchObject(gesture_both_set);
+        expect(region.activeGestures).toMatchObject(gesture_both_set);
+      });
+
       test('Updates the active gestures if active inputs remain', () => {
         region.state.updateAllInputs(touchstart2);
         region.updateActiveGestures(touchstart2, true);
