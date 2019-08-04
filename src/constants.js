@@ -98,7 +98,7 @@ const CANCEL = 'cancel';
  * @memberof westures-core
  * @type { string }
  */
-const END    = 'end';
+const END = 'end';
 
 /**
  * The move phase.
@@ -107,7 +107,7 @@ const END    = 'end';
  * @memberof westures-core
  * @type { string }
  */
-const MOVE   = 'move';
+const MOVE = 'move';
 
 /**
  * The start phase.
@@ -116,7 +116,7 @@ const MOVE   = 'move';
  * @memberof westures-core
  * @type { string }
  */
-const START  = 'start';
+const START = 'start';
 
 /**
  * Normalizes window events to be either of type start, move, end, or cancel.
