@@ -16,8 +16,9 @@ const {
 
   PHASE,
 
-  START,
+  CANCEL,
   END,
+  START,
 } = require('./constants.js');
 const {
   setDifference,
@@ -181,6 +182,9 @@ class Region {
    */
   cancel(event) {
     event.preventDefault();
+    this.activeGestures.forEach(gesture => {
+      gesture.evaluateHook(CANCEL, this.state);
+    });
     this.state = new State(this.element);
     this.resetActiveGestures();
   }

@@ -136,6 +136,49 @@ describe('Region', () => {
       });
     });
 
+    describe('cancel(event)', () => {
+      beforeEach(addGestures);
+
+      test('Resets the state', () => {
+        region.state.updateAllInputs(touchstart2);
+        region.updateActiveGestures(touchstart2, true);
+        region.state.updateAllInputs(touchstart);
+        region.updateActiveGestures(touchstart, false);
+
+        expect(region.state.inputs.length).toBe(2);
+
+        expect(() => region.cancel(new MouseEvent('down'))).not.toThrow();
+        expect(region.state.inputs.length).toBe(0);
+      });
+
+      test('Resets the active and potential gesture sets', () => {
+        region.state.updateAllInputs(touchstart2);
+        region.updateActiveGestures(touchstart2, true);
+        region.state.updateAllInputs(touchstart);
+        region.updateActiveGestures(touchstart, false);
+
+        expect(region.gestures).toMatchObject(gesture_both_set);
+        expect(region.potentialGestures).toMatchObject(gesture_both_set);
+        expect(region.activeGestures).toMatchObject(gesture_both_set);
+
+        expect(() => region.cancel(new MouseEvent('down'))).not.toThrow();
+
+        expect(region.potentialGestures).toMatchObject(emptySet);
+        expect(region.activeGestures).toMatchObject(emptySet);
+      });
+
+      test('Calls the "cancel" hook for active gestures', () => {
+        region.state.updateAllInputs(touchstart2);
+        region.updateActiveGestures(touchstart2, true);
+        region.state.updateAllInputs(touchstart);
+        region.updateActiveGestures(touchstart, false);
+
+        expect(gesture.cancel).not.toHaveBeenCalled();
+        expect(() => region.cancel(new MouseEvent('down'))).not.toThrow();
+        expect(gesture.cancel).toHaveBeenCalledTimes(1);
+      });
+    });
+
     describe('setPotentialGestures()', () => {
       beforeEach(addGestures);
 
@@ -350,38 +393,6 @@ describe('Region', () => {
         expect(region.gestures).toMatchObject(gesture2_set);
         expect(region.potentialGestures).toMatchObject(gesture2_set);
         expect(region.activeGestures).toMatchObject(gesture2_set);
-      });
-    });
-
-    describe('cancel(event)', () => {
-      beforeEach(addGestures);
-
-      test('Resets the state', () => {
-        region.state.updateAllInputs(touchstart2);
-        region.updateActiveGestures(touchstart2, true);
-        region.state.updateAllInputs(touchstart);
-        region.updateActiveGestures(touchstart, false);
-
-        expect(region.state.inputs.length).toBe(2);
-
-        expect(() => region.cancel(new MouseEvent('down'))).not.toThrow();
-        expect(region.state.inputs.length).toBe(0);
-      });
-
-      test('Resets the active and potential gesture sets', () => {
-        region.state.updateAllInputs(touchstart2);
-        region.updateActiveGestures(touchstart2, true);
-        region.state.updateAllInputs(touchstart);
-        region.updateActiveGestures(touchstart, false);
-
-        expect(region.gestures).toMatchObject(gesture_both_set);
-        expect(region.potentialGestures).toMatchObject(gesture_both_set);
-        expect(region.activeGestures).toMatchObject(gesture_both_set);
-
-        expect(() => region.cancel(new MouseEvent('down'))).not.toThrow();
-
-        expect(region.potentialGestures).toMatchObject(emptySet);
-        expect(region.activeGestures).toMatchObject(emptySet);
       });
     });
 
