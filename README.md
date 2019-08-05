@@ -34,9 +34,9 @@ const wes = require('westures-core');
 const region = new wes.Region(document.body);
 
 // Instantiate a Gesture for an element within the region.
-// Assumes a Pan gesture is available.
-const pannable = document.querySelector('#pannable');
-const pan = new Pan(pannable, (data) => {
+// Assumes a Pan gesture is available, and that the element you want to pan has
+// been saved in the `element` variable.
+const pan = new Pan(element, (data) => {
   // data.translation.x ...
   // data.translation.y ...
   // and so on, depending on the Gesture
@@ -48,15 +48,30 @@ region.addGesture(pan);
 
 ## Table of Contents
 
+- [Features](#features)
 - [Overview](#overview)
 - [Basic Usage](#basic-usage)
 - [Implementing Custom Gestures](#implementing-custom-gestures)
-- [What's Changed](#changes)
 - [Links](#links)
+
+## Features
+
+- Full simultaneous multi-touch gesture support.
+    - Continuous use of pointer input allows seamless flow from gesture to
+      gesture without interruption.
+- Robust, simple to understand, easy to maintain engine.
+- Inertial smoothing capabilities for systems using coarse pointers (e.g. touch
+  surfaces).
+- Ability to enable / disable gestures with keys (e.g. ctrlKey, shiftKey)
+    - This allows for easy implementation of single-pointer flows that provide
+      the same behaviour as multi-pointer flows. For example, holding 'CTRL' on
+      a desktop could switch from panning mode to rotating mode.
+- Allows for easy implementation and integration of custom gestures using the
+  four-phase hook structure.
 
 ## Overview
 
-There are eight classes defined in this module:
+There are seven classes defined in this module:
 
 - _Gesture:_ Respond to input phase "hooks" to define a gesture.
 - _Input:_ Track a single pointer through its lifetime, and store the progress
@@ -65,9 +80,13 @@ There are eight classes defined in this module:
 - _PointerData:_ Record data pertaining to a single user input event for a
     single pointer.
 - _Region:_ Listen for user input events and respond appropriately.
+- _Smoothable:_ Datatype which provides inertial smoothing capabilities.
 - _State:_ Track all active Inputs within a Region.
-- _Smoothable:_ Adds optional smoothing to Gestures. (Extension of Gesture,
-  currently implemented as a mixin, but that will likely change).
+
+Additionally, two support files are defined:
+
+- _constants:_ Constant values used throughout the engine.
+- _utils:_ Helpful utility functions.
 
 These classes are structured as follows:
 
@@ -92,8 +111,8 @@ and their bound gestures so as to limit interference between elements during
 gestures, and no such locking occurs between Regions.
 
 If you have lots of interactable elements on your page, you may find it
-convenient to use smaller elements as regions. Test it out in case, and see what
-works better for you.
+convenient to use smaller elements as regions. Test it out in any case, and see
+what works better for you.
 
 ```javascript
 const region = new wes.Region(document.body);
@@ -106,21 +125,19 @@ with the region was inside the given Element. Therefore unless you want to try
 something fancy the gesture element should probably be contained inside the
 region element. It could even be the region element.
 
-Now for an example. Suppose you have a div (id 'pannable') within which you want
-to detect a Pan gesture (assume that such a gesture is available). Your handler
-is called `panner`.
+Now for an example. Suppose you have a div within which you want to detect a Pan
+gesture (assume that such a gesture is available). Your handler is called
+`handler`, and the div is saved in the `element` variable.
 
 ```javascript
-// Assumes a Pan gesture is available.
-const pannable = document.querySelector('#pannable');
-const pan = new Pan(pannable, panner);
+const pan = new Pan(element, handler);
 ```
 
-The `panner` function will be called whenever a Pan hook returns non-null data.
-The data returned by the hook will be available inside `panner` as such:
+The `handler` function will be called whenever a Pan hook returns non-null data.
+The data returned by the hook will be available inside `handler` as such:
 
 ```javascript
-function panner(data) {
+function handler(data) {
   // data.translation.x ...
   // data.translation.y ...
   // and so on, depending on the gesture
@@ -138,17 +155,16 @@ Simple:
 region.addGesture(pan);
 ```
 
-Now the `panner` function will be called whenever a `pan` gesture is detected on
-the `#pannable` element inside the region.
+Now the `handler` function will be called whenever a `pan` gesture is detected
+on the `#pannable` element inside the region.
 
 ## Implementing Custom Gestures
 
-The core technique used by Westures (originally conceived for ZingTouch) is to
-process all user inputs and filter them through four key lifecycle phases:
-`start`, `move`, `end`, and `cancel`. Gestures are defined by how they respond
-to these phases. To respond to the phases, a gesture extends the `Gesture` class
-provided by this module and overrides the method (a.k.a. "hook") corresponding
-to the name of the phase.
+The core technique used by Westures is to process all user inputs and filter
+them through four key lifecycle phases: `start`, `move`, `end`, and `cancel`.
+Gestures are defined by how they respond to these phases. To respond to the
+phases, a gesture extends the `Gesture` class provided by this module and
+overrides the method (a.k.a. "hook") corresponding to the name of the phase.
 
 The hook, when called, will receive the current State object of the region. To
 maintain responsiveness, the functionality within a hook should be short and as
@@ -159,19 +175,29 @@ For example, a simple way to implement a 'Tap' gesture would be as follows:
 ```javascript
 const { Gesture } = require('westures-core');
 
+const TIMEOUT = 100;
+
 class Tap extends Gesture {
   constructor() {
     super('tap');
+    this.startTime = null;
+  }
+
+  start(state) {
+    this.startTime = Date.now();
   }
 
   end(state) {
-    return state.getInputsInPhase('end')[0].current.point;
+    if (Date.now() - this.startTime <= TIMEOUT) {
+        return state.getInputsInPhase('end')[0].current.point;
+    }
+    return null;
   }
 }
 ```
 
-There are problems with this example, and it should not be used as an actual Tap
-gesture, it is merely to illustrate the basic idea.
+There are problems with this example, and it should probably not be used as an
+actual Tap gesture, it is merely to illustrate the basic idea.
 
 The default hooks for all Gestures simply return null. Data will only be
 forwarded to bound handlers when a non-null value is returned by a hook.
@@ -182,11 +208,11 @@ For information about what data is accessible via the State object, see the full
 documentation [here](https://mvanderkamp.github.io/westures-core/State.html).
 Note that his documentation was generated with `jsdoc`.
 
-### Data Passed to Handlers
+### Default Data Passed to Handlers
 
 As you can see from above, it is the gesture which decides when data gets passed
 to handlers, and for the most part what that data will be. Note though that a
-few propertiess will get added to the outgoing data object before the handler is
+few properties will get added to the outgoing data object before the handler is
 called. Those properties are:
 
 Name     | Type    | Value
@@ -197,55 +223,18 @@ phase    | String  | 'start', 'move', or 'end'
 type     | String  | The name of the gesture as specified by its designer.
 target   | Element | The Element that is associated with the recognized gesture.
 
+If data properties returned by a hook clashes with one of these properties, the
+value from the hook gets precedent and the default is overwritten.
+
 ## Changes
 
 See the [changelog](
 https://github.com/mvanderkamp/westures-core/blob/master/CHANGELOG.md) for the
 most recent updates.
 
-### Changes From ZingTouch
+## Issues
 
-The fundamental idea of ZingTouch, the three-phase hook structure, remains more
-or less the same. Most of the changes have to do with streamlining and
-simplifying the code such that it is easier to use and has a wider range of
-capabilities. The most significant of these is full simultaneous multi-touch
-gesture support. Beyond that, here are some spefic changes:
-
-- Reorganized and simplified code structure.
-  - The arbiter-interpreter-dispatcher scheme has been significantly simplified.
-    - There is no arbiter. instead the Region class has an 'arbitrate' function.
-    - There is no interpreter. Instead the Binding class has an 'evaluateHook'
-      function.
-    - There is no dispatcher. The handlers are called directly.
-  - Fewer levels of code and fewer attempts to ram multiple types of
-    functionality into a single function. I've tried to keep all functions clear
-    and simple.
-- Creation and use of a Point2D class.
-- Redesigned technique for handling inputs allows continuous use of touches.
-  ZingTouch had a tendency to stop responding to touches if some gesture ended,
-  this should no longer be the case. Users should now be able to seamlessly flow
-  from one gesture to another (or even multiple simultaneously) without having
-  to restart their touches.
-- Support for using the window object as a region.
-- Simplified hook interaction. A single 'state' object is passed, as that is
-  all that is really needed.
-- Simplified handler interaction. As the handlers are called directly instead of
-  as the callback for an event, the parameters do not need to be wrapped up
-  inside the 'details' property of an event object.
-- Renamed 'bind' to 'addGesture' and 'unbind' to 'removeGestures'.
-- Implemented a Smoothable mixin to be used for movement-based gestures.
-
-## Advisory
-
-This is an alpha release of this library. Browser compatability has not been
-tested except in the newest stable releases of Chrome and Firefox. Likewise, it
-has only been tested on a very small selection of devices. Updates may be
-frequent at times, but check back here and in the documentation to see what's
-new and what breaking changes might have occurred.
-
-That said, please do give it a try, and if something breaks, please let me know!
-Or, even better, figure out why it broke, figure out a solution, and submit a
-pull request!
+If you find any compatibility issues, please let me know!
 
 ## Links
 
