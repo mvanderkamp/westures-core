@@ -38,6 +38,7 @@
     "eslint": "^6.1.0",
     "jest": "^24.8.0",
     "jsdoc": "^3.6.3",
+    "lodash": "^4.17.15",
     "parcel-bundler": "^1.12.3",
     "tui-jsdoc-template": "^1.2.2"
   },
