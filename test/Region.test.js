@@ -4,6 +4,7 @@
 
 'use strict';
 
+const _ = require('lodash');
 const Gesture = require('../src/Gesture.js');
 const Region = require('../src/Region.js');
 const {
@@ -386,10 +387,7 @@ describe('Region', () => {
     });
 
     describe('handleKeyboardEvent(event)', () => {
-      // [0] is 'key' for event, [1] is for boolean property
-      // TODO: Should this be changed to an object?
-      const zippedKeys = STATE_KEY_STRINGS.map((e, i) => [e, STATE_KEYS[i]]);
-
+      const zippedKeys = _.zip(STATE_KEY_STRINGS, STATE_KEYS);
       describe.each(zippedKeys)('%s', (key, keyCheck) => {
         describe('keydown', () => {
           let event;
@@ -581,6 +579,122 @@ describe('Region', () => {
     });
 
     describe('arbitrate(event)', () => {
+      beforeEach(addGestures);
+
+      test('Sets up potential gestures on initial contact', () => {
+        expect(() => region.arbitrate(touchstart)).not.toThrow();
+        expect(region.potentialGestures).toMatchObject(gesture_set);
+      });
+
+      test('Calls the appropriate hook for active gestures', () => {
+        Object.assign(gesture2.options, { minInputs: 1 });
+
+        expect(gesture.start).not.toHaveBeenCalled();
+        region.arbitrate(touchstart);
+        expect(gesture.start).toHaveBeenCalledTimes(1);
+
+        expect(gesture.move).not.toHaveBeenCalled();
+        region.arbitrate(touchmove);
+        expect(gesture.move).toHaveBeenCalledTimes(1);
+
+        region.arbitrate(touchstart2);
+        expect(gesture.start).toHaveBeenCalledTimes(2);
+        region.arbitrate(touchmove2);
+        expect(gesture.move).toHaveBeenCalledTimes(2);
+
+        expect(gesture.end).not.toHaveBeenCalled();
+        region.arbitrate(touchend);
+        expect(gesture.end).toHaveBeenCalledTimes(1);
+
+        region.arbitrate(touchend2);
+        expect(gesture.end).toHaveBeenCalledTimes(2);
+      });
+
+      test('Clears ended inputs after "end" hook and resets active set', () => {
+        expect(region.state.hasNoInputs()).toBe(true);
+        expect(region.activeGestures).toMatchObject(emptySet);
+        region.arbitrate(touchstart);
+        expect(region.state.hasNoInputs()).toBe(false);
+        expect(region.activeGestures).toMatchObject(gesture_set);
+        region.arbitrate(touchend);
+        expect(region.state.hasNoInputs()).toBe(true);
+        expect(region.activeGestures).toMatchObject(emptySet);
+      });
+
+
+      test('Does not call any hooks if no bound element targeted', () => {
+        const event = new TouchEvent('touchstart', 42, 43, element, 0);
+
+        expect(gesture.start).not.toHaveBeenCalled();
+        expect(gesture2.start).not.toHaveBeenCalled();
+        expect(region.state.hasNoInputs()).toBe(true);
+        expect(region.activeGestures).toMatchObject(emptySet);
+
+        expect(() => region.arbitrate(event)).not.toThrow();
+
+        expect(gesture.start).not.toHaveBeenCalled();
+        expect(gesture2.start).not.toHaveBeenCalled();
+        expect(region.state.hasNoInputs()).toBe(false);
+        expect(region.activeGestures).toMatchObject(emptySet);
+      });
+
+      test('Does not add active gesture if not initially targeted', () => {
+        Object.assign(gesture2.options, { minInputs: 1 });
+
+        expect(gesture2.start).not.toHaveBeenCalled();
+        expect(gesture2.move).not.toHaveBeenCalled();
+        expect(gesture2.end).not.toHaveBeenCalled();
+
+        region.arbitrate(touchstart);
+        region.arbitrate(touchmove);
+        region.arbitrate(touchstart2);
+        region.arbitrate(touchmove2);
+        region.arbitrate(touchend);
+        region.arbitrate(touchend2);
+
+        expect(gesture2.start).not.toHaveBeenCalled();
+        expect(gesture2.move).not.toHaveBeenCalled();
+        expect(gesture2.end).not.toHaveBeenCalled();
+      });
+
+      test('Activates gesture, if not initially targeted, after reset', () => {
+        Object.assign(gesture2.options, { minInputs: 1 });
+
+        region.arbitrate(touchstart);
+        region.arbitrate(touchmove);
+        region.arbitrate(touchstart2);
+        region.arbitrate(touchmove2);
+        region.arbitrate(touchend);
+        region.arbitrate(touchend2);
+
+        expect(gesture2.start).not.toHaveBeenCalled();
+        expect(gesture2.move).not.toHaveBeenCalled();
+        expect(gesture2.end).not.toHaveBeenCalled();
+
+        // Only now can the second gesture become active!
+        region.arbitrate(touchstart2);
+        region.arbitrate(touchmove2);
+        region.arbitrate(touchend2);
+
+        expect(gesture2.start).toHaveBeenCalledTimes(1);
+        expect(gesture2.move).toHaveBeenCalledTimes(1);
+        expect(gesture2.end).toHaveBeenCalledTimes(1);
+      });
+
+      test('Calls preventDefault, if requested', () => {
+        touchstart.preventDefault = jest.fn();
+        expect(touchstart.preventDefault).not.toHaveBeenCalled();
+        region.arbitrate(touchstart);
+        expect(touchstart.preventDefault).toHaveBeenCalledTimes(1);
+      });
+
+      test('Does not call preventDefault, if requested', () => {
+        touchstart.preventDefault = jest.fn();
+        region.preventDefault = false
+        expect(touchstart.preventDefault).not.toHaveBeenCalled();
+        region.arbitrate(touchstart);
+        expect(touchstart.preventDefault).not.toHaveBeenCalled();
+      });
     });
   });
 });
