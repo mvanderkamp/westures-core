@@ -1,5 +1,5 @@
 
-.PHONY: release lint fix parcel tags docs 
+.PHONY: release lint fix parcel tags docs coverage
 
 lint:
 	npx eslint src;
@@ -8,7 +8,7 @@ lint:
 	--rule 'init-declarations: off';
 	npx eslint index.js;
 
-release: lint parcel docs tags
+release: lint parcel docs tags coverage
 
 fix:
 	npx eslint src --fix;
@@ -33,4 +33,7 @@ redoc:
 
 tags:
 	ctags -R src;
+
+coverage:
+	npx jest --coverage && cat ./coverage/lcov.info | npx coveralls
 

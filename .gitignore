@@ -2,6 +2,7 @@
 node_modules/
 ._*
 bower_components/
+.coveralls.yml
 .cache/
 .idea/
 playground/
