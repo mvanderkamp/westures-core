@@ -1,16 +1,24 @@
 # Changelog
 
-## Releases
+## 1.0.0
 
-- [0.6.5](#065)
-- [0.6.4](#064)
-- [0.6.3](#063)
-- [0.6.2](#062)
-- [0.6.1](#061)
-- [0.6.0](#060)
-- [0.5.3](#053)
-- [0.5.2](#052)
-- [0.5.0](#050)
+- Official first release! This engine is no longer considered to be in beta.
+- Refactor Smoothable to be a data type, not a mixin.
+- Remove the Binding class and integrate with the Gesture class. It was more of
+  a hindrance than a help on its own.
+- Provide automatic detection of enabled and disabled gestures, including using
+  keys to enable and disable, in a simple way such that gestures don't need to
+  check if their enabled inside their hooks.
+- Region class now takes an optional 'options' object instead of lots of
+  arguments.
+- Add option to choose which X/Y source property on an input event should be
+  used (e.g. 'client', 'screen', or 'page').
+- Remove the 'getProgressOfGesture' method from the Input class. Gestures should
+  track their progress internally, on their own instance!
+- Remove the 'radius' property from the outgoing data. It didn't seem useful and
+  was just cluttering the output.
+- Use Sets for tracking Gestures inside the Region instead of Arrays. (Faster
+  access operations).
 
 ## 0.6.5
 
