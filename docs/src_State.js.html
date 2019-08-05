@@ -32,7 +32,7 @@
     <div class="title">
         <h1><a href="index.html" class="link">westures-core</a></h1>
         
-            <span class="version">v0.6.5</span>
+            <span class="version">v1.0.0-alpha.1</span>
         
     </div>
     <div class="search-container" id="search-container">
@@ -274,12 +274,7 @@ class State {
     this.active = this.getInputsNotInPhase('end');
     this.activePoints = this.active.map(i => i.current.point);
     this.centroid = Point2D.centroid(this.activePoints);
-    // XXX: Delete this.radius for next released. It is not generally useful.
-    this.radius = this.activePoints.reduce((acc, cur) => {
-      const dist = cur.distanceTo(this.centroid);
-      return dist > acc ? dist : acc;
-    }, 0);
-    if (event) this.event = event;
+    this.event = event;
   }
 }
 
