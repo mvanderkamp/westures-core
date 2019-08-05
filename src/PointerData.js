@@ -30,10 +30,9 @@ function getEventObject(event, identifier) {
  *
  * @param {Event} event - The event object being wrapped.
  * @param {number} identifier - The index of touch if applicable
- * @param {string} [source='page'] - One of 'page', 'client', or 'screen'.
- * Determines what the source of (x,y) coordinates will be from the input
- * events. ('X' and 'Y' will be appended, then those are the properties that
- * will be looked up).
+ * @param {westures-core.SOURCE_STRINGS} [source='page'] - Determines what the
+ * source of (x,y) coordinates will be from the input events. ('X' and 'Y' will
+ * be appended, then those are the properties that will be looked up).
  */
 class PointerData {
   constructor(event, identifier, source = 'page') {
@@ -67,7 +66,6 @@ class PointerData {
      * @type {westures-core.Point2D}
      */
     this.point = new Point2D(eventObj[`${source}X`], eventObj[`${source}Y`]);
-    // this.point = new Point2D(eventObj.clientX, eventObj.clientY);
   }
 
   /**

@@ -1,7 +1,7 @@
 /**
  * The global API interface for Westures. Exposes a constructor for the Region
  * and the generic Gesture class for user gestures to implement, as well as the
- * Point2D class, which may be useful.
+ * Point2D and Smoothable datatypes.
  *
  * @namespace westures-core
  */

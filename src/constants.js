@@ -69,6 +69,19 @@ const TOUCH_EVENTS = Object.freeze([
 ]);
 
 /**
+ * List of potential values for the input source string.
+ *
+ * @private
+ * @memberof westures-core
+ * @enum {string}
+ */
+const SOURCE_STRINGS = Object.freeze([
+  'client',
+  'page',
+  'screen',
+]);
+
+/**
  * List of potentially state-modifying keys.
  *
  * @private
@@ -164,6 +177,7 @@ module.exports = {
   POINTER_EVENTS,
   TOUCH_EVENTS,
 
+  SOURCE_STRINGS,
   STATE_KEYS,
   STATE_KEY_STRINGS,
 
