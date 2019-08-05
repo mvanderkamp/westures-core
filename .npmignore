@@ -17,5 +17,6 @@ Makefile
 arkit.*
 .*.json
 .cache
+.ignore
 .coveralls.yml
 
