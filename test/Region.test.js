@@ -8,7 +8,6 @@ const _ = require('lodash');
 const Gesture = require('../src/Gesture.js');
 const Region = require('../src/Region.js');
 const {
-  KEYBOARD_EVENTS,
   STATE_KEYS,
   STATE_KEY_STRINGS,
 } = require('../src/constants.js');
@@ -424,7 +423,8 @@ describe('Region', () => {
             expect(region.activeGestures).toMatchObject(gesture_set);
           });
 
-          test(`If ${keyCheck} is in disableKeys, deactivates the gesture`,
+          test(
+            `If ${keyCheck} is in disableKeys, deactivates the gesture`,
             () => {
               region.addGesture(gesture2);
               region.state.updateAllInputs(touchstart2);
@@ -461,7 +461,6 @@ describe('Region', () => {
             expect(() => region.handleKeyboardEvent(event)).not.toThrow();
             expect(gesture2.end).toHaveBeenCalled();
           });
-
         });
 
         describe('keyup', () => {
@@ -488,7 +487,8 @@ describe('Region', () => {
             });
           });
 
-          test(`If ${keyCheck} is in enableKeys, deactivates the gesture`,
+          test(
+            `If ${keyCheck} is in enableKeys, deactivates the gesture`,
             () => {
               region.addGesture(gesture);
               region.state.updateAllInputs(touchstart);
@@ -508,7 +508,8 @@ describe('Region', () => {
             }
           );
 
-          test(`If ${keyCheck} is in disableKeys, activates the gesture`,
+          test(
+            `If ${keyCheck} is in disableKeys, activates the gesture`,
             () => {
               region.addGesture(gesture2);
               region.state.updateAllInputs(touchstart2);
@@ -690,7 +691,7 @@ describe('Region', () => {
 
       test('Does not call preventDefault, if requested', () => {
         touchstart.preventDefault = jest.fn();
-        region.preventDefault = false
+        region.preventDefault = false;
         expect(touchstart.preventDefault).not.toHaveBeenCalled();
         region.arbitrate(touchstart);
         expect(touchstart.preventDefault).not.toHaveBeenCalled();
