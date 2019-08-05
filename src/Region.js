@@ -295,7 +295,7 @@ class Region {
     }
 
     this.state.clearEndedInputs();
-    this.pruneActiveGestures();
+    this.pruneActiveGestures(event);
   }
 
   /**
