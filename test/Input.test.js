@@ -76,42 +76,6 @@ describe('Input', () => {
     });
   });
 
-  describe('getProgressOfGesture', () => {
-    let input;
-    beforeEach(() => {
-      input = new Input(mousedown, 1234);
-    });
-
-    test('initial call generates empty progress object', () => {
-      expect(input.getProgressOfGesture('tap')).toEqual({});
-    });
-
-    test('persistent data can be stored in the progress object', () => {
-      expect(input.getProgressOfGesture('tap')).toEqual({});
-      input.getProgressOfGesture('tap').foo = 8;
-      expect(input.getProgressOfGesture('tap').foo).toEqual(8);
-    });
-
-    test('can store progress objects for many gestures', () => {
-      const nums = {
-        tap:    42,
-        pinch:  812,
-        rotate: 9157,
-      };
-      const gestures = ['tap', 'pinch', 'rotate'];
-
-      gestures.forEach(id => {
-        expect(input.getProgressOfGesture(id)).toEqual({});
-        input.getProgressOfGesture(id).num = nums[id];
-        expect(input.getProgressOfGesture(id).num).toEqual(nums[id]);
-      });
-
-      gestures.forEach(id => {
-        expect(input.getProgressOfGesture(id).num).toEqual(nums[id]);
-      });
-    });
-  });
-
   describe('update', () => {
     let input;
     beforeEach(() => {

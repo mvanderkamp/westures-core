@@ -110,15 +110,6 @@ class Input {
      * @type {number}
      */
     this.identifier = identifier;
-
-    /**
-     * Stores internal state between events for each gesture based off of the
-     * gesture's id.
-     *
-     * @private
-     * @type {Object}
-     */
-    this.progress = {};
   }
 
   /**
@@ -134,20 +125,6 @@ class Input {
    * @type {number}
    */
   get startTime() { return this.initial.time; }
-
-  /**
-   * @private
-   *
-   * @param {string} id - The ID of the gesture whose progress is sought.
-   *
-   * @return {Object} The progress of the gesture.
-   */
-  getProgressOfGesture(id) {
-    if (!this.progress[id]) {
-      this.progress[id] = {};
-    }
-    return this.progress[id];
-  }
 
   /**
    * @return {number} The distance between the initiating event for this input
