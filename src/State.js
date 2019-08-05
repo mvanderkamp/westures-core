@@ -220,12 +220,7 @@ class State {
     this.active = this.getInputsNotInPhase('end');
     this.activePoints = this.active.map(i => i.current.point);
     this.centroid = Point2D.centroid(this.activePoints);
-    // XXX: Delete this.radius for next released. It is not generally useful.
-    this.radius = this.activePoints.reduce((acc, cur) => {
-      const dist = cur.distanceTo(this.centroid);
-      return dist > acc ? dist : acc;
-    }, 0);
-    if (event) this.event = event;
+    this.event = event;
   }
 }
 

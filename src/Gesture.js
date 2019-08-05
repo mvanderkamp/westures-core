@@ -156,7 +156,6 @@ class Gesture {
         centroid: state.centroid,
         event:    state.event,
         phase:    hook,
-        radius:   state.radius,
         type:     this.type,
         target:   this.element,
         ...data,
