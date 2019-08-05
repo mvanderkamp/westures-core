@@ -215,7 +215,7 @@ class State {
    * @private
    * @param {Event} event - Event with which to update the convenience fields.
    */
-  updateFields(event = null) {
+  updateFields(event) {
     this.inputs = Array.from(this[symbols.inputs].values());
     this.active = this.getInputsNotInPhase('end');
     this.activePoints = this.active.map(i => i.current.point);
