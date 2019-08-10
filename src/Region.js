@@ -182,6 +182,9 @@ class Region {
    */
   cancel(event) {
     event.preventDefault();
+    this.state.inputs.forEach(input => {
+      input.update(event);
+    });
     this.activeGestures.forEach(gesture => {
       gesture.evaluateHook(CANCEL, this.state);
     });
