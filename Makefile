@@ -1,21 +1,18 @@
 
-.PHONY: release lint fix parcel tags docs coverage
+.PHONY: default release lint fix parcel tags docs coverage
+
+default: lint tags
 
 lint:
 	npx eslint src;
-	npx eslint test \
-	--global jest,expect,test,describe,beforeEach,beforeAll \
-	--rule 'init-declarations: off';
+	npx eslint test;
 	npx eslint index.js;
 
 release: lint parcel docs tags coverage
 
 fix:
 	npx eslint src --fix;
-	npx eslint test \
-	--global jest,expect,test,describe,beforeEach,beforeAll \
-	--rule 'init-declarations: off' \
-	--fix;
+	npx eslint test --fix;
 	npx eslint index.js --fix;
 
 parcel:
