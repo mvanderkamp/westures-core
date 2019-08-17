@@ -2,6 +2,8 @@
  * Test suite for the Point2D class.
  */
 
+/* global expect, describe, test, beforeEach */
+
 'use strict';
 
 const Point2D = require('../src/Point2D.js');
@@ -25,7 +27,7 @@ describe('Constructor', () => {
 });
 
 describe('Prototype methods', () => {
-  let origin;
+  let origin = null;
 
   beforeEach(() => {
     origin = new Point2D(0, 0);

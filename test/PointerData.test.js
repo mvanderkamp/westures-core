@@ -2,14 +2,24 @@
  * Test suite for the PointerData class.
  */
 
+/* global expect, describe, test, beforeAll */
+
 'use strict';
 
 const PointerData = require('../src/PointerData.js');
 const Point2D     = require('../src/Point2D.js');
 
 describe('PointerData', () => {
-  let mouseevent, pointerangle, pointerdist, pointerevent, touchevent;
-  let childElement, element, id, mdata, tdata;
+  let mouseevent = null;
+  let pointerangle = null;
+  let pointerdist = null;
+  let pointerevent = null;
+  let touchevent = null;
+  let childElement = null;
+  let element = null;
+  let id = null;
+  let mdata = null;
+  let tdata = null;
 
   beforeAll(() => {
     element = document.createElement('div');

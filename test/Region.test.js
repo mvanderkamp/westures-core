@@ -2,6 +2,8 @@
  * Test suite for the Region class.
  */
 
+/* global expect, describe, test, jest, beforeAll, beforeEach */
+
 'use strict';
 
 const _ = require('lodash');
@@ -12,12 +14,22 @@ const {
   STATE_KEY_STRINGS,
 } = require('../src/constants.js');
 
-let emptySet;
-let element, options, region;
-let gesture, gesture_element, handler;
-let gesture2, gesture_element2, handler2;
-let touchend, touchmove, touchstart;
-let touchend2, touchmove2, touchstart2;
+let emptySet = null;
+let element = null;
+let options = null;
+let region = null;
+let gesture = null;
+let gesture_element = null;
+let handler = null;
+let gesture2 = null;
+let gesture_element2 = null;
+let handler2 = null;
+let touchend = null;
+let touchmove = null;
+let touchstart = null;
+let touchend2 = null;
+let touchmove2 = null;
+let touchstart2 = null;
 
 function addGestures() {
   region.addGesture(gesture);
@@ -86,7 +98,9 @@ describe('Region', () => {
   });
 
   describe('prototype methods', () => {
-    let gesture2_set, gesture_both_set, gesture_set;
+    let gesture2_set = null;
+    let gesture_both_set = null;
+    let gesture_set = null;
 
     beforeEach(() => {
       region = new Region(element);
@@ -400,7 +414,7 @@ describe('Region', () => {
       const zippedKeys = _.zip(STATE_KEY_STRINGS, STATE_KEYS);
       describe.each(zippedKeys)('%s', (key, keyCheck) => {
         describe('keydown', () => {
-          let event;
+          let event = null;
 
           beforeEach(() => {
             event = new KeyboardEvent('keydown', {
@@ -475,7 +489,8 @@ describe('Region', () => {
         });
 
         describe('keyup', () => {
-          let event, keydown;
+          let event = null;
+          let keydown = null;
 
           beforeEach(() => {
             keydown = new KeyboardEvent('keydown', {

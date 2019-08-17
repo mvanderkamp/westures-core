@@ -2,6 +2,8 @@
  * Test suite for the State class.
  */
 
+/* global expect, describe, test, beforeAll, beforeEach */
+
 'use strict';
 
 const State = require('../src/State.js');
@@ -18,10 +20,12 @@ class PointerEvent {
 }
 
 describe('State', () => {
-  let state;
-  let startevents;
-  let testevents;
-  let outerdiv, parentdiv, targetdiv;
+  let state = null;
+  let startevents = null;
+  let testevents = null;
+  let outerdiv = null;
+  let parentdiv = null;
+  let targetdiv = null;
 
   beforeAll(() => {
     outerdiv = document.createElement('div');
@@ -61,7 +65,7 @@ describe('State', () => {
   });
 
   describe('prototype methods', () => {
-    let inputSymbol;
+    let inputSymbol = null;
     beforeAll(() => {
       state = new State();
       inputSymbol = Symbol.for('inputs');
@@ -138,7 +142,7 @@ describe('State', () => {
       });
 
       describe('move', () => {
-        let moves;
+        let moves = null;
         beforeEach(() => {
           moves = state.getInputsInPhase('move');
         });
@@ -160,7 +164,7 @@ describe('State', () => {
       });
 
       describe('end', () => {
-        let ends;
+        let ends = null;
         beforeEach(() => {
           ends = state.getInputsInPhase('end');
         });
@@ -184,7 +188,7 @@ describe('State', () => {
 
     describe('getInputsNotInPhase(phase)', () => {
       describe('start', () => {
-        let starts;
+        let starts = null;
         beforeEach(() => {
           starts = state.getInputsNotInPhase('start');
         });
@@ -208,7 +212,7 @@ describe('State', () => {
       });
 
       describe('move', () => {
-        let moves;
+        let moves = null;
         beforeEach(() => {
           moves = state.getInputsNotInPhase('move');
         });
@@ -233,7 +237,7 @@ describe('State', () => {
       });
 
       describe('end', () => {
-        let ends;
+        let ends = null;
         beforeEach(() => {
           ends = state.getInputsNotInPhase('end');
         });

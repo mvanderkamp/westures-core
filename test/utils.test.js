@@ -2,6 +2,8 @@
  * Test suite for the utils module.
  */
 
+/* global expect, describe, test, beforeAll */
+
 'use strict';
 
 const {
@@ -10,7 +12,7 @@ const {
 } = require('../src/utils.js');
 
 describe('setFilter(set, predicate)', () => {
-  let set;
+  let set = null;
 
   beforeAll(() => {
     set = new Set([1, 2, 3, 42, 'blah', 1]);
@@ -32,7 +34,9 @@ describe('setFilter(set, predicate)', () => {
 });
 
 describe('setDifference(left, right)', () => {
-  let left, match, right;
+  let left = null;
+  let match = null;
+  let right = null;
 
   beforeAll(() => {
     left = new Set([1, 2, 3, 42, 'blah', 1]);

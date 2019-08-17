@@ -2,6 +2,8 @@
  * Test suite for the Gesture class.
  */
 
+/* global expect, describe, test, jest, beforeEach */
+
 'use strict';
 
 const Gesture = require('../src/Gesture.js');
@@ -39,7 +41,10 @@ describe('Gesture', () => {
     });
 
     describe('evaluateHook(hook, state)', () => {
-      let element, gesture, handler, state;
+      let element = null;
+      let gesture = null;
+      let handler = null;
+      let state = null;
 
       beforeEach(() => {
         element = document.createElement('div');
@@ -86,7 +91,10 @@ describe('Gesture', () => {
     });
 
     describe('isEnabled(state)', () => {
-      let element, gesture, handler, state;
+      let element = null;
+      let gesture = null;
+      let handler = null;
+      let state = null;
 
       beforeEach(() => {
         element = document.createElement('div');

@@ -2,17 +2,19 @@
  * Test suite for the Input class.
  */
 
+/* global expect, describe, test, beforeAll, beforeEach */
+
 'use strict';
 
 const Input     = require('../src/Input.js');
 const PointerData = require('../src/PointerData.js');
 
 describe('Input', () => {
-  let activediv;
-  let parentdiv;
-  let outerdiv;
-  let mousedown;
-  let mousemove;
+  let activediv = null;
+  let parentdiv = null;
+  let outerdiv = null;
+  let mousedown = null;
+  let mousemove = null;
 
   beforeAll(() => {
     parentdiv = document.createElement('div');
@@ -40,7 +42,7 @@ describe('Input', () => {
   });
 
   describe('constructor', () => {
-    let input;
+    let input = null;
     test('Can be instantiated', () => {
       expect(() => {
         input = new Input(mousedown, 1234);
@@ -58,7 +60,7 @@ describe('Input', () => {
   });
 
   describe('getters', () => {
-    let input;
+    let input = null;
     beforeEach(() => {
       input = new Input(mousedown, 1234);
     });
@@ -77,7 +79,7 @@ describe('Input', () => {
   });
 
   describe('update', () => {
-    let input;
+    let input = null;
     beforeEach(() => {
       input = new Input(mousedown, 1234);
     });
@@ -90,7 +92,7 @@ describe('Input', () => {
   });
 
   describe('totalDistance', () => {
-    let input;
+    let input = null;
     beforeEach(() => {
       input = new Input(mousedown, 1234);
     });
@@ -113,7 +115,7 @@ describe('Input', () => {
   });
 
   describe('wasInitiallyInside', () => {
-    let input;
+    let input = null;
     beforeEach(() => {
       input = new Input(mousedown, 1234);
     });
