@@ -10,6 +10,11 @@ const _ = require('lodash');
 const Gesture = require('../src/Gesture.js');
 const Region = require('../src/Region.js');
 const {
+  CANCEL,
+  END,
+  MOVE,
+  START,
+
   STATE_KEYS,
   STATE_KEY_STRINGS,
 } = require('../src/constants.js');
@@ -34,6 +39,14 @@ let touchstart2 = null;
 function addGestures() {
   region.addGesture(gesture);
   region.addGesture(gesture2);
+}
+
+function buildExpectPhaseForStateInputs(phase) {
+  return function expectPhaseForStateInputs(state) {
+    state.inputs.forEach(input => {
+      expect(input.phase).toBe(phase);
+    });
+  };
 }
 
 class TouchEvent {
@@ -188,8 +201,18 @@ describe('Region', () => {
         region.updateActiveGestures(touchstart, false);
 
         expect(gesture.cancel).not.toHaveBeenCalled();
-        expect(() => region.cancel(new MouseEvent('down'))).not.toThrow();
+        expect(() => region.cancel(new CustomEvent('blur'))).not.toThrow();
         expect(gesture.cancel).toHaveBeenCalledTimes(1);
+      });
+
+      test('Called hooks receive inputs whose phase is "cancel"', () => {
+        region.state.updateAllInputs(touchstart2);
+        region.updateActiveGestures(touchstart2, true);
+        region.state.updateAllInputs(touchstart);
+        region.updateActiveGestures(touchstart, false);
+
+        gesture.cancel = buildExpectPhaseForStateInputs(CANCEL);
+        region.cancel(new CustomEvent('blur'));
       });
     });
 
@@ -614,8 +637,6 @@ describe('Region', () => {
       });
 
       test('Calls the appropriate hook for active gestures', () => {
-        Object.assign(gesture2.options, { minInputs: 1 });
-
         expect(gesture.start).not.toHaveBeenCalled();
         region.arbitrate(touchstart);
         expect(gesture.start).toHaveBeenCalledTimes(1);
@@ -647,7 +668,6 @@ describe('Region', () => {
         expect(region.state.hasNoInputs()).toBe(true);
         expect(region.activeGestures).toMatchObject(emptySet);
       });
-
 
       test('Does not call any hooks if no bound element targeted', () => {
         const event = new TouchEvent('touchstart', 42, 43, element, 0);
@@ -721,6 +741,16 @@ describe('Region', () => {
         expect(touchstart.preventDefault).not.toHaveBeenCalled();
         region.arbitrate(touchstart);
         expect(touchstart.preventDefault).not.toHaveBeenCalled();
+      });
+
+      test('Sets the correct phase on each input', () => {
+        gesture.start = buildExpectPhaseForStateInputs(START);
+        gesture.move = buildExpectPhaseForStateInputs(MOVE);
+        gesture.end = buildExpectPhaseForStateInputs(END);
+
+        region.arbitrate(touchstart);
+        region.arbitrate(touchmove);
+        region.arbitrate(touchend);
       });
     });
   });

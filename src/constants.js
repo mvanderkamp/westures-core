@@ -154,8 +154,9 @@ const START = 'start';
  * @enum {string}
  */
 const PHASE = Object.freeze({
-  pointercancel: CANCEL,
-  touchcancel:   CANCEL,
+  blur:           CANCEL,
+  pointercancel:  CANCEL,
+  touchcancel:    CANCEL,
 
   mouseup:       END,
   pointerup:     END,
