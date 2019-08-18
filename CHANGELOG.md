@@ -9,6 +9,7 @@
 - Provide automatic detection of enabled and disabled gestures, including using
   keys to enable and disable, in a simple way such that gestures don't need to
   check if their enabled inside their hooks.
+- 'cancel' phase is now properly called.
 - Region class now takes an optional 'options' object instead of lots of
   arguments.
 - Add option to choose which X/Y source property on an input event should be
