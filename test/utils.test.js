@@ -7,9 +7,23 @@
 'use strict';
 
 const {
+  angularDifference,
   setDifference,
   setFilter,
 } = require('../src/utils.js');
+
+describe('angularDifference(a, b)', () => {
+  test('Performs basic subtraction', () => {
+    expect(angularDifference(2, 1)).toBe(1);
+  });
+
+  test('Wraps values > |pi|', () => {
+    const HALF_PI = 1 / 2 * Math.PI;
+    const PI_AND_HALF = 3 * HALF_PI;
+    expect(angularDifference(0, PI_AND_HALF)).toBeCloseTo(HALF_PI);
+    expect(angularDifference(0, -PI_AND_HALF)).toBeCloseTo(-HALF_PI);
+  });
+});
 
 describe('setFilter(set, predicate)', () => {
   let set = null;

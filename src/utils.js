@@ -4,6 +4,28 @@
 
 'use strict';
 
+const PI_2 = 2 * Math.PI;
+const PI_NVE = -Math.PI;
+
+/**
+ * Helper function to regulate angular differences, so they don't jump from 0 to
+ * 2 * PI or vice versa.
+ *
+ * @private
+ * @param {number} a - Angle in radians.
+ * @param {number} b - Angle in radians.
+ * @return {number} c, given by: c = a - b such that || < PI
+ */
+function angularDifference(a, b = 0) {
+  let diff = a - b;
+  if (diff < PI_NVE) {
+    diff += PI_2;
+  } else if (diff > Math.PI) {
+    diff -= PI_2;
+  }
+  return diff;
+}
+
 /**
  * Performs a set filter operation.
  *
@@ -46,6 +68,7 @@ function setDifference(left, right) {
 }
 
 module.exports = Object.freeze({
+  angularDifference,
   setDifference,
   setFilter,
 });
