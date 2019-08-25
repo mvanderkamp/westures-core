@@ -32,7 +32,7 @@
     <div class="title">
         <h1><a href="index.html" class="link">westures-core</a></h1>
         
-            <span class="version">v1.0.0-alpha.2</span>
+            <span class="version">v1.0.0-alpha.3</span>
         
     </div>
     <div class="search-container" id="search-container">
@@ -63,15 +63,25 @@
 'use strict';
 
 const Gesture = require('./src/Gesture.js');
+const Input = require('./src/Input.js');
 const Point2D = require('./src/Point2D.js');
+const PointerData = require('./src/PointerData.js');
 const Region = require('./src/Region.js');
 const Smoothable = require('./src/Smoothable.js');
+const State = require('./src/State.js');
+const constants = require('./src/constants.js');
+const utils = require('./src/utils.js');
 
 module.exports = {
   Gesture,
+  Input,
   Point2D,
+  PointerData,
   Region,
   Smoothable,
+  State,
+  ...constants,
+  ...utils,
 };
 
 </code></pre>
