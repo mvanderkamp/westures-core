@@ -54,8 +54,8 @@ class TouchEvent {
     this.type = type;
     this.target = target;
     this.changedTouches = [{
-      pageX:      x,
-      pageY:      y,
+      clientX:      x,
+      clientY:      y,
       identifier: identifier,
     }];
     this.preventDefault = jest.fn();

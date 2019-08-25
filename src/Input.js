@@ -54,23 +54,10 @@ function getElementsInPath(event) {
  * which will initialize this Input object.
  * @param {number} identifier - The identifier for this input, so that it can
  * be located in subsequent Event objects.
- * @param {string} [source='page'] - One of 'page', 'client', or 'screen'.
- * Determines what the source of (x,y) coordinates will be from the input
- * events. ('X' and 'Y' will be appended, then those are the properties that
- * will be looked up).
  */
 class Input {
-  constructor(event, identifier, source) {
-    const currentData = new PointerData(event, identifier, source);
-
-    /**
-     * Which X/Y attributes of input events to look up for determining input
-     * location.
-     *
-     * @private
-     * @type {string}
-     */
-    this.source = source;
+  constructor(event, identifier) {
+    const currentData = new PointerData(event, identifier);
 
     /**
      * The set of elements along the original event's propagation path at the
@@ -145,7 +132,7 @@ class Input {
    */
   update(event) {
     this.previous = this.current;
-    this.current = new PointerData(event, this.identifier, this.source);
+    this.current = new PointerData(event, this.identifier);
   }
 
   /**

@@ -12,8 +12,6 @@
 - 'cancel' phase is now properly called.
 - Region class now takes an optional 'options' object instead of lots of
   arguments.
-- Add option to choose which X/Y source property on an input event should be
-  used (e.g. 'client', 'screen', or 'page').
 - Remove the 'getProgressOfGesture' method from the Input class. Gestures should
   track their progress internally, on their own instance!
 - Remove the 'radius' property from the outgoing data. It didn't seem useful and

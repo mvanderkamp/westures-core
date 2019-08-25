@@ -14,8 +14,8 @@ class PointerEvent {
     this.pointerId = id;
     this.target = target;
     this.type = type;
-    this.pageX = x;
-    this.pageY = y;
+    this.clientX = x;
+    this.clientY = y;
   }
 }
 
