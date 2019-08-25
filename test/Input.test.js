@@ -27,17 +27,17 @@ describe('Input', () => {
     document.body.appendChild(outerdiv);
 
     mousedown = {
-      type:   'mousedown',
+      type:    'mousedown',
       clientX:  42,
       clientY:  43,
-      target: activediv,
+      target:  activediv,
     };
 
     mousemove = {
-      type:   'mousemove',
+      type:    'mousemove',
       clientX:  45,
       clientY:  41,
-      target: document,
+      target:  document,
     };
   });
 
@@ -104,10 +104,10 @@ describe('Input', () => {
 
     test('Continues measuring from initial after more updates', () => {
       const mousenext = {
-        type:   'mousedown',
+        type:    'mousedown',
         clientX:  46,
         clientY:  40,
-        target: document,
+        target:  document,
       };
       input.update(mousenext);
       expect(input.totalDistance()).toBeCloseTo(Math.sqrt(25));

@@ -29,8 +29,8 @@ describe('PointerData', () => {
     element.appendChild(childElement);
 
     mouseevent = {
-      type:   'mousemove',
-      target: element,
+      type:    'mousemove',
+      target:  element,
       clientX:  89,
       clientY:  53,
     };
