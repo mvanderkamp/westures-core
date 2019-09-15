@@ -7,9 +7,8 @@
 /**
  * List of events that trigger the cancel phase.
  *
- * @private
  * @memberof westures-core
- * @enum {string}
+ * @type {string[]}
  */
 const CANCEL_EVENTS = Object.freeze([
   'blur',
@@ -20,9 +19,8 @@ const CANCEL_EVENTS = Object.freeze([
 /**
  * List of keyboard events that trigger a restart.
  *
- * @private
  * @memberof westures-core
- * @enum {string}
+ * @type {string[]}
  */
 const KEYBOARD_EVENTS = Object.freeze([
   'keydown',
@@ -32,9 +30,8 @@ const KEYBOARD_EVENTS = Object.freeze([
 /**
  * List of mouse events to listen to.
  *
- * @private
  * @memberof westures-core
- * @enum {string}
+ * @type {string[]}
  */
 const MOUSE_EVENTS = Object.freeze([
   'mousedown',
@@ -45,9 +42,8 @@ const MOUSE_EVENTS = Object.freeze([
 /**
  * List of pointer events to listen to.
  *
- * @private
  * @memberof westures-core
- * @enum {string}
+ * @type {string[]}
  */
 const POINTER_EVENTS = Object.freeze([
   'pointerdown',
@@ -58,9 +54,8 @@ const POINTER_EVENTS = Object.freeze([
 /**
  * List of touch events to listen to.
  *
- * @private
  * @memberof westures-core
- * @enum {string}
+ * @type {string[]}
  */
 const TOUCH_EVENTS = Object.freeze([
   'touchend',
@@ -71,9 +66,8 @@ const TOUCH_EVENTS = Object.freeze([
 /**
  * List of potentially state-modifying keys.
  *
- * @private
  * @memberof westures-core
- * @enum {string}
+ * @type {string[]}
  */
 const STATE_KEYS = Object.freeze([
   'altKey',
@@ -86,9 +80,8 @@ const STATE_KEYS = Object.freeze([
  * List of the 'key' values on KeyboardEvent objects of the potentially
  * state-modifying keys.
  *
- * @private
  * @memberof westures-core
- * @enum {string}
+ * @type {string[]}
  */
 const STATE_KEY_STRINGS = Object.freeze([
   'Alt',
@@ -100,45 +93,41 @@ const STATE_KEY_STRINGS = Object.freeze([
 /**
  * The cancel phase.
  *
- * @private
  * @memberof westures-core
- * @type { string }
+ * @type {string}
  */
 const CANCEL = 'cancel';
 
 /**
  * The end phase.
  *
- * @private
  * @memberof westures-core
- * @type { string }
+ * @type {string}
  */
 const END = 'end';
 
 /**
  * The move phase.
  *
- * @private
  * @memberof westures-core
- * @type { string }
+ * @type {string}
  */
 const MOVE = 'move';
 
 /**
  * The start phase.
  *
- * @private
  * @memberof westures-core
- * @type { string }
+ * @type {string}
  */
 const START = 'start';
 
 /**
- * Normalizes window events to be either of type start, move, end, or cancel.
+ * Object that normalizes the names of window events to be either of type start,
+ * move, end, or cancel.
  *
- * @private
  * @memberof westures-core
- * @enum {string}
+ * @type {object}
  */
 const PHASE = Object.freeze({
   blur:           CANCEL,

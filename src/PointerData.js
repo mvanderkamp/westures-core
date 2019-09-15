@@ -10,7 +10,7 @@ const { PHASE } = require('./constants.js');
 /**
  * @private
  * @inner
- * @memberof PointerData
+ * @memberof westures-core.PointerData
  *
  * @return {Event} The Event object which corresponds to the given identifier.
  *    Contains clientX, clientY values.
@@ -27,6 +27,8 @@ function getEventObject(event, identifier) {
 /**
  * Low-level storage of pointer data based on incoming data from an interaction
  * event.
+ *
+ * @memberof westures-core
  *
  * @param {Event} event - The event object being wrapped.
  * @param {number} identifier - The index of touch if applicable

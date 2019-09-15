@@ -14,7 +14,7 @@
   "recurseDepth": 10,
   "source": {
     "include": [
-      "src", 
+      "src",
       "index.js"
     ],
     "includePattern": ".js$"
@@ -29,7 +29,11 @@
     "css": [
       "styles/custom.css"
     ],
-    "footerText": "Westures: Simultaneous Multitouch Gestures",
+    "footerText": "Westures: Robust Multitouch Gestures",
+    "logo": {
+        "width": "0px",
+        "height": "0px"
+    },
     "monospaceLinks": false,
     "name": "westures-core"
   }

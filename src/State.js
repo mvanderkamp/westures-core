@@ -24,7 +24,7 @@ const symbols = Object.freeze({
  *
  * @private
  * @inner
- * @memberof State
+ * @memberof westure-core.State
  */
 const update_fns = {
   TouchEvent: function TouchEvent(event) {
@@ -48,6 +48,8 @@ const update_fns = {
  * Keeps track of currently active and ending input points on the interactive
  * surface.
  *
+ * @memberof westures-core
+ *
  * @param {Element} element - The element underpinning the associated Region.
  */
 class State {
@@ -66,7 +68,7 @@ class State {
      * @private
      * @alias [@@inputs]
      * @type {Map.<Input>}
-     * @memberof State
+     * @memberof westure-core.State
      */
     this[symbols.inputs] = new Map();
 

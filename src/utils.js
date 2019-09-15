@@ -11,7 +11,8 @@ const PI_NVE = -Math.PI;
  * Helper function to regulate angular differences, so they don't jump from 0 to
  * 2 * PI or vice versa.
  *
- * @private
+ * @memberof westures-core
+ *
  * @param {number} a - Angle in radians.
  * @param {number} b - Angle in radians.
  * @return {number} c, given by: c = a - b such that || < PI
@@ -29,9 +30,7 @@ function angularDifference(a, b = 0) {
 /**
  * Performs a set filter operation.
  *
- * @private
- * @inner
- * @memberof westures-core.Region
+ * @memberof westures-core
  *
  * @param {Set} set - The set to filter.
  * @param {Function} predicate - Function to test elements of 'set'. Receives
@@ -53,12 +52,10 @@ function setFilter(set, predicate) {
 /**
  * Performs a set difference operation.
  *
- * @private
- * @inner
- * @memberof westures-core.Region
+ * @memberof westures-core
  *
- * @param {Set} left
- * @param {Set} right
+ * @param {Set} left - Base set.
+ * @param {Set} right - Set of elements to remove from 'left'.
  *
  * @return {Set} Set consisting of elements in 'left' that are not in
  * 'right'.

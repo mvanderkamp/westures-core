@@ -11,7 +11,7 @@ const PointerData = require('./PointerData.js');
  *
  * @private
  * @inner
- * @memberof Input
+ * @memberof wesutres-core.Input
  *
  * @param {Event} event
  *
@@ -38,7 +38,7 @@ function getPropagationPath(event) {
  *
  * @private
  * @inner
- * @memberof Input
+ * @memberof wesutres-core.Input
  * @return {WeakSet.<Element>} The Elements in the path of the given event.
  */
 function getElementsInPath(event) {
@@ -49,6 +49,8 @@ function getElementsInPath(event) {
  * Tracks a single input and contains information about the current, previous,
  * and initial events. Contains the progress of each Input and its associated
  * gestures.
+ *
+ * @memberof westures-core
  *
  * @param {(PointerEvent | MouseEvent | TouchEvent)} event - The input event
  * which will initialize this Input object.
