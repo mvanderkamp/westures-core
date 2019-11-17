@@ -12,7 +12,7 @@ const PointerData = require('../src/PointerData.js');
 describe('Input', () => {
   let activediv = null;
   let parentdiv = null;
-  let outerdiv = null;
+  let outerdiv  = null;
   let mousedown = null;
   let mousemove = null;
 
@@ -28,15 +28,15 @@ describe('Input', () => {
 
     mousedown = {
       type:    'mousedown',
-      clientX:  42,
-      clientY:  43,
+      clientX: 42,
+      clientY: 43,
       target:  activediv,
     };
 
     mousemove = {
       type:    'mousemove',
-      clientX:  45,
-      clientY:  41,
+      clientX: 45,
+      clientY: 41,
       target:  document,
     };
   });

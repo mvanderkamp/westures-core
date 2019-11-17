@@ -5,32 +5,7 @@
 'use strict';
 
 const PointerData = require('./PointerData.js');
-
-/**
- * In case event.composedPath() is not available.
- *
- * @private
- * @inner
- * @memberof wesutres-core.Input
- *
- * @param {Event} event
- *
- * @return {Element[]} The elements along the composed path of the event.
- */
-function getPropagationPath(event) {
-  if (typeof event.composedPath === 'function') {
-    return event.composedPath();
-  }
-
-  const path = [];
-  for (let node = event.target; node !== document; node = node.parentNode) {
-    path.push(node);
-  }
-  path.push(document);
-  path.push(window);
-
-  return path;
-}
+const { getPropagationPath } = require('./utils.js');
 
 /**
  * Tracks a single input and contains information about the current, previous,

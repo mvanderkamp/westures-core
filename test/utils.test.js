@@ -2,12 +2,13 @@
  * Test suite for the utils module.
  */
 
-/* global expect, describe, test, beforeAll */
+/* global expect, describe, jest, test, beforeAll */
 
 'use strict';
 
 const {
   angularDifference,
+  getPropagationPath,
   setDifference,
   setFilter,
 } = require('../src/utils.js');
@@ -22,6 +23,29 @@ describe('angularDifference(a, b)', () => {
     const PI_AND_HALF = 3 * HALF_PI;
     expect(angularDifference(0, PI_AND_HALF)).toBeCloseTo(HALF_PI);
     expect(angularDifference(0, -PI_AND_HALF)).toBeCloseTo(-HALF_PI);
+  });
+});
+
+describe('getPropagationPath(event)', () => {
+  let event = null;
+
+  test('Calls event.composedPath() if available', () => {
+    event = { composedPath: jest.fn() };
+    expect(() => getPropagationPath(event)).not.toThrow();
+    expect(event.composedPath).toHaveBeenCalledTimes(1);
+  });
+
+  test('Manually walks up to the window otherwise', () => {
+    const div = document.createElement('div');
+    document.body.appendChild(div);
+    event = { target: div };
+    expect(getPropagationPath(event)).toEqual([
+      div,
+      document.body,
+      document.body.parentNode,
+      document,
+      window,
+    ]);
   });
 });
 

@@ -28,6 +28,30 @@ function angularDifference(a, b = 0) {
 }
 
 /**
+ * In case event.composedPath() is not available.
+ *
+ * @memberof westures-core
+ *
+ * @param {Event} event
+ *
+ * @return {Element[]} The elements along the composed path of the event.
+ */
+function getPropagationPath(event) {
+  if (typeof event.composedPath === 'function') {
+    return event.composedPath();
+  }
+
+  const path = [];
+  for (let node = event.target; node !== document; node = node.parentNode) {
+    path.push(node);
+  }
+  path.push(document);
+  path.push(window);
+
+  return path;
+}
+
+/**
  * Performs a set filter operation.
  *
  * @memberof westures-core
@@ -66,6 +90,7 @@ function setDifference(left, right) {
 
 module.exports = Object.freeze({
   angularDifference,
+  getPropagationPath,
   setDifference,
   setFilter,
 });
