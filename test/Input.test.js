@@ -59,82 +59,84 @@ describe('Input', () => {
     });
   });
 
-  describe('getters', () => {
-    let input = null;
-    beforeEach(() => {
-      input = new Input(mousedown, 1234);
-    });
+  describe('prototype methods', () => {
+    describe('getters', () => {
+      let input = null;
+      beforeEach(() => {
+        input = new Input(mousedown, 1234);
+      });
 
-    describe('phase', () => {
-      test('Returns the current phase of the Input', () => {
-        expect(input.phase).toBe('start');
+      describe('phase', () => {
+        test('Returns the current phase of the Input', () => {
+          expect(input.phase).toBe('start');
+        });
+      });
+
+      describe('startTime', () => {
+        test('Returns the time of the initial event', () => {
+          expect(input.startTime).toBe(input.initial.time);
+        });
       });
     });
 
-    describe('startTime', () => {
-      test('Returns the time of the initial event', () => {
-        expect(input.startTime).toBe(input.initial.time);
+    describe('update', () => {
+      let input = null;
+      beforeEach(() => {
+        input = new Input(mousedown, 1234);
+      });
+
+      test('updates the current event', () => {
+        input.update(mousemove);
+        expect(input.previous).not.toBe(input.current);
+        expect(input.current).toBeInstanceOf(PointerData);
       });
     });
-  });
 
-  describe('update', () => {
-    let input = null;
-    beforeEach(() => {
-      input = new Input(mousedown, 1234);
+    describe('totalDistance', () => {
+      let input = null;
+      beforeEach(() => {
+        input = new Input(mousedown, 1234);
+      });
+
+      test('Measures the point distance from initial to current', () => {
+        input.update(mousemove);
+        expect(input.totalDistance()).toBeCloseTo(Math.sqrt(13));
+      });
+
+      test('Continues measuring from initial after more updates', () => {
+        const mousenext = {
+          type:    'mousedown',
+          clientX:  46,
+          clientY:  40,
+          target:  document,
+        };
+        input.update(mousenext);
+        expect(input.totalDistance()).toBeCloseTo(Math.sqrt(25));
+      });
     });
 
-    test('updates the current event', () => {
-      input.update(mousemove);
-      expect(input.previous).not.toBe(input.current);
-      expect(input.current).toBeInstanceOf(PointerData);
-    });
-  });
+    describe('wasInitiallyInside', () => {
+      let input = null;
+      beforeEach(() => {
+        input = new Input(mousedown, 1234);
+      });
 
-  describe('totalDistance', () => {
-    let input = null;
-    beforeEach(() => {
-      input = new Input(mousedown, 1234);
-    });
+      test('Returns true for initial target', () => {
+        expect(input.wasInitiallyInside(activediv)).toBe(true);
+      });
 
-    test('Measures the point distance from initial to current', () => {
-      input.update(mousemove);
-      expect(input.totalDistance()).toBeCloseTo(Math.sqrt(13));
-    });
+      test('Returns true for elements in the initial path', () => {
+        expect(input.wasInitiallyInside(parentdiv)).toBe(true);
+      });
 
-    test('Continues measuring from initial after more updates', () => {
-      const mousenext = {
-        type:    'mousedown',
-        clientX:  46,
-        clientY:  40,
-        target:  document,
-      };
-      input.update(mousenext);
-      expect(input.totalDistance()).toBeCloseTo(Math.sqrt(25));
-    });
-  });
+      test('Returns true for document and window', () => {
+        expect(input.wasInitiallyInside(document)).toBe(true);
+        expect(input.wasInitiallyInside(window)).toBe(true);
+      });
 
-  describe('wasInitiallyInside', () => {
-    let input = null;
-    beforeEach(() => {
-      input = new Input(mousedown, 1234);
-    });
-
-    test('Returns true for initial target', () => {
-      expect(input.wasInitiallyInside(activediv)).toBe(true);
-    });
-
-    test('Returns true for elements in the initial path', () => {
-      expect(input.wasInitiallyInside(parentdiv)).toBe(true);
-    });
-
-    test('Returns true for document and window', () => {
-      expect(input.wasInitiallyInside(document)).toBe(true);
-      expect(input.wasInitiallyInside(window)).toBe(true);
-    });
-
-    test('Returns false for elements outside the initial path', () => {
-      expect(input.wasInitiallyInside(outerdiv)).toBe(false);
+      test('Returns false for elements outside the initial path', () => {
+        expect(input.wasInitiallyInside(outerdiv)).toBe(false);
+      });
     });
   });
 });

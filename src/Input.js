@@ -33,19 +33,6 @@ function getPropagationPath(event) {
 }
 
 /**
- * A WeakSet is used so that references will be garbage collected when the
- * element they point to is removed from the page.
- *
- * @private
- * @inner
- * @memberof wesutres-core.Input
- * @return {WeakSet.<Element>} The Elements in the path of the given event.
- */
-function getElementsInPath(event) {
-  return new WeakSet(getPropagationPath(event));
-}
-
-/**
  * Tracks a single input and contains information about the current, previous,
  * and initial events. Contains the progress of each Input and its associated
  * gestures.
@@ -67,7 +54,7 @@ class Input {
      *
      * @type {WeakSet.<Element>}
      */
-    this.initialElements = getElementsInPath(event);
+    this.initialElements = new WeakSet(getPropagationPath(event));
 
     /**
      * Holds the initial data from the mousedown / touchstart / pointerdown that
