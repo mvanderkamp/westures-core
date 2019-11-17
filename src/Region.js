@@ -46,16 +46,14 @@ class Region {
     /**
      * The list of relations between elements, their gestures, and the handlers.
      *
-     * @private
-     * @type {Set.<Gesture>}
+     * @type {Set.<westures-core.Gesture>}
      */
     this.gestures = new Set();
 
     /**
      * The list of active gestures for the current input session.
      *
-     * @private
-     * @type {Set.<Gesture>}
+     * @type {Set.<westures-core.Gesture>}
      */
     this.activeGestures = new Set();
 
@@ -63,15 +61,13 @@ class Region {
      * The base list of potentially active gestures for the current input
      * session.
      *
-     * @private
-     * @type {Set.<Gesture>}
+     * @type {Set.<westures-core.Gesture>}
      */
     this.potentialGestures = new Set();
 
     /**
      * The element being bound to.
      *
-     * @private
      * @type {Element}
      */
     this.element = element;
@@ -79,7 +75,6 @@ class Region {
     /**
      * Whether the region listens for captures or bubbles.
      *
-     * @private
      * @type {boolean}
      */
     this.capture = settings.capture;
@@ -88,7 +83,6 @@ class Region {
      * Whether the default browser functionality should be disabled. This option
      * should most likely be ignored. Here there by dragons if set to false.
      *
-     * @private
      * @type {boolean}
      */
     this.preventDefault = settings.preventDefault;
@@ -96,8 +90,7 @@ class Region {
     /**
      * The internal state object for a Region.  Keeps track of inputs.
      *
-     * @private
-     * @type {State}
+     * @type {westures-core.State}
      */
     this.state = new State(this.element);
 
@@ -315,11 +308,9 @@ class Region {
   /**
    * Retrieves Gestures by their associated element.
    *
-   * @private
-   *
    * @param {Element} element - The element for which to find gestures.
    *
-   * @return {Gesture[]} Gestures to which the element is bound.
+   * @return {westures-core.Gesture[]} Gestures to which the element is bound.
    */
   getGesturesByElement(element) {
     return setFilter(this.gestures, gesture => gesture.element === element);

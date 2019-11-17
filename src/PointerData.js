@@ -70,7 +70,7 @@ class PointerData {
   /**
    * Calculates the angle between this event and the given event.
    *
-   * @param {PointerData} pdata
+   * @param {westures-core.PointerData} pdata
    *
    * @return {number} Radians measurement between this event and the given
    *    event's points.
@@ -82,7 +82,7 @@ class PointerData {
   /**
    * Calculates the distance between two PointerDatas.
    *
-   * @param {PointerData} pdata
+   * @param {westures-core.PointerData} pdata
    *
    * @return {number} The distance between the two points, a.k.a. the
    *    hypoteneuse.

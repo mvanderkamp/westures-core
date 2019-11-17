@@ -79,7 +79,8 @@ class Gesture {
   /**
    * Determines whether this gesture is enabled.
    *
-   * @param {State} state - The input state object of the current region.
+   * @param {westures-core.State} state - The input state object of the current
+   * region.
    *
    * @return {boolean} true if enabled, false otherwise.
    */
@@ -96,7 +97,8 @@ class Gesture {
   /**
    * Event hook for the start phase of a gesture.
    *
-   * @param {State} state - The input state object of the current region.
+   * @param {westures-core.State} state - The input state object of the current
+   * region.
    *
    * @return {?Object} Gesture is considered recognized if an Object is
    *    returned.
@@ -108,7 +110,8 @@ class Gesture {
   /**
    * Event hook for the move phase of a gesture.
    *
-   * @param {State} state - The input state object of the current region.
+   * @param {westures-core.State} state - The input state object of the current
+   * region.
    *
    * @return {?Object} Gesture is considered recognized if an Object is
    *    returned.
@@ -120,7 +123,8 @@ class Gesture {
   /**
    * Event hook for the end phase of a gesture.
    *
-   * @param {State} state - The input state object of the current region.
+   * @param {westures-core.State} state - The input state object of the current
+   * region.
    *
    * @return {?Object} Gesture is considered recognized if an Object is
    *    returned.
@@ -132,7 +136,8 @@ class Gesture {
   /**
    * Event hook for when an input is cancelled.
    *
-   * @param {State} state - The input state object of the current region.
+   * @param {westures-core.State} state - The input state object of the current
+   * region.
    *
    * @return {?Object} Gesture is considered recognized if an Object is
    *    returned.
@@ -144,10 +149,8 @@ class Gesture {
   /**
    * Evalutes the given gesture hook, and dispatches any data that is produced.
    *
-   * @private
-   *
    * @param {string} hook - Must be one of 'start', 'move', 'end', or 'cancel'.
-   * @param {State} state - The current State instance.
+   * @param {westures-core.State} state - The current State instance.
    */
   evaluateHook(hook, state) {
     const data = this[hook](state);

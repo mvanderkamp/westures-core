@@ -57,7 +57,6 @@ class State {
     /**
      * Keep a reference to the element for the associated region.
      *
-     * @private
      * @type {Element}
      */
     this.element = element;
@@ -65,9 +64,8 @@ class State {
     /**
      * Keeps track of the current Input objects.
      *
-     * @private
      * @alias [@@inputs]
-     * @type {Map.<Input>}
+     * @type {Map.<westures-core.Input>}
      * @memberof westure-core.State
      */
     this[symbols.inputs] = new Map();
@@ -75,7 +73,7 @@ class State {
     /**
      * All currently valid inputs, including those that have ended.
      *
-     * @type {Input[]}
+     * @type {westures-core.Input[]}
      */
     this.inputs = [];
 
@@ -83,7 +81,7 @@ class State {
      * The array of currently active inputs, sourced from the current Input
      * objects. "Active" is defined as not being in the 'end' phase.
      *
-     * @type {Input[]}
+     * @type {westures-core.Input[]}
      */
     this.active = [];
 
@@ -112,8 +110,6 @@ class State {
 
   /**
    * Deletes all inputs that are in the 'end' phase.
-   *
-   * @private
    */
   clearEndedInputs() {
     this[symbols.inputs].forEach((v, k) => {
@@ -124,7 +120,7 @@ class State {
   /**
    * @param {string} phase - One of 'start', 'move', 'end', or 'cancel'.
    *
-   * @return {Input[]} Inputs in the given phase.
+   * @return {westures-core.Input[]} Inputs in the given phase.
    */
   getInputsInPhase(phase) {
     return this.inputs.filter(i => i.phase === phase);
@@ -133,14 +129,13 @@ class State {
   /**
    * @param {string} phase - One of 'start', 'move', 'end', or 'cancel'.
    *
-   * @return {Input[]} Inputs <b>not</b> in the given phase.
+   * @return {westures-core.Input[]} Inputs <b>not</b> in the given phase.
    */
   getInputsNotInPhase(phase) {
     return this.inputs.filter(i => i.phase !== phase);
   }
 
   /**
-   * @private
    * @return {boolean} True if there are no active inputs. False otherwise.
    */
   hasNoInputs() {
@@ -160,7 +155,7 @@ class State {
     case START:
       this[symbols.inputs].set(
         identifier,
-        new Input(event, identifier)
+        new Input(event, identifier),
       );
       try {
         this.element.setPointerCapture(identifier);

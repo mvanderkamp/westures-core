@@ -363,7 +363,7 @@ describe('Region', () => {
 
           expect(region.potentialGestures).toMatchObject(emptySet);
           expect(region.activeGestures).toMatchObject(emptySet);
-        }
+        },
       );
     });
 
@@ -487,7 +487,7 @@ describe('Region', () => {
               expect(region.gestures).toMatchObject(gesture2_set);
               expect(region.potentialGestures).toMatchObject(gesture2_set);
               expect(region.activeGestures).toMatchObject(emptySet);
-            }
+            },
           );
 
           test('Calls "start" hook of activated gestures', () => {
@@ -554,7 +554,7 @@ describe('Region', () => {
               expect(region.gestures).toMatchObject(gesture_set);
               expect(region.potentialGestures).toMatchObject(gesture_set);
               expect(region.activeGestures).toMatchObject(emptySet);
-            }
+            },
           );
 
           test(
@@ -575,7 +575,7 @@ describe('Region', () => {
               expect(region.gestures).toMatchObject(gesture2_set);
               expect(region.potentialGestures).toMatchObject(gesture2_set);
               expect(region.activeGestures).toMatchObject(gesture2_set);
-            }
+            },
           );
 
           test('Calls "start" hook of activated gestures', () => {

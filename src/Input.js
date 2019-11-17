@@ -65,7 +65,6 @@ class Input {
      * The set of elements along the original event's propagation path at the
      * time it was dispatched.
      *
-     * @private
      * @type {WeakSet.<Element>}
      */
     this.initialElements = getElementsInPath(event);
@@ -74,21 +73,21 @@ class Input {
      * Holds the initial data from the mousedown / touchstart / pointerdown that
      * began this input.
      *
-     * @type {PointerData}
+     * @type {westures-core.PointerData}
      */
     this.initial = currentData;
 
     /**
      * Holds the most current pointer data for this Input.
      *
-     * @type {PointerData}
+     * @type {westures-core.PointerData}
      */
     this.current = currentData;
 
     /**
      * Holds the previous pointer data for this Input.
      *
-     * @type {PointerData}
+     * @type {westures-core.PointerData}
      */
     this.previous = currentData;
 
@@ -128,8 +127,6 @@ class Input {
    * input, pushing the old current data into the previous slot, and tossing
    * out the old previous data.
    *
-   * @private
-   *
    * @param {Event} event - The event object to wrap with a PointerData.
    */
   update(event) {
@@ -140,8 +137,6 @@ class Input {
   /**
    * Determines if this PointerData was inside the given element at the time it
    * was dispatched.
-   *
-   * @private
    *
    * @param {Element} element
    *

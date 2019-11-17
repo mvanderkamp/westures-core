@@ -55,7 +55,7 @@ describe('Smoothable', () => {
       const sdata = new Smoothable({ identity: new Point2D() });
       sdata.average = (p, q) => new Point2D(
         (p.x + q.x) / 2,
-        (p.y + q.y) / 2
+        (p.y + q.y) / 2,
       );
       expect(sdata.next(new Point2D(2, 4))).toMatchObject(new Point2D(1, 2));
     });

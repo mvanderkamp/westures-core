@@ -90,7 +90,7 @@ class Point2D {
   minus(point) {
     return new Point2D(
       this.x - point.x,
-      this.y - point.y
+      this.y - point.y,
     );
   }
 
