@@ -122,23 +122,5 @@ describe('PointerData', () => {
       expect(tdata.point.y).toBe(touchevent.changedTouches[1].clientY);
     });
   });
-
-  describe('angleTo(pdata)', () => {
-    test('gives the correct angle', () => {
-      const pdata = new PointerData(pointerevent, id);
-      const pangle = new PointerData(pointerangle, id);
-      expect(pdata.angleTo(pangle)).toBeCloseTo(Math.PI / 4);
-      expect(pdata.angleTo(pdata)).toBe(0);
-    });
-  });
-
-  describe('distanceTo(pdata)', () => {
-    test('gives the correct distance', () => {
-      const pdata = new PointerData(pointerevent, id);
-      const pdist = new PointerData(pointerdist, id);
-      expect(pdata.distanceTo(pdist)).toBe(5);
-      expect(pdata.distanceTo(pdata)).toBe(0);
-    });
-  });
 });
 

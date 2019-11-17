@@ -133,10 +133,9 @@ class Point2D {
     if (points.length === 0) return null;
 
     const total = Point2D.sum(points);
-    return new Point2D(
-      total.x / points.length,
-      total.y / points.length,
-    );
+    total.x /= points.length;
+    total.y /= points.length;
+    return total;
   }
 
   /**
@@ -148,7 +147,14 @@ class Point2D {
    * given points.
    */
   static sum(points = []) {
-    return points.reduce((total, pt) => total.plus(pt), new Point2D(0, 0));
+    return points.reduce(
+      (total, pt) => {
+        total.x += pt.x;
+        total.y += pt.y;
+        return total;
+      },
+      new Point2D(0, 0)
+    );
   }
 }
 

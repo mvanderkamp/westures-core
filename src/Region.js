@@ -223,7 +223,7 @@ class Region {
   setPotentialGestures() {
     const input = this.state.inputs[0];
     this.potentialGestures = setFilter(this.gestures, gesture => {
-      return input.wasInitiallyInside(gesture.element);
+      return input.initialElements.has(gesture.element);
     });
   }
 

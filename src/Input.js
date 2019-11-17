@@ -81,7 +81,7 @@ class Input {
    *    and its current event.
    */
   totalDistance() {
-    return this.initial.distanceTo(this.current);
+    return this.initial.point.distanceTo(this.current.point);
   }
 
   /**
@@ -94,19 +94,6 @@ class Input {
   update(event) {
     this.previous = this.current;
     this.current = new PointerData(event, this.identifier);
-  }
-
-  /**
-   * Determines if this PointerData was inside the given element at the time it
-   * was dispatched.
-   *
-   * @param {Element} element
-   *
-   * @return {boolean} true if the Input began inside the element, false
-   *    otherwise.
-   */
-  wasInitiallyInside(element) {
-    return this.initialElements.has(element);
   }
 }
 
