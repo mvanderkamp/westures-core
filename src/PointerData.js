@@ -40,7 +40,7 @@ class PointerData {
      *
      * @type {Event}
      */
-    this.originalEvent = event;
+    this.event = event;
 
     /**
      * The type or 'phase' of this batch of pointer data. 'start' or 'move' or

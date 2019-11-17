@@ -98,8 +98,8 @@ describe('PointerData', () => {
     });
 
     test('Records the original event', () => {
-      expect(mdata.originalEvent).toBe(mouseevent);
-      expect(tdata.originalEvent).toBe(touchevent);
+      expect(mdata.event).toBe(mouseevent);
+      expect(tdata.event).toBe(touchevent);
     });
 
     test('Translates the event type into the correct phase', () => {
