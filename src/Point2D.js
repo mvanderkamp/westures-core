@@ -153,7 +153,7 @@ class Point2D {
         total.y += pt.y;
         return total;
       },
-      new Point2D(0, 0)
+      new Point2D(0, 0),
     );
   }
 }

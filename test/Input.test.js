@@ -114,30 +114,6 @@ describe('Input', () => {
         expect(input.totalDistance()).toBeCloseTo(Math.sqrt(25));
       });
     });
-
-    describe('wasInitiallyInside', () => {
-      let input = null;
-      beforeEach(() => {
-        input = new Input(mousedown, 1234);
-      });
-
-      test('Returns true for initial target', () => {
-        expect(input.wasInitiallyInside(activediv)).toBe(true);
-      });
-
-      test('Returns true for elements in the initial path', () => {
-        expect(input.wasInitiallyInside(parentdiv)).toBe(true);
-      });
-
-      test('Returns true for document and window', () => {
-        expect(input.wasInitiallyInside(document)).toBe(true);
-        expect(input.wasInitiallyInside(window)).toBe(true);
-      });
-
-      test('Returns false for elements outside the initial path', () => {
-        expect(input.wasInitiallyInside(outerdiv)).toBe(false);
-      });
-    });
   });
 });
 

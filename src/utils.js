@@ -4,7 +4,7 @@
 
 'use strict';
 
-const PI_2 = 2 * Math.PI;
+const PI_2   = 2 * Math.PI;
 const PI_NVE = -Math.PI;
 
 /**
@@ -15,9 +15,10 @@ const PI_NVE = -Math.PI;
  *
  * @param {number} a - Angle in radians.
  * @param {number} b - Angle in radians.
- * @return {number} c, given by: c = a - b such that || < PI
+
+ * @return {number} c, given by: c = a - b such that |c| < PI
  */
-function angularDifference(a, b = 0) {
+function angularDifference(a, b) {
   let diff = a - b;
   if (diff < PI_NVE) {
     diff += PI_2;
