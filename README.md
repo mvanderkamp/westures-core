@@ -5,7 +5,7 @@ https://travis-ci.org/mvanderkamp/westures-core.svg?branch=master)
 ](https://travis-ci.org/mvanderkamp/westures-core)
 [![Coverage Status](
 https://coveralls.io/repos/github/mvanderkamp/westures-core/badge.svg?branch=master)
-](https://coveralls.io/github/mvanderkamp/westures-core?branch=release-1.0.0)
+](https://coveralls.io/github/mvanderkamp/westures-core?branch=master)
 [![Maintainability](
 https://api.codeclimate.com/v1/badges/a5f4a4745352d6e2520c/maintainability)
 ](https://codeclimate.com/github/mvanderkamp/westures-core/maintainability)
