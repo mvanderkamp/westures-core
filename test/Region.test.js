@@ -17,6 +17,12 @@ const {
 
   STATE_KEYS,
   STATE_KEY_STRINGS,
+
+  MOUSE_EVENTS,
+  TOUCH_EVENTS,
+  POINTER_EVENTS,
+  CANCEL_EVENTS,
+  KEYBOARD_EVENTS,
 } = require('../src/constants.js');
 
 let emptySet = null;
@@ -99,14 +105,45 @@ describe('Region', () => {
       expect(region).toBeInstanceOf(Region);
     });
 
-    test('Attaches input event listeners to the element', () => {
-      region = new Region(element);
-      expect(element.addEventListener).toHaveBeenCalled();
+    test('Attaches mouse and touch event listeners to the element', () => {
+      new Region(element);
+
+      MOUSE_EVENTS.concat(TOUCH_EVENTS).forEach(event => {
+        expect(element.addEventListener)
+          .toHaveBeenCalledWith(event, expect.anything(), {
+            'capture': false,
+            'once':    false,
+            'passive': false,
+          });
+      });
     });
 
-    test('Attaches event listeners to the window', () => {
-      region = new Region(element);
-      expect(window.addEventListener).toHaveBeenCalled();
+    test('Attaches pointer event listeners instead if required', () => {
+      const oldMouseEvent = window.MouseEvent;
+      const oldTouchEevent = window.TouchEvent;
+      window.MouseEvent = null;
+      window.TouchEvent = null;
+
+      new Region(element);
+      POINTER_EVENTS.forEach(event => {
+        expect(element.addEventListener)
+          .toHaveBeenCalledWith(event, expect.anything(), {
+            'capture': false,
+            'once':    false,
+            'passive': false,
+          });
+      });
+
+      window.MouseEvent = oldMouseEvent;
+      window.TouchEvent = oldTouchEevent;
+    });
+
+    test('Attaches "cancel" and keyboard event listeners to the window', () => {
+      new Region(element);
+      CANCEL_EVENTS.concat(KEYBOARD_EVENTS).forEach(event => {
+        expect(window.addEventListener)
+          .toHaveBeenCalledWith(event, expect.anything());
+      });
     });
   });
 
