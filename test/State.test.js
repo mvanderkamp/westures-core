@@ -84,6 +84,17 @@ describe('State', () => {
         expect(() => state.updateInput(testevents[0], 1)).not.toThrow();
         expect(state[inputSymbol].get(1).phase).toBe('end');
       });
+
+      test('Logs a warning to the console for unrecognized phases', () => {
+        const oldWarn = console.warn;
+        console.warn = jest.fn();
+        const event = { type: 'not a type' };
+
+        state.updateInput(event, 0);
+        expect(console.warn).toHaveBeenCalled();
+
+        console.warn = oldWarn;
+      });
     });
 
     describe('updateAllInputs', () => {
