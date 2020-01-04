@@ -293,7 +293,31 @@ describe('State', () => {
         expect(inputs[4].identifier).toBe(5);
       });
     });
+
+    describe('hasNoInputs', () => {
+      test('Is true if the state has no inputs', () => {
+        state = new State();
+        expect(state.hasNoInputs()).toBe(true);
+      });
+
+      test('Is false if the state has any inputs', () => {
+        state = new State();
+        state.updateInput(startevents[0], 0);
+        expect(state.hasNoInputs()).toBe(false);
+      });
+
+      test('Is true again after inputs are cleared', () => {
+        const down = new PointerEvent(0, targetdiv, 'mousedown', 42, 43);
+        const up = new PointerEvent(0, targetdiv, 'mouseup', 42, 43);
+
+        state = new State();
+        state.updateInput(down, 0);
+        expect(state.hasNoInputs()).toBe(false);
+
+        state.updateInput(up, 0);
+        state.clearEndedInputs();
+        expect(state.hasNoInputs()).toBe(true);
+      });
+    });
   });
 });
-
-
