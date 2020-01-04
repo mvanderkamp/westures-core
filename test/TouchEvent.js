@@ -6,6 +6,7 @@
 
 class TouchEvent {
   constructor(id, target, type, x, y) {
+    this.id = id;
     this.target = target;
     this.type = type;
     this.changedTouches = [{

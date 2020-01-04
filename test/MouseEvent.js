@@ -6,6 +6,7 @@
 
 class MouseEvent {
   constructor(id, target, type, x, y) {
+    this.id = id;
     this.button = id;
     this.target = target;
     this.type = type;

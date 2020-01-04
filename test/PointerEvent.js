@@ -6,6 +6,7 @@
 
 class PointerEvent {
   constructor(id, target, type, x, y) {
+    this.id = id;
     this.pointerId = id;
     this.target = target;
     this.type = type;

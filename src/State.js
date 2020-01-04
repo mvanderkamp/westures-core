@@ -163,20 +163,22 @@ class State {
         // NOP: Optional operation failed.
       }
       break;
+
+    // All of 'end', 'move', and 'cancel' perform updates, hence the
+    // following fall-throughs
     case END:
       try {
         this.element.releasePointerCapture(identifier);
       } catch (e) {
         // NOP: Optional operation failed.
       }
-      // All of 'end', 'move', and 'cancel' perform updates, hence the
-      // following fall-throughs
     case CANCEL:
     case MOVE:
       if (this[symbols.inputs].has(identifier)) {
         this[symbols.inputs].get(identifier).update(event);
       }
       break;
+
     default:
       console.warn(`Unrecognized event type: ${event.type}`);
     }
