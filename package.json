@@ -35,8 +35,8 @@
     "coveralls": "jest --coverage && cat ./coverage/lcov.info | coveralls"
   },
   "devDependencies": {
-    "@babel/core": "^7.7.7",
-    "@babel/preset-env": "^7.7.7",
+    "@babel/core": "^7.8.3",
+    "@babel/preset-env": "^7.8.3",
     "arkit": "^1.6.2",
     "coveralls": "^3.0.9",
     "eslint": "^6.8.0",
