@@ -147,7 +147,8 @@ class Gesture {
   }
 
   /**
-   * Evalutes the given gesture hook, and dispatches any data that is produced.
+   * Evalutes the given gesture hook, and dispatches any data that is produced
+   * by calling [recognize]{@link westures-core.Gesture#recognize}.
    *
    * @param {string} hook - Must be one of 'start', 'move', 'end', or 'cancel'.
    * @param {westures-core.State} state - The current State instance.
@@ -155,15 +156,32 @@ class Gesture {
   evaluateHook(hook, state) {
     const data = this[hook](state);
     if (data) {
-      this.handler({
-        centroid: state.centroid,
-        event:    state.event,
-        phase:    hook,
-        type:     this.type,
-        target:   this.element,
-        ...data,
-      });
+      this.recognize(hook, state, data);
     }
+  }
+
+  /**
+   * Recognize a Gesture by calling the handler. Standardizes the way the
+   * handler is called so that classes extending Gesture can circumvent the
+   * evaluateHook approach but still provide results that have a common format.
+   *
+   * Note that the properties in the "data" object will receive priority when
+   * constructing the results. This can be used to override standard results
+   * such as the phase or the centroid.
+   *
+   * @param {string} hook - Must be one of 'start', 'move', 'end', or 'cancel'.
+   * @param {westures-core.State} state - current input state.
+   * @param {Object} data - Results data specific to the recognized gesture.
+   */
+  recognize(hook, state, data) {
+    this.handler({
+      centroid: state.centroid,
+      event:    state.event,
+      phase:    hook,
+      type:     this.type,
+      target:   this.element,
+      ...data,
+    });
   }
 }
 

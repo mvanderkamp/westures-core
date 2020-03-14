@@ -90,6 +90,36 @@ describe('Gesture', () => {
       });
     });
 
+    describe('recognize(hook, state, data)', () => {
+      let element = null;
+      let gesture = null;
+      let handler = null;
+      let state = null;
+
+      beforeEach(() => {
+        element = document.createElement('div');
+        handler = jest.fn();
+        state = 42;
+        gesture = new Gesture('dummy', element, handler);
+      });
+
+      describe.each(PHASES)('%s', (hook) => {
+        test('Calls the handler with an appropiate object', () => {
+          const data = { answer: 42 };
+          gesture.recognize(hook, state, data);
+          expect(gesture.handler).toHaveBeenCalledTimes(1);
+
+          const received = gesture.handler.mock.calls[0][0];
+          expect(received.centroid).toBe(state.centroid);
+          expect(received.event).toBe(state.event);
+          expect(received.phase).toBe(hook);
+          expect(received.type).toBe(gesture.type);
+          expect(received.target).toBe(gesture.element);
+          expect(received.answer).toBe(data.answer);
+        });
+      });
+    });
+
     describe('isEnabled(state)', () => {
       let element = null;
       let gesture = null;
