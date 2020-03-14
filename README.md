@@ -25,10 +25,10 @@ Westures is a fork of [ZingTouch](https://github.com/zingchart/zingtouch).
 
 ```javascript
 // Import the module.
-const wes = require('westures-core');
+const { Region } = require('westures-core');
 
 // Declare a region. The document body is probably a good one to use.
-const region = new wes.Region(document.body);
+const region = new Region(document.body);
 
 // Instantiate a Gesture for an element within the region.
 // Assumes a Pan gesture is available, and that the element you want to pan has
@@ -61,8 +61,8 @@ region.addGesture(pan);
   surfaces).
 - Ability to enable / disable gestures with keys (e.g. ctrlKey, shiftKey)
     - This allows for easy implementation of single-pointer flows that provide
-      the same behaviour as multi-pointer flows. For example, holding 'CTRL' on
-      a desktop could switch from panning mode to rotating mode.
+      the equivalent behaviour as multi-pointer flows. For example, holding
+      'CTRL' on a desktop could switch from panning mode to rotating mode.
 - Allows for easy implementation and integration of custom gestures using the
   four-phase hook structure.
 
@@ -95,7 +95,7 @@ https://raw.githubusercontent.com/mvanderkamp/westures-core/master/arkit.svg?san
 ### Importing the module
 
 ```javascript
-const wes = require('westures-core');
+const { Region } = require('westures-core');
 ```
 
 ### Declaring a Region
@@ -112,7 +112,7 @@ convenient to use smaller elements as regions. Test it out in any case, and see
 what works better for you.
 
 ```javascript
-const region = new wes.Region(document.body);
+const region = new Region(document.body);
 ```
 ### Instantiating a Gesture
 
@@ -167,7 +167,7 @@ The hook, when called, will receive the current State object of the region. To
 maintain responsiveness, the functionality within a hook should be short and as
 efficient as possible.
 
-For example, a simple way to implement a 'Tap' gesture would be as follows:
+For example, a simple way to implement a `Tap` gesture would be as follows:
 
 ```javascript
 const { Gesture } = require('westures-core');
@@ -216,7 +216,7 @@ Name     | Type    | Value
 ---------|---------|-------
 centroid | Point2D | The centroid of the input points.
 event    | Event   | The input event which caused the gesture to be recognized
-phase    | String  | 'start', 'move', or 'end'
+phase    | String  | `'start'`, `'move'`, `'end'`, or `'cancel'`
 type     | String  | The name of the gesture as specified by its designer.
 target   | Element | The Element that is associated with the recognized gesture.
 
