@@ -1,7 +1,3 @@
-/**
- * Custom TouchEvent
- */
-
 'use strict';
 
 class TouchEvent {

@@ -1,7 +1,3 @@
-/*
- * Test suite for the utils module.
- */
-
 /* global expect, describe, jest, test, beforeAll */
 
 'use strict';

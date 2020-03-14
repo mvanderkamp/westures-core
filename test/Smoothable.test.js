@@ -1,7 +1,3 @@
-/*
- * Test suite for the Smoothable class.
- */
-
 /* global expect, describe, test */
 
 'use strict';

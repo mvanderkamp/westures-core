@@ -1,7 +1,3 @@
-/*
- * Test suite for the Gesture class.
- */
-
 /* global expect, describe, test, jest, beforeEach */
 
 'use strict';

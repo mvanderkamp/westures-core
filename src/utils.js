@@ -1,7 +1,3 @@
-/*
- * Contains various helpful utilities.
- */
-
 'use strict';
 
 const PI_2   = 2 * Math.PI;

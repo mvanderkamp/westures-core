@@ -1,7 +1,3 @@
-/*
- * Contains event list definitions, PHASE mapping, and other constants.
- */
-
 'use strict';
 
 /**

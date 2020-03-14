@@ -1,7 +1,3 @@
-/*
- * Contains the Gesture class
- */
-
 'use strict';
 
 let g_id = 0;

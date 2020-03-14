@@ -1,7 +1,3 @@
-/*
- * Test suite for the Region class.
- */
-
 /* global expect, describe, test, jest, beforeAll, beforeEach */
 
 'use strict';

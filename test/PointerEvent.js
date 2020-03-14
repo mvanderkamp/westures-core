@@ -1,7 +1,3 @@
-/**
- * Custom PointerEvent
- */
-
 'use strict';
 
 class PointerEvent {

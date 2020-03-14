@@ -1,7 +1,3 @@
-/*
- * Contains the {@link Point2D} class.
- */
-
 'use strict';
 
 /**

@@ -1,7 +1,3 @@
-/*
- * Test suite for the State class.
- */
-
 /* global jest, expect, describe, test, beforeAll, beforeEach */
 
 'use strict';

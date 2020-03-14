@@ -1,7 +1,3 @@
-/*
- * Test suite for the Point2D class.
- */
-
 /* global expect, describe, test, beforeEach */
 
 'use strict';

@@ -1,7 +1,3 @@
-/*
- * Test suite for the Input class.
- */
-
 /* global expect, describe, test, beforeAll, beforeEach */
 
 'use strict';

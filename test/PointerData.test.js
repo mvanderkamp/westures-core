@@ -1,7 +1,3 @@
-/*
- * Test suite for the PointerData class.
- */
-
 /* global expect, describe, test, beforeAll */
 
 'use strict';

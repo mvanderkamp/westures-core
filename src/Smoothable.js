@@ -1,7 +1,3 @@
-/*
- * Contains the abstract Pinch class.
- */
-
 'use strict';
 
 const cascade = Symbol('cascade');

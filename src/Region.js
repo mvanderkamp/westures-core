@@ -1,7 +1,3 @@
-/*
- * Contains the Region class
- */
-
 'use strict';
 
 const State = require('./State.js');

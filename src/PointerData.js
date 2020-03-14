@@ -1,7 +1,3 @@
-/*
- * Contains the {@link PointerData} class
- */
-
 'use strict';
 
 const Point2D   = require('./Point2D.js');

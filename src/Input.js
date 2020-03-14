@@ -1,7 +1,3 @@
-/*
- * Contains the {@link Input} class
- */
-
 'use strict';
 
 const PointerData = require('./PointerData.js');

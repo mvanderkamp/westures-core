@@ -1,7 +1,3 @@
-/**
- * Custom MouseEvent
- */
-
 'use strict';
 
 class MouseEvent {
