@@ -16,8 +16,15 @@ intend on using the base gestures included with the standard [westures](
 https://mvanderkamp.github.io/westures/) module.
 
 Visit this page for an example of the system in action: [Westures Example](
-https://mvanderkamp.github.io/westures-example/). Note that this is best viewed
-on a touch device.
+https://mvanderkamp.github.io/westures-example/).
+
+The library aims to achieve its goals without using any dependencies, yet
+maintain usability across the main modern browsers.  Transpilation may be
+necessary for this last point to be achieved, as the library is written using
+many of the newer features of the JavaScript language.  A transpiled bundle is
+provided, but the browser target list is arbitrary and likely includes some
+bloat. In most cases you will be better off performing bundling, transpilation,
+and minification yourself.
 
 Westures is a fork of [ZingTouch](https://github.com/zingchart/zingtouch).
 
@@ -49,6 +56,9 @@ region.addGesture(pan);
 - [Overview](#overview)
 - [Basic Usage](#basic-usage)
 - [Implementing Custom Gestures](#implementing-custom-gestures)
+- [Nomenclature and Origins](#nomenclature-and-origins)
+- [Changes](#changes)
+- [Issues](#issues)
 - [Links](#links)
 
 ## Features
@@ -68,29 +78,35 @@ region.addGesture(pan);
 
 ## Overview
 
-There are seven classes defined in this module:
+There are seven classes made available by this module:
 
-- _Gesture:_ Respond to input phase "hooks" to define a gesture.
-- _Input:_ Track a single pointer through its lifetime, and store the progress
-    of gestures associated with that input.
-- _Point2D:_ Store and act on a 2-dimensional point.
-- _PointerData:_ Record data pertaining to a single user input event for a
-    single pointer.
-- _Region:_ Listen for user input events and respond appropriately.
-- _Smoothable:_ Datatype which provides inertial smoothing capabilities.
-- _State:_ Track all active Inputs within a Region.
+Name        | Description
+----------- | -----------
+Gesture     | Base class for defining westures gestures
+Input       | Track a single pointer through its lifetime
+Point2D     | Store and act on a 2-dimensional point
+PointerData | Record data pertaining to a single user input event for a single pointer.
+Region      | Listen for user input events and respond appropriately
+Smoothable  | Datatype which provides inertial smoothing capabilities
+State       | Track inputs within a Region
 
 Additionally, two support files are defined:
 
-- _constants:_ Constant values used throughout the engine.
-- _utils:_ Helpful utility functions.
+Name      | Description
+--------- | -----------
+constants | Constant values used throughout the engine
+utils     | Helpful utility functions
 
-These classes are structured as follows:
+Here is a graph to help you understand the relationships between these classes:
 
 ![Graph of westures-core module](
 https://raw.githubusercontent.com/mvanderkamp/westures-core/master/arkit.svg?sanitize=true)
 
 ## Basic Usage
+
+- [Declaring a Region](#declaring-a-region)
+- [Instantiating a Gesture](#instantiating-a-gesture)
+- [Adding a Gesture to a Region](#adding-a-gesture-to-a-region)
 
 ### Importing the module
 
@@ -212,16 +228,30 @@ to handlers, and for the most part what that data will be. Note though that a
 few properties will get added to the outgoing data object before the handler is
 called. Those properties are:
 
-Name     | Type    | Value
----------|---------|-------
-centroid | Point2D | The centroid of the input points.
-event    | Event   | The input event which caused the gesture to be recognized
-phase    | String  | `'start'`, `'move'`, `'end'`, or `'cancel'`
-type     | String  | The name of the gesture as specified by its designer.
-target   | Element | The Element that is associated with the recognized gesture.
+Name     | Type     | Value
+-------- | -------- | -----
+centroid | Point2D  | The centroid of the input points.
+event    | Event    | The input event which caused the gesture to be recognized
+phase    | String   | `'start'`, `'move'`, `'end'`, or `'cancel'`
+type     | String   | The name of the gesture as specified by its designer.
+target   | Element  | The Element that is associated with the recognized gesture.
 
 If data properties returned by a hook clashes with one of these properties, the
 value from the hook gets precedent and the default is overwritten.
+
+## Nomenclature and Origins
+
+In my last year of univerisity, I was working on an API for building
+multi-device interfaces called "WAMS" (Workspaces Across Multiple Surfaces),
+which included the goal of supporting multi-device gestures.
+
+After an extensive search I found that none of the available multitouch
+libraries for JavaScript provided the fidelity I needed, and concluded that I
+would need to write my own, or at least fork an existing one. ZingTouch proved
+to the be the most approachable, so I decided it would make a good starting
+point.
+
+The name "westures" is a mash-up of "WAMS" and "gestures".
 
 ## Changes
 
@@ -231,7 +261,7 @@ most recent updates.
 
 ## Issues
 
-If you find any compatibility issues, please let me know!
+If you find any issues, please let me know!
 
 ## Links
 
