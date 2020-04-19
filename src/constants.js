@@ -61,6 +61,7 @@ const TOUCH_EVENTS = Object.freeze([
 
 /**
  * List of potentially state-modifying keys.
+ * Entries are: ['altKey', 'ctrlKey', 'metaKey', 'shiftKey'].
  *
  * @memberof westures-core
  * @type {string[]}
