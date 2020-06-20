@@ -128,10 +128,10 @@ class Smoothable {
   }
 }
 
-Smoothable.DEFAULTS = Object.freeze({
+Smoothable.DEFAULTS = {
   applySmoothing: true,
   identity:       0,
-});
+};
 
 module.exports = Smoothable;
 

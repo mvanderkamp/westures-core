@@ -181,12 +181,12 @@ class Gesture {
   }
 }
 
-Gesture.DEFAULTS = Object.freeze({
+Gesture.DEFAULTS = {
   enableKeys:  [],
   disableKeys: [],
   minInputs:   1,
   maxInputs:   Number.MAX_VALUE,
-});
+};
 
 module.exports = Gesture;
 

@@ -6,11 +6,11 @@
  * @memberof westures-core
  * @type {string[]}
  */
-const CANCEL_EVENTS = Object.freeze([
+const CANCEL_EVENTS = [
   'blur',
   'pointercancel',
   'touchcancel',
-]);
+];
 
 /**
  * List of keyboard events that trigger a restart.
@@ -18,10 +18,10 @@ const CANCEL_EVENTS = Object.freeze([
  * @memberof westures-core
  * @type {string[]}
  */
-const KEYBOARD_EVENTS = Object.freeze([
+const KEYBOARD_EVENTS = [
   'keydown',
   'keyup',
-]);
+];
 
 /**
  * List of mouse events to listen to.
@@ -29,11 +29,11 @@ const KEYBOARD_EVENTS = Object.freeze([
  * @memberof westures-core
  * @type {string[]}
  */
-const MOUSE_EVENTS = Object.freeze([
+const MOUSE_EVENTS = [
   'mousedown',
   'mousemove',
   'mouseup',
-]);
+];
 
 /**
  * List of pointer events to listen to.
@@ -41,11 +41,11 @@ const MOUSE_EVENTS = Object.freeze([
  * @memberof westures-core
  * @type {string[]}
  */
-const POINTER_EVENTS = Object.freeze([
+const POINTER_EVENTS = [
   'pointerdown',
   'pointermove',
   'pointerup',
-]);
+];
 
 /**
  * List of touch events to listen to.
@@ -53,11 +53,11 @@ const POINTER_EVENTS = Object.freeze([
  * @memberof westures-core
  * @type {string[]}
  */
-const TOUCH_EVENTS = Object.freeze([
+const TOUCH_EVENTS = [
   'touchend',
   'touchmove',
   'touchstart',
-]);
+];
 
 /**
  * List of potentially state-modifying keys.
@@ -66,12 +66,12 @@ const TOUCH_EVENTS = Object.freeze([
  * @memberof westures-core
  * @type {string[]}
  */
-const STATE_KEYS = Object.freeze([
+const STATE_KEYS = [
   'altKey',
   'ctrlKey',
   'metaKey',
   'shiftKey',
-]);
+];
 
 /**
  * List of the 'key' values on KeyboardEvent objects of the potentially
@@ -80,12 +80,12 @@ const STATE_KEYS = Object.freeze([
  * @memberof westures-core
  * @type {string[]}
  */
-const STATE_KEY_STRINGS = Object.freeze([
+const STATE_KEY_STRINGS = [
   'Alt',
   'Control',
   'Meta',
   'Shift',
-]);
+];
 
 /**
  * The cancel phase.
@@ -126,7 +126,7 @@ const START = 'start';
  * @memberof westures-core
  * @type {object}
  */
-const PHASE = Object.freeze({
+const PHASE = {
   blur:           CANCEL,
   pointercancel:  CANCEL,
   touchcancel:    CANCEL,
@@ -142,7 +142,7 @@ const PHASE = Object.freeze({
   mousedown:   START,
   pointerdown: START,
   touchstart:  START,
-});
+};
 
 module.exports = {
   CANCEL_EVENTS,

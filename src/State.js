@@ -10,9 +10,9 @@ const {
 const Input     = require('./Input.js');
 const Point2D   = require('./Point2D.js');
 
-const symbols = Object.freeze({
+const symbols = {
   inputs: Symbol.for('inputs'),
-});
+};
 
 /**
  * Set of helper functions for updating inputs based on type of input.

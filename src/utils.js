@@ -85,10 +85,10 @@ function setDifference(left, right) {
   return setFilter(left, element => !right.has(element));
 }
 
-module.exports = Object.freeze({
+module.exports = {
   angularDifference,
   getPropagationPath,
   setDifference,
   setFilter,
-});
+};
 

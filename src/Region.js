@@ -322,10 +322,10 @@ class Region {
   }
 }
 
-Region.DEFAULTS = Object.freeze({
+Region.DEFAULTS = {
   capture:        false,
   preventDefault: true,
-});
+};
 
 module.exports = Region;
 
