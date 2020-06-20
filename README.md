@@ -268,7 +268,7 @@ If your Gesture subclass needs to track any kind of complex state, remember that
 it may be necessary to reset the state in the `cancel` phase.
 
 For information about what data is accessible via the State object, see the full
-documentation [here](https://mvanderkamp.github.io/westures-core/State.html).
+documentation [here](https://mvanderkamp.github.io/westures-core/westures-core.State.html).
 Note that his documentation was generated with `jsdoc`.
 
 ### Default Data Passed to Handlers
