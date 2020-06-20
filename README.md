@@ -212,7 +212,7 @@ the gesture to the region.
 Simple:
 
 ```javascript
-region.addGesture(pan);
+region.addGesture(follow);
 ```
 
 Now the `followLogger` function will be called whenever a `follow` gesture is
