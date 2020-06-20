@@ -10,21 +10,27 @@ https://coveralls.io/repos/github/mvanderkamp/westures-core/badge.svg?branch=mas
 https://api.codeclimate.com/v1/badges/a5f4a4745352d6e2520c/maintainability)
 ](https://codeclimate.com/github/mvanderkamp/westures-core/maintainability)
 
-This module contains the core functionality of the Westures JavaScript gesture
-library. It is intended for use as a lighter-weight module to use if you do not
-intend on using the base gestures included with the standard [westures](
+Westures is a robust n-pointer multitouch gesture detection library for
+JavaScript. This means that each gesture is be capable of working seamlessly as
+input points are added and removed, with no limit on the number of input points,
+and with each input point contributing to the gesture.  It is also capable of
+working across a wide range of devices.
+
+This module contains the core functionality of the Westures gesture library for
+JavaScript. It is intended for use as a lighter-weight module to use if you do
+not want to use the base gestures included with the standard [westures](
 https://mvanderkamp.github.io/westures/) module.
 
 Visit this page for an example of the system in action: [Westures Example](
 https://mvanderkamp.github.io/westures-example/).
 
-The library aims to achieve its goals without using any dependencies, yet
-maintain usability across the main modern browsers.  Transpilation may be
-necessary for this last point to be achieved, as the library is written using
-many of the newer features of the JavaScript language.  A transpiled bundle is
-provided, but the browser target list is arbitrary and likely includes some
-bloat. In most cases you will be better off performing bundling, transpilation,
-and minification yourself.
+Westures aims to achieve its goals without using any dependencies, yet maintain
+usability across the main modern browsers. Transpilation may be necessary for
+this last point to be achieved, as the library is written using many of the
+newer features of the JavaScript language. A transpiled bundle is provided, but
+the browser target list is arbitrary and likely includes some bloat. In most
+cases you will be better off performing bundling, transpilation, and
+minification yourself.
 
 Westures is a fork of [ZingTouch](https://github.com/zingchart/zingtouch).
 
@@ -32,22 +38,30 @@ Westures is a fork of [ZingTouch](https://github.com/zingchart/zingtouch).
 
 ```javascript
 // Import the module.
-const { Region } = require('westures-core');
+const wes = require('westures-core');
 
-// Declare a region. The document body is probably a good one to use.
-const region = new Region(document.body);
+// Declare a region. The default is the window object, but other elements like
+// the document body work too.
+const region = new wes.Region();
+
+// Define a Gesture subclass
+class Follow extends wes.Gesture {
+  move(state) {
+    return state.centroid; // Reports the {x, y} of the average input position
+  }
+}
+
+// Locate an element to attach the gesture to.
+const element = document.querySelector('#follow');
 
 // Instantiate a Gesture for an element within the region.
-// Assumes a Pan gesture is available, and that the element you want to pan has
-// been saved in the `element` variable.
-const pan = new Pan(element, (data) => {
-  // data.translation.x ...
-  // data.translation.y ...
-  // and so on, depending on the Gesture
+const follow = new Follow(element, (data) => {
+  // data.x ...
+  // data.y ...
 });
 
 // Add the gesture to the region.
-region.addGesture(pan);
+region.addGesture(follow);
 ```
 
 ## Table of Contents
@@ -105,13 +119,14 @@ https://raw.githubusercontent.com/mvanderkamp/westures-core/master/arkit.svg?san
 ## Basic Usage
 
 - [Declaring a Region](#declaring-a-region)
+- [Defining a Gesture Subclass](#defining-a-gesture-subclass)
 - [Instantiating a Gesture](#instantiating-a-gesture)
 - [Adding a Gesture to a Region](#adding-a-gesture-to-a-region)
 
 ### Importing the module
 
 ```javascript
-const { Region } = require('westures-core');
+const wes = require('westures-core');
 ```
 
 ### Declaring a Region
@@ -127,9 +142,29 @@ If you have lots of interactable elements on your page, you may find it
 convenient to use smaller elements as regions. Test it out in any case, and see
 what works better for you.
 
+By default, the window object is used.
+
 ```javascript
-const region = new Region(document.body);
+const region = new wes.Region(document.body);
 ```
+
+### Defining a Gesture Subclass
+
+In order to use the engine, you'll need to define gestures. This is done by
+extending the Gesture class provided by this module, and overriding any or all
+of the four phase hooks ('start', 'move', 'end', and 'cancel') as is appropriate
+for your gesture.
+
+Defined here is a very simple gesture that simply reports the centroid of the
+input points. Note that the returned value must be an Object!
+
+// Define a Gesture subclass
+class Follow extends wes.Gesture {
+  move(state) {
+    return state.centroid;
+  }
+}
+
 ### Instantiating a Gesture
 
 When you instantiate a gesture, you need to provide a handler as well as an
@@ -138,27 +173,37 @@ with the region was inside the given Element. Therefore unless you want to try
 something fancy the gesture element should probably be contained inside the
 region element. It could even be the region element.
 
-Now for an example. Suppose you have a div within which you want to detect a Pan
-gesture (assume that such a gesture is available). Your handler is called
-`handler`, and the div is saved in the `element` variable.
+Now for an example. Suppose you have a div within which you want to detect the
+Follow gesture we defined above. The div has id 'follow'. We need to find the
+element first.
 
 ```javascript
-const pan = new Pan(element, handler);
+const element = document.querySelector('#follow');
 ```
 
-The `handler` function will be called whenever a Pan hook returns non-null data.
-The data returned by the hook will be available inside `handler` as such:
+And we also need a handler. This function will be called whenever a gesture hook
+returns non-null data. For Follow, this is just the move phase, but the handler
+doesn't need to know that. The data returned by the hook will be available
+inside the handler.
 
 ```javascript
-function handler(data) {
-  // data.translation.x ...
-  // data.translation.y ...
-  // and so on, depending on the gesture
+function followLogger(data) {
+  console.log(
+    'The centroid of the points interacting with #follow is:',
+    'x:', data.x,
+    'y:', data.y,
+  )
 }
 ```
 
-That said, none of this will actually work until you add the gesture to the
-region.
+Now we're ready to combine the element and its handler into a gesture.
+
+```javascript
+const follow = new Follow(element, followLogger);
+```
+
+We're not quite done though, as none of this will actually work until you add
+the gesture to the region.
 
 ### Adding a Gesture to a Region
 
@@ -168,8 +213,8 @@ Simple:
 region.addGesture(pan);
 ```
 
-Now the `handler` function will be called whenever a `pan` gesture is detected
-on the `#pannable` element inside the region.
+Now the `followLogger` function will be called whenever a `follow` gesture is
+detected on the `#follow` element inside the region.
 
 ## Implementing Custom Gestures
 
@@ -217,6 +262,9 @@ forwarded to bound handlers when a non-null value is returned by a hook.
 Returned values should be packed inside an object. For example, instead of just
 `return 42;`, a custom hook should do `return { value: 42 };`
 
+If your Gesture subclass needs to track any kind of complex state, remember that
+it may be necessary to reset the state in the `cancel` phase.
+
 For information about what data is accessible via the State object, see the full
 documentation [here](https://mvanderkamp.github.io/westures-core/State.html).
 Note that his documentation was generated with `jsdoc`.
@@ -236,8 +284,9 @@ phase    | String   | `'start'`, `'move'`, `'end'`, or `'cancel'`
 type     | String   | The name of the gesture as specified by its designer.
 target   | Element  | The Element that is associated with the recognized gesture.
 
-If data properties returned by a hook clashes with one of these properties, the
-value from the hook gets precedent and the default is overwritten.
+If data properties returned by a hook have a name collision with one of these
+properties, the value from the hook gets precedent and the default is
+overwritten.
 
 ## Nomenclature and Origins
 
