@@ -235,12 +235,13 @@ of the four phase hooks ('start', 'move', 'end', and 'cancel') as is appropriate
 for your gesture.</p>
 <p>Defined here is a very simple gesture that simply reports the centroid of the
 input points. Note that the returned value must be an Object!</p>
-<p>// Define a Gesture subclass
+<pre class="prettyprint source lang-javascript"><code>// Define a Gesture subclass
 class Follow extends wes.Gesture {
-move(state) {
-return state.centroid;
+  move(state) {
+    return state.centroid;
+  }
 }
-}</p>
+</code></pre>
 <h3 id="instantiating-a-gesture">Instantiating a Gesture</h3>
 <p>When you instantiate a gesture, you need to provide a handler as well as an
 Element. The gesture will only be recognized when the first pointer to interact

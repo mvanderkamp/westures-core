@@ -158,12 +158,14 @@ for your gesture.
 Defined here is a very simple gesture that simply reports the centroid of the
 input points. Note that the returned value must be an Object!
 
+```javascript
 // Define a Gesture subclass
 class Follow extends wes.Gesture {
   move(state) {
     return state.centroid;
   }
 }
+```
 
 ### Instantiating a Gesture
 
