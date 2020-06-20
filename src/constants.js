@@ -10,6 +10,7 @@ const CANCEL_EVENTS = [
   'blur',
   'pointercancel',
   'touchcancel',
+  'mouseleave',
 ];
 
 /**
