@@ -34,6 +34,15 @@
   "scripts": {
     "coveralls": "jest --coverage && cat ./coverage/lcov.info | coveralls"
   },
+  "jest": {
+    "modulePaths": [
+      "<rootDir>",
+      "<rootDir>/src/"
+    ],
+    "setupFilesAfterEnv": [
+      "./test/setup.js"
+    ]
+  },
   "devDependencies": {
     "@babel/core": "^7.10.2",
     "@babel/preset-env": "^7.10.2",
