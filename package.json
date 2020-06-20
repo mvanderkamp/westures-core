@@ -1,7 +1,7 @@
 {
   "name": "westures-core",
   "version": "1.1.0",
-  "description": "The core engine of the Westures gesture library.",
+  "description": "The core engine of Westures, a robust n-pointer multitouch gesture detection library for JavaScript.",
   "keywords": [
     "multitouch",
     "gesture",
