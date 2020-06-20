@@ -27,17 +27,22 @@ const {
  *
  * @memberof westures-core
  *
- * @param {Element} element - The element which should listen to input events.
+ * @param {Element} element=window - The element which should listen to input
+ * events.
  * @param {object} [options]
  * @param {boolean} [options.capture=false] - Whether the region uses the
  * capture phase of input events. If false, uses the bubbling phase.
+ * @param {boolean} [options.preferPointer=true] - If false, the region listens
+ * to mouse/touch events instead of pointer events.
  * @param {boolean} [options.preventDefault=true] - Whether the default
  * browser functionality should be disabled. This option should most likely be
  * ignored. Here there by dragons if set to false.
+ * @param {string} [options.touchAction='none'] - Value to set the CSS
+ * 'touch-action' property to on elements added to the region.
  */
 class Region {
-  constructor(element, options = {}) {
-    const settings = { ...Region.DEFAULTS, ...options };
+  constructor(element = window, options = {}) {
+    options = { ...Region.DEFAULTS, ...options };
 
     /**
      * The list of relations between elements, their gestures, and the handlers.
@@ -69,19 +74,11 @@ class Region {
     this.element = element;
 
     /**
-     * Whether the region listens for captures or bubbles.
+     * The user-supplied options for the Region.
      *
-     * @type {boolean}
+     * @type {object}
      */
-    this.capture = settings.capture;
-
-    /**
-     * Whether the default browser functionality should be disabled. This option
-     * should most likely be ignored. Here there by dragons if set to false.
-     *
-     * @type {boolean}
-     */
-    this.preventDefault = settings.preventDefault;
+    this.options = options;
 
     /**
      * The internal state object for a Region.  Keeps track of inputs.
@@ -102,19 +99,13 @@ class Region {
    */
   activate() {
     /*
-     * Having to listen to both mouse and touch events is annoying, but
-     * necessary due to conflicting standards and browser implementations.
-     * Pointer is a fallback for now instead of the primary, until I figure out
-     * all the details to do with pointer-events and touch-action and their
-     * cross browser compatibility.
-     *
      * Listening to both mouse and touch comes with the difficulty that
      * preventDefault() must be called to prevent both events from iterating
      * through the system. However I have left it as an option to the end user,
      * which defaults to calling preventDefault(), in case there's a use-case I
      * haven't considered or am not aware of.
      *
-     * It is also a good idea to keep regions small in large pages.
+     * It also may be a good idea to keep regions small in large pages.
      *
      * See:
      *  https://www.html5rocks.com/en/mobile/touchandmouse/
@@ -122,17 +113,17 @@ class Region {
      *  https://developer.mozilla.org/en-US/docs/Web/API/Pointer_events
      */
     let eventNames = [];
-    if (window.TouchEvent || window.MouseEvent) {
-      eventNames = MOUSE_EVENTS.concat(TOUCH_EVENTS);
-    } else {
+    if (this.options.preferPointer && window.PointerEvent) {
       eventNames = POINTER_EVENTS;
+    } else {
+      eventNames = MOUSE_EVENTS.concat(TOUCH_EVENTS);
     }
 
     // Bind detected browser events to the region element.
     const arbitrate = this.arbitrate.bind(this);
     eventNames.forEach(eventName => {
       this.element.addEventListener(eventName, arbitrate, {
-        capture: this.capture,
+        capture: this.options.capture,
         once:    false,
         passive: false,
       });
@@ -157,7 +148,7 @@ class Region {
    * @param {Event} event - The event emitted from the window object.
    */
   cancel(event) {
-    event.preventDefault();
+    if (this.options.preventDefault) event.preventDefault();
     this.state.inputs.forEach(input => {
       input.update(event);
     });
@@ -270,7 +261,7 @@ class Region {
     this.updateActiveGestures(event, isInitial);
 
     if (this.activeGestures.size > 0) {
-      if (this.preventDefault) event.preventDefault();
+      if (this.options.preventDefault) event.preventDefault();
 
       this.activeGestures.forEach(gesture => {
         gesture.evaluateHook(PHASE[event.type], this.state);
@@ -287,6 +278,7 @@ class Region {
    * @param {westures-core.Gesture} gesture - Instantiated gesture to add.
    */
   addGesture(gesture) {
+    gesture.element.style.touchAction = this.options.touchAction;
     this.gestures.add(gesture);
   }
 
@@ -324,8 +316,9 @@ class Region {
 
 Region.DEFAULTS = {
   capture:        false,
+  preferPointer:  true,
   preventDefault: true,
+  touchAction:    'none',
 };
 
 module.exports = Region;
-

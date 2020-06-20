@@ -51,19 +51,6 @@ function buildExpectPhaseForStateInputs(phase) {
   };
 }
 
-class TouchEvent {
-  constructor(type, x, y, target, identifier) {
-    this.type = type;
-    this.target = target;
-    this.changedTouches = [{
-      clientX:      x,
-      clientY:      y,
-      identifier: identifier,
-    }];
-    this.preventDefault = jest.fn();
-  }
-}
-
 beforeAll(() => {
   emptySet = new Set();
 
@@ -90,19 +77,24 @@ beforeEach(() => {
 
 describe('Region', () => {
   describe('constructor(element, options = {})', () => {
-    test('Throws TypeError if no element provided', () => {
-      expect(() => new Region()).toThrow(TypeError);
+    test('Element defaults to the window object', () => {
+      expect(() => {
+        region = new Region();
+      }).not.toThrow();
+      expect(region).toBeInstanceOf(Region);
+      expect(region.element).toBe(window);
     });
 
-    test('Instantiates a Region if an element is provided', () => {
+    test('Instantiates a Region on the provided element', () => {
       expect(() => {
         region = new Region(element);
       }).not.toThrow();
       expect(region).toBeInstanceOf(Region);
+      expect(region.element).toBe(element);
     });
 
-    test('Attaches mouse and touch event listeners to the element', () => {
-      new Region(element);
+    test('Attaches mouse/touch listeners if preferPointer is false', () => {
+      new Region(element, { preferPointer: false });
 
       MOUSE_EVENTS.concat(TOUCH_EVENTS).forEach(event => {
         expect(element.addEventListener)
@@ -114,14 +106,12 @@ describe('Region', () => {
       });
     });
 
-    test('Attaches pointer event listeners instead if required', () => {
-      const oldMouseEvent = window.MouseEvent;
-      const oldTouchEevent = window.TouchEvent;
-      window.MouseEvent = null;
-      window.TouchEvent = null;
+    test('Attaches mouse/touch listeners if PointerEvent undefined', () => {
+      const oldPointerEvent = window.PointerEvent;
+      window.PointerEvent = null;
 
       new Region(element);
-      POINTER_EVENTS.forEach(event => {
+      MOUSE_EVENTS.concat(TOUCH_EVENTS).forEach(event => {
         expect(element.addEventListener)
           .toHaveBeenCalledWith(event, expect.anything(), {
             'capture': false,
@@ -130,8 +120,19 @@ describe('Region', () => {
           });
       });
 
-      window.MouseEvent = oldMouseEvent;
-      window.TouchEvent = oldTouchEevent;
+      window.PointerEvent = oldPointerEvent;
+    });
+
+    test('Attaches pointer listeners if preferPointer is true', () => {
+      new Region(element, { preferPointer: true });
+      POINTER_EVENTS.forEach(event => {
+        expect(element.addEventListener)
+          .toHaveBeenCalledWith(event, expect.anything(), {
+            'capture': false,
+            'once':    false,
+            'passive': false,
+          });
+      });
     });
 
     test('Attaches "cancel" and keyboard event listeners to the window', () => {
@@ -207,7 +208,7 @@ describe('Region', () => {
 
         expect(region.state.inputs.length).toBe(2);
 
-        expect(() => region.cancel(new MouseEvent('down'))).not.toThrow();
+        expect(() => region.cancel(new MouseEvent('mouseleave'))).not.toThrow();
         expect(region.state.inputs.length).toBe(0);
       });
 
@@ -221,7 +222,7 @@ describe('Region', () => {
         expect(region.potentialGestures).toMatchObject(gesture_both_set);
         expect(region.activeGestures).toMatchObject(gesture_both_set);
 
-        expect(() => region.cancel(new MouseEvent('down'))).not.toThrow();
+        expect(() => region.cancel(new MouseEvent('mouseleave'))).not.toThrow();
 
         expect(region.potentialGestures).toMatchObject(emptySet);
         expect(region.activeGestures).toMatchObject(emptySet);
@@ -246,6 +247,19 @@ describe('Region', () => {
 
         gesture.cancel = buildExpectPhaseForStateInputs(CANCEL);
         region.cancel(new CustomEvent('blur'));
+      });
+
+      test('Does not call preventDefault, if requested', () => {
+        const oldPreventDefault = region.options.preventDefault;
+        region.options.preventDefault = false;
+
+        const cancelevent = new MouseEvent('mouseleave');
+        cancelevent.preventDefault = jest.fn();
+        expect(cancelevent.preventDefault).not.toHaveBeenCalled();
+        expect(() => region.cancel(cancelevent)).not.toThrow();
+        expect(cancelevent.preventDefault).not.toHaveBeenCalled();
+
+        region.options.preventDefault = oldPreventDefault;
       });
     });
 
@@ -769,11 +783,15 @@ describe('Region', () => {
       });
 
       test('Does not call preventDefault, if requested', () => {
+        const oldPreventDefault = region.options.preventDefault;
+        region.options.preventDefault = false;
+
         touchstart.preventDefault = jest.fn();
-        region.preventDefault = false;
         expect(touchstart.preventDefault).not.toHaveBeenCalled();
         region.arbitrate(touchstart);
         expect(touchstart.preventDefault).not.toHaveBeenCalled();
+
+        region.options.preventDefault = oldPreventDefault;
       });
 
       test('Sets the correct phase on each input', () => {
