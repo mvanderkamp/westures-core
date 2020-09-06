@@ -5,8 +5,7 @@ const { getPropagationPath } = require('./utils.js');
 
 /**
  * Tracks a single input and contains information about the current, previous,
- * and initial events. Contains the progress of each Input and its associated
- * gestures.
+ * and initial events.
  *
  * @memberof westures-core
  *
