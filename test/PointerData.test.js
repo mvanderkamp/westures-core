@@ -67,21 +67,25 @@ describe('PointerData', () => {
     });
 
     test('Records the original event', () => {
+      mdata = new PointerData(mouseevent, id);
       expect(mdata.event).toBe(mouseevent);
       expect(tdata.event).toBe(touchevent);
     });
 
     test('Translates the event type into the correct phase', () => {
+      mdata = new PointerData(mouseevent, id);
       expect(mdata.type).toBe('move');
       expect(tdata.type).toBe('start');
     });
 
     test('Records an epoch timestamp', () => {
+      mdata = new PointerData(mouseevent, id);
       expect(mdata.time).toBeDefined();
       expect(mdata.time / 1000).toBeCloseTo(Date.now() / 1000, 1);
     });
 
     test('Saves the correct clientX and clientY as a Point2D', () => {
+      mdata = new PointerData(mouseevent, id);
       expect(mdata.point).toBeInstanceOf(Point2D);
       expect(mdata.point.x).toBe(mouseevent.clientX);
       expect(mdata.point.y).toBe(mouseevent.clientY);
