@@ -4,14 +4,9 @@
 
 const Gesture = require('../src/Gesture.js');
 const {
-  CANCEL,
-  END,
-  MOVE,
-  START,
+  PHASES,
   STATE_KEYS,
 } = require('../src/constants.js');
-
-const PHASES = [START, MOVE, END, CANCEL];
 
 describe('Gesture', () => {
   describe('constructor', () => {

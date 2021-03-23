@@ -121,6 +121,14 @@ const MOVE = 'move';
 const START = 'start';
 
 /**
+ * The recognized phases.
+ *
+ * @memberof westures-core
+ * @type {list.<string>}
+ */
+const PHASES = [START, MOVE, END, CANCEL];
+
+/**
  * Object that normalizes the names of window events to be either of type start,
  * move, end, or cancel.
  *
@@ -161,5 +169,6 @@ module.exports = {
   START,
 
   PHASE,
+  PHASES,
 };
 
