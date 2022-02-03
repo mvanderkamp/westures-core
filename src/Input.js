@@ -72,6 +72,14 @@ class Input {
   get startTime() { return this.initial.time; }
 
   /**
+   * The amount of time elapsed between the start of this input and its latest
+   * event.
+   *
+   * @type {number}
+   */
+  get elapsedTime() { return this.current.time - this.initial.time; }
+
+  /**
    * @return {number} The distance between the initiating event for this input
    *    and its current event.
    */

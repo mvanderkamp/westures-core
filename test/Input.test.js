@@ -1,4 +1,4 @@
-/* global expect, describe, test, beforeAll, beforeEach */
+/* global expect, describe, test, beforeAll, beforeEach, jest */
 
 'use strict';
 
@@ -73,6 +73,21 @@ describe('Input', () => {
           expect(input.startTime).toBe(input.initial.time);
         });
       });
+
+      describe('elapsedTime', () => {
+        test('Returns the elapsed time since initial', () => {
+          const start = 1000;
+          const end = 1337;
+
+          jest.spyOn(global.Date, 'now')
+            .mockImplementationOnce(() => start)
+            .mockImplementationOnce(() => end);
+
+          const elapsed_input = new Input(mousedown, 1234);
+          elapsed_input.update(mousemove);
+          expect(elapsed_input.elapsedTime).toBe(end - start);
+        });
+      });
     });
 
     describe('update', () => {
@@ -112,5 +127,3 @@ describe('Input', () => {
     });
   });
 });
-
-
