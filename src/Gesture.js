@@ -65,7 +65,7 @@ class Gesture {
     this.handler = handler;
 
     /**
-     * The options settings.
+     * The options. Can usually be adjusted live, though be careful doing this.
      *
      * @type {object}
      */
