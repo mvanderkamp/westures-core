@@ -3,6 +3,7 @@
 'use strict';
 
 const Point2D = require('../src/Point2D.js');
+const _ = require('underscore');
 
 describe('Constructor', () => {
   test('does not throw an error given valid input', () => {
@@ -34,6 +35,46 @@ describe('Prototype methods', () => {
       const pt = new Point2D(3, 3);
       expect(origin.angleTo(pt)).toBeCloseTo(Math.PI / 4);
       expect(origin.angleTo(origin)).toBe(0);
+    });
+  });
+
+  describe('anglesTo(points)', () => {
+    test('gives the correct angles', () => {
+      // let's use a unit circle (ish, with easier x/y numbers that don't
+      // involve division)
+      const trig_circle = [
+        // top right
+        [new Point2D(1,             0),             0],
+        [new Point2D(Math.sqrt(3),  1),             Math.PI / 6],
+        [new Point2D(1,             1),             Math.PI / 4],
+        [new Point2D(1,             Math.sqrt(3)),  Math.PI / 3],
+
+        // top left
+        [new Point2D(0,             1),             Math.PI / 2],
+        [new Point2D(-1,            Math.sqrt(3)),  2 * Math.PI / 3],
+        [new Point2D(-1,            1),             3 * Math.PI / 4],
+        [new Point2D(-Math.sqrt(3), 1),             5 * Math.PI / 6],
+
+        // bottom left: Note that atan2 now gives negative results instead of
+        // results > PI. That is, we need to subtract 2 * PI from the positive
+        // result.
+        [new Point2D(-1,            0),             Math.PI],
+        [new Point2D(-Math.sqrt(3), -1),            -5 * Math.PI / 6],
+        [new Point2D(-1,            -1),            -3 * Math.PI / 4],
+        [new Point2D(-1,            -Math.sqrt(3)), -2 * Math.PI / 3],
+
+        // bottom right
+        [new Point2D(0,             -1),            -Math.PI / 2],
+        [new Point2D(1,             -Math.sqrt(3)), -Math.PI / 3],
+        [new Point2D(1,             -1),            -Math.PI / 4],
+        [new Point2D(Math.sqrt(3),  -1),            -Math.PI / 6],
+      ];
+      const [points, expected_angles] = _.unzip(trig_circle);
+      const angles = origin.anglesTo(points);
+      _.zip(angles, expected_angles)
+        .forEach(([angle, expected]) => {
+          expect(angle).toBeCloseTo(expected);
+        });
     });
   });
 

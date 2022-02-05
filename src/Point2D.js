@@ -40,6 +40,18 @@ class Point2D {
   }
 
   /**
+   * Determine the angle from the centroid to each of the points.
+   *
+   * @param {!westures-core.Point2D[]} points - the Point2D objects to calculate
+   *    the angles to.
+   *
+   * @returns {number[]}
+   */
+  anglesTo(points) {
+    return points.map(point => this.angleTo(point));
+  }
+
+  /**
    * Determine the average distance from this point to the provided array of
    * points.
    *
