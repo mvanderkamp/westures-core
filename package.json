@@ -1,6 +1,6 @@
 {
   "name": "westures-core",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "The core engine of Westures, a robust n-pointer multitouch gesture detection library for JavaScript.",
   "author": "Michael van der Kamp <michael.vanderkamp@usask.ca>",
   "keywords": [
