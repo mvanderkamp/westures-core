@@ -27,8 +27,9 @@ const {
  *
  * @memberof westures-core
  *
- * @param {Element} element=window - The element which should listen to input
- * events.
+ * @param {Element} [element=null] - The element which should listen to input
+ * events. If not provided, will be set to the window unless operating in
+ * "headless" mode.
  * @param {object} [options]
  * @param {boolean} [options.capture=false] - Whether the region uses the
  * capture phase of input events. If false, uses the bubbling phase.
@@ -39,10 +40,27 @@ const {
  * ignored. Here there by dragons if set to false.
  * @param {string} [options.touchAction='none'] - Value to set the CSS
  * 'touch-action' property to on elements added to the region.
+ * @param {boolean} [options.headless=false] - Set to true to turn on "headless"
+ * mode. This mode is intended for use outside of a browser environment. It does
+ * not listen to window events, so instead you will have to send events directly
+ * into the region. Pointer down/move/up events should be sent to
+ * Region.arbitrate(event), cancel events should be sent to
+ * Region.cancel(event), and keyboard events should be sent to
+ * Region.handleKeyboardEvent(event). You do not need to supply an element to
+ * the Region constructor in this mode, but you will still need to attach
+ * elements to Gestures, and the events you pass in should specify event.target
+ * appropriately, in order to select which gestures to run.
  */
 class Region {
-  constructor(element = window, options = {}) {
+  constructor(element = null, options = {}) {
     options = { ...Region.DEFAULTS, ...options };
+    if (element === null) {
+      if (options.headless) {
+        element = null;
+      } else {
+        element = window;
+      }
+    }
 
     /**
      * The list of relations between elements, their gestures, and the handlers.
@@ -85,10 +103,12 @@ class Region {
      *
      * @type {westures-core.State}
      */
-    this.state = new State(this.element);
+    this.state = new State(this.element, options.headless);
 
-    // Begin operating immediately.
-    this.activate();
+    if (!options.headless) {
+      // Begin operating immediately.
+      this.activate();
+    }
   }
 
   /**
@@ -155,7 +175,7 @@ class Region {
     this.activeGestures.forEach(gesture => {
       gesture.evaluateHook(CANCEL, this.state);
     });
-    this.state = new State(this.element);
+    this.state = new State(this.element, this.options.headless);
     this.resetActiveGestures();
   }
 
@@ -278,7 +298,9 @@ class Region {
    * @param {westures-core.Gesture} gesture - Instantiated gesture to add.
    */
   addGesture(gesture) {
-    gesture.element.style.touchAction = this.options.touchAction;
+    if (!this.options.headless) {
+      gesture.element.style.touchAction = this.options.touchAction;
+    }
     this.gestures.add(gesture);
   }
 
@@ -319,6 +341,7 @@ Region.DEFAULTS = {
   preferPointer:  true,
   preventDefault: true,
   touchAction:    'none',
+  headless:       false,
 };
 
 module.exports = Region;

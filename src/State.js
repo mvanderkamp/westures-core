@@ -47,15 +47,24 @@ const update_fns = {
  * @memberof westures-core
  *
  * @param {Element} element - The element underpinning the associated Region.
+ * @param {boolean} [headless=false] - Whether westures is operating in
+ * "headless" mode.
  */
 class State {
-  constructor(element) {
+  constructor(element, headless = false) {
     /**
      * Keep a reference to the element for the associated region.
      *
      * @type {Element}
      */
     this.element = element;
+
+    /**
+     * Whether westures is operating in "headless" mode.
+     *
+     * @type {boolean}
+     */
+    this.headless = headless;
 
     /**
      * Keeps track of the current Input objects.
@@ -151,22 +160,26 @@ class State {
     case START:
       this[symbols.inputs].set(
         identifier,
-        new Input(event, identifier),
+        new Input(event, identifier, this.headless),
       );
-      try {
-        this.element.setPointerCapture(identifier);
-      } catch (e) {
-        // NOP: Optional operation failed.
+      if (!this.headless) {
+        try {
+          this.element.setPointerCapture(identifier);
+        } catch (e) {
+          // NOP: Optional operation failed.
+        }
       }
       break;
 
     // All of 'end', 'move', and 'cancel' perform updates, hence the
     // following fall-throughs
     case END:
-      try {
-        this.element.releasePointerCapture(identifier);
-      } catch (e) {
-        // NOP: Optional operation failed.
+      if (!this.headless) {
+        try {
+          this.element.releasePointerCapture(identifier);
+        } catch (e) {
+          // NOP: Optional operation failed.
+        }
       }
     case CANCEL:
     case MOVE:
