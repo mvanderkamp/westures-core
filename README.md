@@ -1,14 +1,8 @@
 # westures-core
 
-[![Build Status](
-https://travis-ci.org/mvanderkamp/westures-core.svg?branch=main)
-](https://travis-ci.org/mvanderkamp/westures-core)
-[![Coverage Status](
-https://coveralls.io/repos/github/mvanderkamp/westures-core/badge.svg?branch=main)
-](https://coveralls.io/github/mvanderkamp/westures-core?branch=main)
-[![Maintainability](
-https://api.codeclimate.com/v1/badges/a5f4a4745352d6e2520c/maintainability)
-](https://codeclimate.com/github/mvanderkamp/westures-core/maintainability)
+[![Node.js CI](https://github.com/mvanderkamp/westures-core/actions/workflows/node.js.yml/badge.svg)](https://github.com/mvanderkamp/westures-core/actions/workflows/node.js.yml)
+[![Coverage Status](https://coveralls.io/repos/github/mvanderkamp/westures-core/badge.svg?branch=main)](https://coveralls.io/github/mvanderkamp/westures-core?branch=main)
+[![Maintainability](https://api.codeclimate.com/v1/badges/a5f4a4745352d6e2520c/maintainability)](https://codeclimate.com/github/mvanderkamp/westures-core/maintainability)
 
 Westures is a robust n-pointer multitouch gesture detection library for
 JavaScript. This means that each gesture is be capable of working seamlessly as
