@@ -2,7 +2,7 @@
 
 'use strict';
 
-const _ = require('lodash');
+const _ = require('underscore');
 const Gesture = require('../src/Gesture.js');
 const Region = require('../src/Region.js');
 const {

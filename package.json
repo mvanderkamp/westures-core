@@ -54,7 +54,6 @@
     "eslint": "^7.17.0",
     "jest": "^26.6.3",
     "jsdoc": "^3.6.6",
-    "lodash": "^4.17.20",
     "parcel": "^2.2.1",
     "tui-jsdoc-template": "^1.2.2",
     "underscore": "^1.13.2"
