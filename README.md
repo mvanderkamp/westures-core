@@ -111,11 +111,6 @@ Name      | Description
 constants | Constant values used throughout the engine
 utils     | Helpful utility functions
 
-Here is a graph to help you understand the relationships between these classes:
-
-![Graph of westures-core module](
-https://raw.githubusercontent.com/mvanderkamp/westures-core/master/arkit.svg?sanitize=true)
-
 ## Basic Usage
 
 - [Declaring a Region](#declaring-a-region)
