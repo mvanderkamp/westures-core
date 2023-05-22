@@ -4,11 +4,13 @@
   },
   "opts": {
     "destination": "docs",
+    "encoding": "utf8",
     "mainpagetitle": "Home | Westures Core Documentation",
     "package": "package.json",
     "readme": "README.md",
     "recurse": true,
-    "template": "node_modules/tui-jsdoc-template"
+    "template": "node_modules/docdash",
+    "verbose": true
   },
   "plugins": [],
   "recurseDepth": 10,
@@ -24,18 +26,23 @@
     "allowUnknownTags": true,
     "dictionaries": ["jsdoc"]
   },
-  "templates": {
-    "cleverLinks": false,
-    "css": [
-      "styles/custom.css"
-    ],
-    "footerText": "Westures: Robust Multitouch Gestures",
-    "logo": {
-        "width": "0px",
-        "height": "0px"
-    },
-    "monospaceLinks": false,
-    "name": "westures-core"
+  "docdash": {
+      "static": false,
+      "sort": true,
+      "meta": {
+          "title": "Westures Documentation",
+          "description": "Reference documentation for the Westures multitouch gesture library for JavaScript",
+          "keyword": "javascript, multitouch, gesture"
+      },
+      "search": true,
+      "collapse": true,
+      "typedefs": true,
+      "private": false,
+      "removeQuotes": "trim",
+      "ShortenTypes": true,
+      "scopeInOutputPath": false,
+      "nameInOutputPath": false,
+      "versionInOutputPath": false
   }
 }
 

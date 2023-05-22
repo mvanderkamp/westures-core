@@ -1,50 +1,51 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    
     <meta charset="utf-8">
-    <title>Source: src/PointerData.js | westures-core</title>
-
-    <script src="scripts/prettify/prettify.js"> </script>
-    <script src="scripts/prettify/lang-css.js"> </script>
+    <title>src/PointerData.js - Westures Documentation</title>
+    
+    <meta name="description" content="Reference documentation for the Westures multitouch gesture library for JavaScript" />
+    
+        <meta name="keywords" content="javascript, multitouch, gesture" />
+        <meta name="keyword" content="javascript, multitouch, gesture" />
+    
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
     <!--[if lt IE 9]>
       <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
-    <link type="text/css" rel="stylesheet" href="styles/bootstrap.min.css">
-    <link type="text/css" rel="stylesheet" href="styles/prettify-jsdoc.css">
-    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
-    <link type="text/css" rel="stylesheet" href="styles/tui-doc.css">
-
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <script src="scripts/nav.js" defer></script>
     
-        
-            <link type="text/css" rel="stylesheet" href="styles/custom.css">
-        
-    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
-<nav class="lnb" id="lnb">
-    <div class="logo" style="width: 0px; height: 0px">
-        
-            <img src="img/toast-ui.png" width="100%" height="100%">
-        
-    </div>
-    <div class="title">
-        <h1><a href="index.html" class="link">westures-core</a></h1>
-        
-            <span class="version">v1.2.1</span>
-        
-    </div>
-    <div class="search-container" id="search-container">
-        <input type="text" placeholder="Search">
-        <ul></ul>
-    </div>
-    
-    <div class="lnb-api hidden"><h3>Classes</h3><ul><li><a href="westures-core.Gesture.html">Gesture</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="westures-core.Gesture_sub"><div class="member-type">Members</div><ul class="inner"><li><a href="westures-core.Gesture.html#element">element</a></li><li><a href="westures-core.Gesture.html#handler">handler</a></li><li><a href="westures-core.Gesture.html#id">id</a></li><li><a href="westures-core.Gesture.html#options">options</a></li><li><a href="westures-core.Gesture.html#type">type</a></li></ul><div class="member-type">Methods</div><ul class="inner"><li><a href="westures-core.Gesture.html#cancel">cancel</a></li><li><a href="westures-core.Gesture.html#end">end</a></li><li><a href="westures-core.Gesture.html#evaluateHook">evaluateHook</a></li><li><a href="westures-core.Gesture.html#isEnabled">isEnabled</a></li><li><a href="westures-core.Gesture.html#move">move</a></li><li><a href="westures-core.Gesture.html#recognize">recognize</a></li><li><a href="westures-core.Gesture.html#start">start</a></li></ul></div></li><li><a href="westures-core.Input.html">Input</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="westures-core.Input_sub"><div class="member-type">Members</div><ul class="inner"><li><a href="westures-core.Input.html#current">current</a></li><li><a href="westures-core.Input.html#elapsedTime">elapsedTime</a></li><li><a href="westures-core.Input.html#identifier">identifier</a></li><li><a href="westures-core.Input.html#initial">initial</a></li><li><a href="westures-core.Input.html#initialElements">initialElements</a></li><li><a href="westures-core.Input.html#phase">phase</a></li><li><a href="westures-core.Input.html#previous">previous</a></li><li><a href="westures-core.Input.html#startTime">startTime</a></li></ul><div class="member-type">Methods</div><ul class="inner"><li><a href="westures-core.Input.html#totalDistance">totalDistance</a></li><li><a href="westures-core.Input.html#update">update</a></li></ul></div></li><li><a href="westures-core.Point2D.html">Point2D</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="westures-core.Point2D_sub"><div class="member-type">Members</div><ul class="inner"><li><a href="westures-core.Point2D.html#x">x</a></li><li><a href="westures-core.Point2D.html#y">y</a></li></ul><div class="member-type">Methods</div><ul class="inner"><li><a href="westures-core.Point2D.html#.centroid">centroid</a></li><li><a href="westures-core.Point2D.html#.sum">sum</a></li><li><a href="westures-core.Point2D.html#anglesTo">anglesTo</a></li><li><a href="westures-core.Point2D.html#angleTo">angleTo</a></li><li><a href="westures-core.Point2D.html#averageDistanceTo">averageDistanceTo</a></li><li><a href="westures-core.Point2D.html#clone">clone</a></li><li><a href="westures-core.Point2D.html#distanceTo">distanceTo</a></li><li><a href="westures-core.Point2D.html#minus">minus</a></li><li><a href="westures-core.Point2D.html#plus">plus</a></li><li><a href="westures-core.Point2D.html#totalDistanceTo">totalDistanceTo</a></li></ul></div></li><li><a href="westures-core.PointerData.html">PointerData</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="westures-core.PointerData_sub"><div class="member-type">Members</div><ul class="inner"><li><a href="westures-core.PointerData.html#event">event</a></li><li><a href="westures-core.PointerData.html#point">point</a></li><li><a href="westures-core.PointerData.html#time">time</a></li><li><a href="westures-core.PointerData.html#type">type</a></li></ul></div></li><li><a href="westures-core.Region.html">Region</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="westures-core.Region_sub"><div class="member-type">Members</div><ul class="inner"><li><a href="westures-core.Region.html#activeGestures">activeGestures</a></li><li><a href="westures-core.Region.html#element">element</a></li><li><a href="westures-core.Region.html#gestures">gestures</a></li><li><a href="westures-core.Region.html#options">options</a></li><li><a href="westures-core.Region.html#potentialGestures">potentialGestures</a></li><li><a href="westures-core.Region.html#state">state</a></li></ul><div class="member-type">Methods</div><ul class="inner"><li><a href="westures-core.Region.html#addGesture">addGesture</a></li><li><a href="westures-core.Region.html#getGesturesByElement">getGesturesByElement</a></li><li><a href="westures-core.Region.html#removeGesture">removeGesture</a></li><li><a href="westures-core.Region.html#removeGesturesByElement">removeGesturesByElement</a></li></ul></div></li><li><a href="westures-core.Smoothable.html">Smoothable</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="westures-core.Smoothable_sub"><div class="member-type">Members</div><ul class="inner"><li><a href="westures-core.Smoothable.html">[@@cascade]</a></li><li><a href="westures-core.Smoothable.html#identity">identity</a></li></ul><div class="member-type">Methods</div><ul class="inner"><li><a href="westures-core.Smoothable.html">[@@smooth]</a></li><li><a href="westures-core.Smoothable.html#average">average</a></li><li><a href="westures-core.Smoothable.html#next">next</a></li><li><a href="westures-core.Smoothable.html#restart">restart</a></li><li><a href="westures-core.Smoothable.html#~smoothingIsApplicable">smoothingIsApplicable</a></li></ul></div></li><li><a href="westures-core.State.html">State</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="westures-core.State_sub"><div class="member-type">Members</div><ul class="inner"><li><a href="westures-core.State.html#active">active</a></li><li><a href="westures-core.State.html#activePoints">activePoints</a></li><li><a href="westures-core.State.html#centroid">centroid</a></li><li><a href="westures-core.State.html#element">element</a></li><li><a href="westures-core.State.html#event">event</a></li><li><a href="westures-core.State.html#inputs">inputs</a></li></ul><div class="member-type">Methods</div><ul class="inner"><li><a href="westures-core.State.html#clearEndedInputs">clearEndedInputs</a></li><li><a href="westures-core.State.html#getInputsInPhase">getInputsInPhase</a></li><li><a href="westures-core.State.html#getInputsNotInPhase">getInputsNotInPhase</a></li><li><a href="westures-core.State.html#hasNoInputs">hasNoInputs</a></li></ul></div></li></ul></div><div class="lnb-api hidden"><h3>Namespaces</h3><ul><li><a href="westures-core.html">westures-core</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="westures-core_sub"><div class="member-type">Members</div><ul class="inner"><li><a href="westures-core.html#.CANCEL">CANCEL</a></li><li><a href="westures-core.html#.CANCEL_EVENTS">CANCEL_EVENTS</a></li><li><a href="westures-core.html#.END">END</a></li><li><a href="westures-core.html#.KEYBOARD_EVENTS">KEYBOARD_EVENTS</a></li><li><a href="westures-core.html#.MOUSE_EVENTS">MOUSE_EVENTS</a></li><li><a href="westures-core.html#.MOVE">MOVE</a></li><li><a href="westures-core.html#.PHASE">PHASE</a></li><li><a href="westures-core.html#.PHASES">PHASES</a></li><li><a href="westures-core.html#.POINTER_EVENTS">POINTER_EVENTS</a></li><li><a href="westures-core.html#.START">START</a></li><li><a href="westures-core.html#.STATE_KEY_STRINGS">STATE_KEY_STRINGS</a></li><li><a href="westures-core.html#.STATE_KEYS">STATE_KEYS</a></li><li><a href="westures-core.html#.TOUCH_EVENTS">TOUCH_EVENTS</a></li></ul><div class="member-type">Methods</div><ul class="inner"><li><a href="westures-core.html#.angularDifference">angularDifference</a></li><li><a href="westures-core.html#.getPropagationPath">getPropagationPath</a></li><li><a href="westures-core.html#.setDifference">setDifference</a></li><li><a href="westures-core.html#.setFilter">setFilter</a></li></ul></div></li></ul></div>
-</nav>
-<div id="resizer"></div>
 
-<div class="main" id="main">
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    <input type="text" id="nav-search" placeholder="Search" />
+    
+    
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="westures-core.Gesture.html">Gesture</a><ul class='methods'><li data-type='method' style='display: none;'><a href="westures-core.Gesture.html#cancel">cancel</a></li><li data-type='method' style='display: none;'><a href="westures-core.Gesture.html#end">end</a></li><li data-type='method' style='display: none;'><a href="westures-core.Gesture.html#evaluateHook">evaluateHook</a></li><li data-type='method' style='display: none;'><a href="westures-core.Gesture.html#isEnabled">isEnabled</a></li><li data-type='method' style='display: none;'><a href="westures-core.Gesture.html#move">move</a></li><li data-type='method' style='display: none;'><a href="westures-core.Gesture.html#recognize">recognize</a></li><li data-type='method' style='display: none;'><a href="westures-core.Gesture.html#start">start</a></li></ul></li><li><a href="westures-core.Input.html">Input</a><ul class='methods'><li data-type='method' style='display: none;'><a href="westures-core.Input.html#totalDistance">totalDistance</a></li><li data-type='method' style='display: none;'><a href="westures-core.Input.html#update">update</a></li></ul></li><li><a href="westures-core.Point2D.html">Point2D</a><ul class='methods'><li data-type='method' style='display: none;'><a href="westures-core.Point2D.html#angleTo">angleTo</a></li><li data-type='method' style='display: none;'><a href="westures-core.Point2D.html#anglesTo">anglesTo</a></li><li data-type='method' style='display: none;'><a href="westures-core.Point2D.html#averageDistanceTo">averageDistanceTo</a></li><li data-type='method' style='display: none;'><a href="westures-core.Point2D.html#clone">clone</a></li><li data-type='method' style='display: none;'><a href="westures-core.Point2D.html#distanceTo">distanceTo</a></li><li data-type='method' style='display: none;'><a href="westures-core.Point2D.html#minus">minus</a></li><li data-type='method' style='display: none;'><a href="westures-core.Point2D.html#plus">plus</a></li><li data-type='method' style='display: none;'><a href="westures-core.Point2D.html#totalDistanceTo">totalDistanceTo</a></li></ul></li><li><a href="westures-core.PointerData.html">PointerData</a></li><li><a href="westures-core.Region.html">Region</a><ul class='methods'><li data-type='method' style='display: none;'><a href="westures-core.Region.html#addGesture">addGesture</a></li><li data-type='method' style='display: none;'><a href="westures-core.Region.html#getGesturesByElement">getGesturesByElement</a></li><li data-type='method' style='display: none;'><a href="westures-core.Region.html#removeGesture">removeGesture</a></li><li data-type='method' style='display: none;'><a href="westures-core.Region.html#removeGesturesByElement">removeGesturesByElement</a></li></ul></li><li><a href="westures-core.Smoothable.html">Smoothable</a><ul class='methods'><li data-type='method' style='display: none;'><a href="westures-core.Smoothable.html">[@@smooth]</a></li><li data-type='method' style='display: none;'><a href="westures-core.Smoothable.html#average">average</a></li><li data-type='method' style='display: none;'><a href="westures-core.Smoothable.html#next">next</a></li><li data-type='method' style='display: none;'><a href="westures-core.Smoothable.html#restart">restart</a></li><li data-type='method' style='display: none;'><a href="westures-core.Smoothable.html#~smoothingIsApplicable">smoothingIsApplicable</a></li></ul></li><li><a href="westures-core.State.html">State</a><ul class='methods'><li data-type='method' style='display: none;'><a href="westures-core.State.html#clearEndedInputs">clearEndedInputs</a></li><li data-type='method' style='display: none;'><a href="westures-core.State.html#getInputsInPhase">getInputsInPhase</a></li><li data-type='method' style='display: none;'><a href="westures-core.State.html#getInputsNotInPhase">getInputsNotInPhase</a></li><li data-type='method' style='display: none;'><a href="westures-core.State.html#hasNoInputs">hasNoInputs</a></li></ul></li></ul><h3>Namespaces</h3><ul><li><a href="westures-core.html">westures-core</a><ul class='methods'></ul></li></ul>
+    
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">src/PointerData.js</h1>
+    
+
     
 
 
@@ -128,26 +129,25 @@ module.exports = PointerData;
 
 
 
+    
+    
 </div>
 
+<br class="clear">
+
 <footer>
-    <img class="logo" src="img/toast-ui.png" style="width: 0px; height: 0px">
-    <div class="footer-text">Westures: Robust Multitouch Gestures</div>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.2</a> on Mon May 22 2023 11:37:55 GMT-0700 (Pacific Daylight Saving Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
+
 <script>prettyPrint();</script>
-<script src="scripts/jquery.min.js"></script>
-<script src="scripts/tui-doc.js"></script>
+<script src="scripts/polyfill.js"></script>
 <script src="scripts/linenumber.js"></script>
 
-    <script>
-        var id = '_sub'.replace(/"/g, '_');
-        var selectedApi = document.getElementById(id); // do not use jquery selector
-        var $selectedApi = $(selectedApi);
+<script src="scripts/search.js" defer></script>
 
-        $selectedApi.removeClass('hidden');
-        $selectedApi.parent().find('.glyphicon').removeClass('glyphicon-plus').addClass('glyphicon-minus');
-        showLnbApi();
-    </script>
+
+<script src="scripts/collapse.js" defer></script>
+
 
 </body>
 </html>
