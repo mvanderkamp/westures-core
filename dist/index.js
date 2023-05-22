@@ -3,9 +3,9 @@
  * and routines used by the package. Use responsibly.
  *
  * @namespace westures-core
- */ 'use strict';
+ */ "use strict";
 var $de0d6a332419bf3c$exports = {};
-'use strict';
+"use strict";
 let $de0d6a332419bf3c$var$g_id = 0;
 /**
  * The Gesture class that all gestures inherit from. A custom gesture class will
@@ -32,9 +32,8 @@ let $de0d6a332419bf3c$var$g_id = 0;
  * @param {number} [options.maxInputs=Number.MAX_VALUE] - The maximum number of
  * pointers that may be active for the gesture to be recognized. Uses <=.
  */ class $de0d6a332419bf3c$var$Gesture {
-    constructor(type, element, handler, options = {
-    }){
-        if (typeof type !== 'string') throw new TypeError('Gestures require a string type / name');
+    constructor(type, element, handler, options = {}){
+        if (typeof type !== "string") throw new TypeError("Gestures require a string type / name");
         /**
      * The name of the gesture. (e.g. 'pan' or 'tap' or 'pinch').
      *
@@ -78,9 +77,7 @@ let $de0d6a332419bf3c$var$g_id = 0;
         const count = state.active.length;
         const event = state.event;
         const { enableKeys: enableKeys , disableKeys: disableKeys , minInputs: minInputs , maxInputs: maxInputs  } = this.options;
-        return minInputs <= count && maxInputs >= count && (enableKeys.length === 0 || enableKeys.some((k)=>event[k]
-        )) && !disableKeys.some((k)=>event[k]
-        );
+        return minInputs <= count && maxInputs >= count && (enableKeys.length === 0 || enableKeys.some((k)=>event[k])) && !disableKeys.some((k)=>event[k]);
     }
     /**
    * Event hook for the start phase of a gesture.
@@ -169,11 +166,11 @@ $de0d6a332419bf3c$exports = $de0d6a332419bf3c$var$Gesture;
 
 
 var $e2125e2e71e37a0c$exports = {};
-'use strict';
+"use strict";
 var $0ca7bfe1c074e8ca$exports = {};
-'use strict';
+"use strict";
 var $6c3676f10a43b740$exports = {};
-'use strict';
+"use strict";
 /**
  * The Point2D class stores and operates on 2-dimensional points, represented as
  * x and y coordinates.
@@ -214,8 +211,7 @@ var $6c3676f10a43b740$exports = {};
    *
    * @returns {number[]}
    */ anglesTo(points) {
-        return points.map((point)=>this.angleTo(point)
-        );
+        return points.map((point)=>this.angleTo(point));
     }
     /**
    * Determine the average distance from this point to the provided array of
@@ -275,8 +271,7 @@ var $6c3676f10a43b740$exports = {};
    *
    * @return {number} The total distance from this point to the provided points.
    */ totalDistanceTo(points) {
-        return points.reduce((d, p)=>d + this.distanceTo(p)
-        , 0);
+        return points.reduce((d, p)=>d + this.distanceTo(p), 0);
     }
     /**
    * Calculates the centroid of a list of points.
@@ -311,17 +306,17 @@ $6c3676f10a43b740$exports = $6c3676f10a43b740$var$Point2D;
 
 
 var $be6f0e84320366a7$exports = {};
-'use strict';
+"use strict";
 /**
  * List of events that trigger the cancel phase.
  *
  * @memberof westures-core
  * @type {string[]}
  */ const $be6f0e84320366a7$var$CANCEL_EVENTS = [
-    'blur',
-    'pointercancel',
-    'touchcancel',
-    'mouseleave', 
+    "blur",
+    "pointercancel",
+    "touchcancel",
+    "mouseleave"
 ];
 /**
  * List of keyboard events that trigger a restart.
@@ -329,8 +324,8 @@ var $be6f0e84320366a7$exports = {};
  * @memberof westures-core
  * @type {string[]}
  */ const $be6f0e84320366a7$var$KEYBOARD_EVENTS = [
-    'keydown',
-    'keyup', 
+    "keydown",
+    "keyup"
 ];
 /**
  * List of mouse events to listen to.
@@ -338,9 +333,9 @@ var $be6f0e84320366a7$exports = {};
  * @memberof westures-core
  * @type {string[]}
  */ const $be6f0e84320366a7$var$MOUSE_EVENTS = [
-    'mousedown',
-    'mousemove',
-    'mouseup', 
+    "mousedown",
+    "mousemove",
+    "mouseup"
 ];
 /**
  * List of pointer events to listen to.
@@ -348,9 +343,9 @@ var $be6f0e84320366a7$exports = {};
  * @memberof westures-core
  * @type {string[]}
  */ const $be6f0e84320366a7$var$POINTER_EVENTS = [
-    'pointerdown',
-    'pointermove',
-    'pointerup', 
+    "pointerdown",
+    "pointermove",
+    "pointerup"
 ];
 /**
  * List of touch events to listen to.
@@ -358,9 +353,9 @@ var $be6f0e84320366a7$exports = {};
  * @memberof westures-core
  * @type {string[]}
  */ const $be6f0e84320366a7$var$TOUCH_EVENTS = [
-    'touchend',
-    'touchmove',
-    'touchstart', 
+    "touchend",
+    "touchmove",
+    "touchstart"
 ];
 /**
  * List of potentially state-modifying keys.
@@ -369,10 +364,10 @@ var $be6f0e84320366a7$exports = {};
  * @memberof westures-core
  * @type {string[]}
  */ const $be6f0e84320366a7$var$STATE_KEYS = [
-    'altKey',
-    'ctrlKey',
-    'metaKey',
-    'shiftKey', 
+    "altKey",
+    "ctrlKey",
+    "metaKey",
+    "shiftKey"
 ];
 /**
  * List of the 'key' values on KeyboardEvent objects of the potentially
@@ -381,35 +376,35 @@ var $be6f0e84320366a7$exports = {};
  * @memberof westures-core
  * @type {string[]}
  */ const $be6f0e84320366a7$var$STATE_KEY_STRINGS = [
-    'Alt',
-    'Control',
-    'Meta',
-    'Shift', 
+    "Alt",
+    "Control",
+    "Meta",
+    "Shift"
 ];
 /**
  * The cancel phase.
  *
  * @memberof westures-core
  * @type {string}
- */ const $be6f0e84320366a7$var$CANCEL = 'cancel';
+ */ const $be6f0e84320366a7$var$CANCEL = "cancel";
 /**
  * The end phase.
  *
  * @memberof westures-core
  * @type {string}
- */ const $be6f0e84320366a7$var$END = 'end';
+ */ const $be6f0e84320366a7$var$END = "end";
 /**
  * The move phase.
  *
  * @memberof westures-core
  * @type {string}
- */ const $be6f0e84320366a7$var$MOVE = 'move';
+ */ const $be6f0e84320366a7$var$MOVE = "move";
 /**
  * The start phase.
  *
  * @memberof westures-core
  * @type {string}
- */ const $be6f0e84320366a7$var$START = 'start';
+ */ const $be6f0e84320366a7$var$START = "start";
 /**
  * The recognized phases.
  *
@@ -511,7 +506,7 @@ $0ca7bfe1c074e8ca$exports = $0ca7bfe1c074e8ca$var$PointerData;
 
 
 var $4559ecf940edc78d$exports = {};
-'use strict';
+"use strict";
 const $4559ecf940edc78d$var$PI_2 = 2 * Math.PI;
 const $4559ecf940edc78d$var$PI_NVE = -Math.PI;
 /**
@@ -539,7 +534,7 @@ const $4559ecf940edc78d$var$PI_NVE = -Math.PI;
  *
  * @return {Element[]} The elements along the composed path of the event.
  */ function $4559ecf940edc78d$var$getPropagationPath(event) {
-    if (typeof event.composedPath === 'function') return event.composedPath();
+    if (typeof event.composedPath === "function") return event.composedPath();
     const path = [];
     for(let node = event.target; node !== document; node = node.parentNode)path.push(node);
     path.push(document);
@@ -575,8 +570,7 @@ const $4559ecf940edc78d$var$PI_NVE = -Math.PI;
  * @return {Set} Set consisting of elements in 'left' that are not in
  * 'right'.
  */ function $4559ecf940edc78d$var$setDifference(left, right) {
-    return $4559ecf940edc78d$var$setFilter(left, (element)=>!right.has(element)
-    );
+    return $4559ecf940edc78d$var$setFilter(left, (element)=>!right.has(element));
 }
 $4559ecf940edc78d$exports = {
     angularDifference: $4559ecf940edc78d$var$angularDifference,
@@ -674,9 +668,9 @@ $e2125e2e71e37a0c$exports = $e2125e2e71e37a0c$var$Input;
 
 
 var $b66a0f22c18e3e3d$exports = {};
-'use strict';
+"use strict";
 var $639be6fb478a6d5a$exports = {};
-'use strict';
+"use strict";
 
 var $639be6fb478a6d5a$require$CANCEL = $be6f0e84320366a7$exports.CANCEL;
 var $639be6fb478a6d5a$require$END = $be6f0e84320366a7$exports.END;
@@ -686,7 +680,7 @@ var $639be6fb478a6d5a$require$START = $be6f0e84320366a7$exports.START;
 
 
 const $639be6fb478a6d5a$var$symbols = {
-    inputs: Symbol.for('inputs')
+    inputs: Symbol.for("inputs")
 };
 /**
  * Set of helper functions for updating inputs based on type of input.
@@ -750,8 +744,7 @@ const $639be6fb478a6d5a$var$symbols = {
      * The centroid of the currently active points.
      *
      * @type {westures-core.Point2D}
-     */ this.centroid = {
-        };
+     */ this.centroid = {};
         /**
      * The latest event that the state processed.
      *
@@ -762,7 +755,7 @@ const $639be6fb478a6d5a$var$symbols = {
    * Deletes all inputs that are in the 'end' phase.
    */ clearEndedInputs() {
         this[$639be6fb478a6d5a$var$symbols.inputs].forEach((v, k)=>{
-            if (v.phase === 'end') this[$639be6fb478a6d5a$var$symbols.inputs].delete(k);
+            if (v.phase === "end") this[$639be6fb478a6d5a$var$symbols.inputs].delete(k);
         });
     }
     /**
@@ -770,16 +763,14 @@ const $639be6fb478a6d5a$var$symbols = {
    *
    * @return {westures-core.Input[]} Inputs in the given phase.
    */ getInputsInPhase(phase) {
-        return this.inputs.filter((i)=>i.phase === phase
-        );
+        return this.inputs.filter((i)=>i.phase === phase);
     }
     /**
    * @param {string} phase - One of 'start', 'move', 'end', or 'cancel'.
    *
    * @return {westures-core.Input[]} Inputs <b>not</b> in the given phase.
    */ getInputsNotInPhase(phase) {
-        return this.inputs.filter((i)=>i.phase !== phase
-        );
+        return this.inputs.filter((i)=>i.phase !== phase);
     }
     /**
    * @return {boolean} True if there are no active inputs. False otherwise.
@@ -808,7 +799,7 @@ const $639be6fb478a6d5a$var$symbols = {
             case $639be6fb478a6d5a$require$END:
                 try {
                     this.element.releasePointerCapture(identifier);
-                } catch (e1) {
+                } catch (e) {
                 // NOP: Optional operation failed.
                 }
             case $639be6fb478a6d5a$require$CANCEL:
@@ -835,9 +826,8 @@ const $639be6fb478a6d5a$var$symbols = {
    * @param {Event} event - Event with which to update the convenience fields.
    */ updateFields(event) {
         this.inputs = Array.from(this[$639be6fb478a6d5a$var$symbols.inputs].values());
-        this.active = this.getInputsNotInPhase('end');
-        this.activePoints = this.active.map((i)=>i.current.point
-        );
+        this.active = this.getInputsNotInPhase("end");
+        this.activePoints = this.active.map((i)=>i.current.point);
         this.centroid = $6c3676f10a43b740$exports.centroid(this.activePoints);
         this.event = event;
     }
@@ -878,8 +868,7 @@ var $b66a0f22c18e3e3d$require$setFilter = $4559ecf940edc78d$exports.setFilter;
  * @param {string} [options.touchAction='none'] - Value to set the CSS
  * 'touch-action' property to on elements added to the region.
  */ class $b66a0f22c18e3e3d$var$Region {
-    constructor(element = window, options = {
-    }){
+    constructor(element = window, options = {}){
         options = {
             ...$b66a0f22c18e3e3d$var$Region.DEFAULTS,
             ...options
@@ -1089,31 +1078,29 @@ var $b66a0f22c18e3e3d$require$setFilter = $4559ecf940edc78d$exports.setFilter;
    *
    * @return {westures-core.Gesture[]} Gestures to which the element is bound.
    */ getGesturesByElement(element) {
-        return $b66a0f22c18e3e3d$require$setFilter(this.gestures, (gesture)=>gesture.element === element
-        );
+        return $b66a0f22c18e3e3d$require$setFilter(this.gestures, (gesture)=>gesture.element === element);
     }
     /**
    * Remove all gestures bound to the given element.
    *
    * @param {Element} element - The element to unbind.
    */ removeGesturesByElement(element) {
-        this.getGesturesByElement(element).forEach((g)=>this.removeGesture(g)
-        );
+        this.getGesturesByElement(element).forEach((g)=>this.removeGesture(g));
     }
 }
 $b66a0f22c18e3e3d$var$Region.DEFAULTS = {
     capture: false,
     preferPointer: true,
     preventDefault: true,
-    touchAction: 'none'
+    touchAction: "none"
 };
 $b66a0f22c18e3e3d$exports = $b66a0f22c18e3e3d$var$Region;
 
 
 var $01c3d7b128023e4f$exports = {};
-'use strict';
-const $01c3d7b128023e4f$var$cascade = Symbol('cascade');
-const $01c3d7b128023e4f$var$smooth = Symbol('smooth');
+"use strict";
+const $01c3d7b128023e4f$var$cascade = Symbol("cascade");
+const $01c3d7b128023e4f$var$smooth = Symbol("smooth");
 /**
  * Determines whether to apply smoothing. Smoothing is on by default but turned
  * off if either:<br>
@@ -1131,7 +1118,7 @@ const $01c3d7b128023e4f$var$smooth = Symbol('smooth');
  * @returns {boolean} Whether to apply smoothing.
  */ function $01c3d7b128023e4f$var$smoothingIsApplicable(isRequested) {
     if (isRequested) try {
-        return window.matchMedia('(pointer: coarse)').matches;
+        return window.matchMedia("(pointer: coarse)").matches;
     } catch (e) {
         return true;
     }
@@ -1162,8 +1149,7 @@ const $01c3d7b128023e4f$var$smooth = Symbol('smooth');
  * the data.
  * @param {*} [options.identity=0] The identity value of this smoothable data.
  */ class $01c3d7b128023e4f$var$Smoothable {
-    constructor(options = {
-    }){
+    constructor(options = {}){
         const final_options = {
             ...$01c3d7b128023e4f$var$Smoothable.DEFAULTS,
             ...options
@@ -1177,8 +1163,7 @@ const $01c3d7b128023e4f$var$smooth = Symbol('smooth');
      * @return {*} The smoothed out data.
      */ this.next = null;
         if ($01c3d7b128023e4f$var$smoothingIsApplicable(final_options.applySmoothing)) this.next = this[$01c3d7b128023e4f$var$smooth].bind(this);
-        else this.next = (data)=>data
-        ;
+        else this.next = (data)=>data;
         /**
      * The "identity" value of the data that will be smoothed.
      *
