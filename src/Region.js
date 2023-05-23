@@ -168,7 +168,12 @@ class Region {
    * @param {Event} event - The event emitted from the window object.
    */
   cancel(event) {
-    if (this.options.preventDefault) event.preventDefault();
+    if (
+      this.options.preventDefault &&
+      event.preventDefault instanceof Function
+    ) {
+      event.preventDefault();
+    }
     this.state.inputs.forEach(input => {
       input.update(event);
     });
@@ -281,7 +286,10 @@ class Region {
     this.updateActiveGestures(event, isInitial);
 
     if (this.activeGestures.size > 0) {
-      if (this.options.preventDefault) event.preventDefault();
+      if (
+        this.options.preventDefault &&
+        event.preventDefault instanceof Function
+      ) event.preventDefault();
 
       this.activeGestures.forEach(gesture => {
         gesture.evaluateHook(PHASE[event.type], this.state);
