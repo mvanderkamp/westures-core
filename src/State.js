@@ -6,38 +6,15 @@ const {
   MOVE,
   PHASE,
   START,
+  MOUSE_EVENTS,
+  POINTER_EVENTS,
+  TOUCH_EVENTS,
 } = require('./constants.js');
 const Input     = require('./Input.js');
 const Point2D   = require('./Point2D.js');
 
 const symbols = {
   inputs: Symbol.for('inputs'),
-};
-
-/**
- * Set of helper functions for updating inputs based on type of input.
- * Must be called with a bound 'this', via bind(), or call(), or apply().
- *
- * @private
- * @inner
- * @memberof westure-core.State
- */
-const update_fns = {
-  TouchEvent: function TouchEvent(event) {
-    Array.from(event.changedTouches).forEach(touch => {
-      this.updateInput(event, touch.identifier);
-    });
-  },
-
-  PointerEvent: function PointerEvent(event) {
-    this.updateInput(event, event.pointerId);
-  },
-
-  MouseEvent: function MouseEvent(event) {
-    if (event.button === 0) {
-      this.updateInput(event, event.button);
-    }
-  },
 };
 
 /**
@@ -200,7 +177,19 @@ class State {
    * @param {Event} event - The event being captured.
    */
   updateAllInputs(event) {
-    update_fns[event.constructor.name].call(this, event);
+    if (POINTER_EVENTS.includes(event.type)) {
+      this.updateInput(event, event.pointerId);
+    } else if (MOUSE_EVENTS.includes(event.type)) {
+      if (event.button === 0) {
+        this.updateInput(event, event.button);
+      }
+    } else if (TOUCH_EVENTS.includes(event.type)) {
+      Array.from(event.changedTouches).forEach(touch => {
+        this.updateInput(event, touch.identifier);
+      });
+    } else {
+      throw new Error(`Unexpected event type: ${event.type}`);
+    }
     this.updateFields(event);
   }
 
