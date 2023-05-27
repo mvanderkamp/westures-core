@@ -169,8 +169,7 @@ class Region {
    */
   cancel(event) {
     if (
-      this.options.preventDefault &&
-      event.preventDefault instanceof Function
+      this.options.preventDefault && typeof event.preventDefault === 'function'
     ) {
       event.preventDefault();
     }
@@ -288,7 +287,7 @@ class Region {
     if (this.activeGestures.size > 0) {
       if (
         this.options.preventDefault &&
-        event.preventDefault instanceof Function
+        typeof event.preventDefault === 'function'
       ) event.preventDefault();
 
       this.activeGestures.forEach(gesture => {
