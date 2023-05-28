@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.3.0
+
+- Introduce "headless" mode, which allows westures to be run in a server environment.
+
+## 1.2.0
+
+- Switch to "parcel" from "parcel-bundler"
+- Add a list of the PHASES to constants.js
+- Provide Input.elapsedTime
+- Provide Point2D.anglesTo()
+
 ## 1.1.0
 
 - Switch to using pointer events by default, combined with setting touch-action:

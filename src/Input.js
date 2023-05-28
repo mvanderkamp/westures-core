@@ -15,7 +15,7 @@ const { getPropagationPath } = require('./utils.js');
  * be located in subsequent Event objects.
  */
 class Input {
-  constructor(event, identifier) {
+  constructor(event, identifier, headless = false) {
     const currentData = new PointerData(event, identifier);
 
     /**
@@ -24,7 +24,11 @@ class Input {
      *
      * @type {WeakSet.<Element>}
      */
-    this.initialElements = new WeakSet(getPropagationPath(event));
+    if (headless) {
+      this.initialElements = new WeakSet([event.target]);
+    } else {
+      this.initialElements = new WeakSet(getPropagationPath(event));
+    }
 
     /**
      * Holds the initial data from the mousedown / touchstart / pointerdown that
