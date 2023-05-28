@@ -21,3 +21,4 @@ arkit.*
 .coveralls.yml
 .parcel-cache
 .travis.yml
+.github
