@@ -8,6 +8,7 @@
  */
 const CANCEL_EVENTS = [
   'blur',
+  'contextmenu',
   'pointercancel',
   'touchcancel',
   'mouseleave',
