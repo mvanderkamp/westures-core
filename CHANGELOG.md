@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.3.1
+
+- Add 'contextmenu' to CANCEL_EVENTS
+- Changed docs deployment strategy
+
 ## 1.3.0
 
 - Introduce "headless" mode, which allows westures to be run in a server environment.
