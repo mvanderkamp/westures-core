@@ -10,9 +10,7 @@ let g_id = 0;
  * @memberof westures-core
  *
  * @param {string} type - The name of the gesture.
- * @param {Element} element - The element to which to associate the gesture.
- * @param {Function} handler - The function handler to execute when a gesture
- *    is recognized on the associated element.
+ * @param {Element} element - HTML element to interact with.
  * @param {object} [options] - Generic gesture options
  * @param {westures-core.STATE_KEYS[]} [options.enableKeys=[]] - List of keys
  * which will enable the gesture. The gesture will not be recognized unless one
@@ -28,7 +26,7 @@ let g_id = 0;
  * pointers that may be active for the gesture to be recognized. Uses <=.
  */
 class Gesture {
-  constructor(type, element, handler, options = {}) {
+  constructor(type, element, options = {}) {
     if (typeof type !== 'string') {
       throw new TypeError('Gestures require a string type / name');
     }
@@ -57,12 +55,12 @@ class Gesture {
     this.element = element;
 
     /**
-     * The function handler to execute when the gesture is recognized on the
-     * associated element.
+     * Event listeners.
      *
-     * @type {Function}
+     * @type {Element[]}
+     * @private
      */
-    this.handler = handler;
+    this.listeners = [];
 
     /**
      * The options. Can usually be adjusted live, though be careful doing this.
@@ -157,8 +155,26 @@ class Gesture {
   }
 
   /**
-   * Recognize a Gesture by calling the handler. Standardizes the way the
-   * handler is called so that classes extending Gesture can circumvent the
+   * Add a listener.
+   *
+   * @param {function} listener
+   */
+  addListener(listener) {
+    this.listeners.push(listener);
+  }
+
+  /**
+   * Remove a listener.
+   *
+   * @param {function} listener
+   */
+  removeListener(listener) {
+    this.listeners.splice(this.listeners.indexOf(listener), 1);
+  }
+
+  /**
+   * Recognize a Gesture by calling the listeners. Standardizes the way the
+   * listeners are called so that classes extending Gesture can circumvent the
    * evaluateHook approach but still provide results that have a common format.
    *
    * Note that the properties in the "data" object will receive priority when
@@ -170,14 +186,17 @@ class Gesture {
    * @param {Object} data - Results data specific to the recognized gesture.
    */
   recognize(hook, state, data) {
-    this.handler({
+    // Take a copy of the listeners so to make sure they won't be interfered
+    // with while processing user code.
+    const listeners = Array.from(this.listeners);
+    listeners.forEach(listener => listener({
       centroid: state.centroid,
       event:    state.event,
       phase:    hook,
       type:     this.type,
       target:   this.element,
       ...data,
-    });
+    }));
   }
 }
 

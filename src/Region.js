@@ -63,7 +63,7 @@ class Region {
     }
 
     /**
-     * The list of relations between elements, their gestures, and the handlers.
+     * The gestures this region knows about.
      *
      * @type {Set.<westures-core.Gesture>}
      */
