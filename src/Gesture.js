@@ -144,14 +144,14 @@ class Gesture {
 
   /**
    * Evaluates the given phase, and dispatches any data that is produced
-   * by calling [recognize]{@link westures-core.Gesture#recognize}.
+   * by calling [emit]{@link westures-core.Gesture#emit}.
    *
    * @param {string} phase - One of 'start', 'move', 'end', or 'cancel'.
    * @param {westures-core.State} state
    */
   evaluatePhase(phase, state) {
     const data = this[phase](state);
-    this.recognize(phase, state, data);
+    this.emit(phase, state, data);
   }
 
   /**
@@ -176,8 +176,8 @@ class Gesture {
   }
 
   /**
-   * Recognize a Gesture by calling the listeners. Standardizes the way the
-   * listeners are called so that classes extending Gesture can circumvent the
+   * Emit a Gesture by calling the listeners. Standardizes the way the listeners
+   * are called so that classes extending Gesture can circumvent the
    * evaluatePhase approach but still provide results that have a common format.
    *
    * Note that the properties in the "data" object will receive priority when
@@ -188,7 +188,7 @@ class Gesture {
    * @param {westures-core.State} state
    * @param {Object} [data={}] - Any additional data the gesture wishes to emit.
    */
-  recognize(phase, state, data) {
+  emit(phase, state, data) {
     data = data || {};
     // Take a copy of the listeners so to make sure they won't be interfered
     // with while processing user code.
