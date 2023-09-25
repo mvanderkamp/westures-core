@@ -163,7 +163,7 @@ class Gesture {
    * @param {string} phase
    * @param {function} listener
    */
-  addListener(phase, listener) {
+  on(phase, listener) {
     this.listeners.get(phase).push(listener);
   }
 
@@ -173,7 +173,7 @@ class Gesture {
    * @param {string} phase
    * @param {function} listener
    */
-  removeListener(phase, listener) {
+  off(phase, listener) {
     const phase_listeners = this.listeners.get(phase);
     phase_listeners.splice(phase_listeners.indexOf(listener), 1);
   }
