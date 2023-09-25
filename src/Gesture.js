@@ -5,9 +5,8 @@ const { PHASES } = require('./constants.js');
 let g_id = 0;
 
 /**
- * The Gesture class that all gestures inherit from. A custom gesture class will
- * need to override some or all of the four phase "hooks": start, move, end, and
- * cancel.
+ * The Gesture class that all gestures inherit from. A custom gesture class
+ * should override some or all of the four phases: start, move, end, and cancel.
  *
  * @memberof westures-core
  *
@@ -144,17 +143,15 @@ class Gesture {
   }
 
   /**
-   * Evalutes the given gesture hook, and dispatches any data that is produced
+   * Evaluates the given phase, and dispatches any data that is produced
    * by calling [recognize]{@link westures-core.Gesture#recognize}.
    *
-   * @param {string} hook - Must be one of 'start', 'move', 'end', or 'cancel'.
-   * @param {westures-core.State} state - The current State instance.
+   * @param {string} phase - One of 'start', 'move', 'end', or 'cancel'.
+   * @param {westures-core.State} state
    */
-  evaluateHook(hook, state) {
-    const data = this[hook](state);
-    if (data) {
-      this.recognize(hook, state, data);
-    }
+  evaluateHook(phase, state) {
+    const data = this[phase](state);
+    this.recognize(phase, state, data);
   }
 
   /**
@@ -187,19 +184,20 @@ class Gesture {
    * constructing the results. This can be used to override standard results
    * such as the phase or the centroid.
    *
-   * @param {string} hook - Must be one of 'start', 'move', 'end', or 'cancel'.
-   * @param {westures-core.State} state - current input state.
-   * @param {Object} data - Results data specific to the recognized gesture.
+   * @param {string} phase - One of 'start', 'move', 'end', or 'cancel'.
+   * @param {westures-core.State} state
+   * @param {Object} [data={}] - Any additional data the gesture wishes to emit.
    */
-  recognize(hook, state, data) {
+  recognize(phase, state, data) {
+    data = data || {};
     // Take a copy of the listeners so to make sure they won't be interfered
     // with while processing user code.
-    const listeners = Array.from(this.listeners.get(hook));
+    const listeners = Array.from(this.listeners.get(phase));
     listeners.forEach(listener => listener({
       centroid: state.centroid,
       event:    state.event,
       gesture:  this,
-      phase:    hook,
+      phase:    phase,
       type:     this.type,
       target:   this.element,
       ...data,
