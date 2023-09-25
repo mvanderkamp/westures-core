@@ -1,5 +1,7 @@
 'use strict';
 
+const { PHASES } = require('./constants.js');
+
 let g_id = 0;
 
 /**
@@ -57,10 +59,11 @@ class Gesture {
     /**
      * Event listeners.
      *
-     * @type {Element[]}
+     * @type {Map.<Element>}
      * @private
      */
-    this.listeners = [];
+    this.listeners = new Map();
+    PHASES.forEach(phase => this.listeners.set(phase, []));
 
     /**
      * The options. Can usually be adjusted live, though be careful doing this.
@@ -157,19 +160,22 @@ class Gesture {
   /**
    * Add a listener.
    *
+   * @param {string} phase
    * @param {function} listener
    */
-  addListener(listener) {
-    this.listeners.push(listener);
+  addListener(phase, listener) {
+    this.listeners.get(phase).push(listener);
   }
 
   /**
    * Remove a listener.
    *
+   * @param {string} phase
    * @param {function} listener
    */
-  removeListener(listener) {
-    this.listeners.splice(this.listeners.indexOf(listener), 1);
+  removeListener(phase, listener) {
+    const phase_listeners = this.listeners.get(phase);
+    phase_listeners.splice(phase_listeners.indexOf(listener), 1);
   }
 
   /**
@@ -188,7 +194,7 @@ class Gesture {
   recognize(hook, state, data) {
     // Take a copy of the listeners so to make sure they won't be interfered
     // with while processing user code.
-    const listeners = Array.from(this.listeners);
+    const listeners = Array.from(this.listeners.get(hook));
     listeners.forEach(listener => listener({
       centroid: state.centroid,
       event:    state.event,
