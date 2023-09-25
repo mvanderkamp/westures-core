@@ -198,6 +198,7 @@ class Gesture {
     listeners.forEach(listener => listener({
       centroid: state.centroid,
       event:    state.event,
+      gesture:  this,
       phase:    hook,
       type:     this.type,
       target:   this.element,
