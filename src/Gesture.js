@@ -36,6 +36,7 @@ class Gesture {
      * The name of the gesture. (e.g. 'pan' or 'tap' or 'pinch').
      *
      * @type {string}
+     * @const
      */
     this.type = type;
 
@@ -45,13 +46,16 @@ class Gesture {
      * gesture-tap-1, gesture-tap-2).
      *
      * @type {string}
+     * @const
+     * @private
      */
     this.id = `gesture-${this.type}-${g_id++}`;
 
     /**
-     * The element to which to associate the gesture.
+     * HTML element to interact with.
      *
      * @type {Element}
+     * @const
      */
     this.element = element;
 
@@ -68,6 +72,7 @@ class Gesture {
      * The options. Can usually be adjusted live, though be careful doing this.
      *
      * @type {object}
+     * @private
      */
     this.options = { ...Gesture.DEFAULTS, ...options };
   }
@@ -75,9 +80,7 @@ class Gesture {
   /**
    * Determines whether this gesture is enabled.
    *
-   * @param {westures-core.State} state - The input state object of the current
-   * region.
-   *
+   * @param {westures-core.State} state
    * @return {boolean} true if enabled, false otherwise.
    */
   isEnabled(state) {
@@ -91,52 +94,40 @@ class Gesture {
   }
 
   /**
-   * Event hook for the start phase of a gesture.
+   * Evaluated on 'start' phase.
    *
-   * @param {westures-core.State} state - The input state object of the current
-   * region.
-   *
-   * @return {?Object} Gesture is considered recognized if an Object is
-   *    returned.
+   * @param {westures-core.State} state
+   * @return {?Object} Any extra data the gesture wishes to emit for this phase.
    */
   start() {
     return null;
   }
 
   /**
-   * Event hook for the move phase of a gesture.
+   * Evaluated on 'move' phase.
    *
-   * @param {westures-core.State} state - The input state object of the current
-   * region.
-   *
-   * @return {?Object} Gesture is considered recognized if an Object is
-   *    returned.
+   * @param {westures-core.State} state
+   * @return {?Object} Any extra data the gesture wishes to emit for this phase.
    */
   move() {
     return null;
   }
 
   /**
-   * Event hook for the end phase of a gesture.
+   * Evaluated on 'end' phase.
    *
-   * @param {westures-core.State} state - The input state object of the current
-   * region.
-   *
-   * @return {?Object} Gesture is considered recognized if an Object is
-   *    returned.
+   * @param {westures-core.State} state
+   * @return {?Object} Any extra data the gesture wishes to emit for this phase.
    */
   end() {
     return null;
   }
 
   /**
-   * Event hook for when an input is cancelled.
+   * Evaluated on 'cancel' phase.
    *
-   * @param {westures-core.State} state - The input state object of the current
-   * region.
-   *
-   * @return {?Object} Gesture is considered recognized if an Object is
-   *    returned.
+   * @param {westures-core.State} state
+   * @return {?Object} Any extra data the gesture wishes to emit for this phase.
    */
   cancel() {
     return null;

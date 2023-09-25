@@ -81,7 +81,7 @@ describe('Gesture', () => {
       });
     });
 
-    describe('recognize(hook, state, data)', () => {
+    describe('emit(hook, state, data)', () => {
       let element = null;
       let gesture = null;
       let handler = null;
@@ -97,7 +97,7 @@ describe('Gesture', () => {
       describe.each(PHASES)('%s', (hook) => {
         test('Calls the handler with an appropiate object', () => {
           const data = { answer: 42 };
-          gesture.recognize(hook, state, data);
+          gesture.emit(hook, state, data);
           expect(gesture.handler).toHaveBeenCalledTimes(1);
 
           const received = gesture.handler.mock.calls[0][0];
