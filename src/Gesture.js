@@ -149,7 +149,7 @@ class Gesture {
    * @param {string} phase - One of 'start', 'move', 'end', or 'cancel'.
    * @param {westures-core.State} state
    */
-  evaluateHook(phase, state) {
+  evaluatePhase(phase, state) {
     const data = this[phase](state);
     this.recognize(phase, state, data);
   }
@@ -178,7 +178,7 @@ class Gesture {
   /**
    * Recognize a Gesture by calling the listeners. Standardizes the way the
    * listeners are called so that classes extending Gesture can circumvent the
-   * evaluateHook approach but still provide results that have a common format.
+   * evaluatePhase approach but still provide results that have a common format.
    *
    * Note that the properties in the "data" object will receive priority when
    * constructing the results. This can be used to override standard results

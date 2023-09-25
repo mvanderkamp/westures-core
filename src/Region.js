@@ -177,7 +177,7 @@ class Region {
       input.update(event);
     });
     this.activeGestures.forEach(gesture => {
-      gesture.evaluateHook(CANCEL, this.state);
+      gesture.evaluatePhase(CANCEL, this.state);
     });
     this.state = new State(this.element, this.options.headless);
     this.resetActiveGestures();
@@ -197,10 +197,10 @@ class Region {
       this.setActiveGestures();
 
       setDifference(oldActiveGestures, this.activeGestures).forEach(gesture => {
-        gesture.evaluateHook(END, this.state);
+        gesture.evaluatePhase(END, this.state);
       });
       setDifference(this.activeGestures, oldActiveGestures).forEach(gesture => {
-        gesture.evaluateHook(START, this.state);
+        gesture.evaluatePhase(START, this.state);
       });
     }
   }
@@ -291,7 +291,7 @@ class Region {
       ) event.preventDefault();
 
       this.activeGestures.forEach(gesture => {
-        gesture.evaluateHook(PHASE[event.type], this.state);
+        gesture.evaluatePhase(PHASE[event.type], this.state);
       });
     }
 

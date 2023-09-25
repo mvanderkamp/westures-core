@@ -31,7 +31,7 @@ describe('Gesture', () => {
       });
     });
 
-    describe('evaluateHook(hook, state)', () => {
+    describe('evaluatePhase(hook, state)', () => {
       let element = null;
       let gesture = null;
       let handler = null;
@@ -53,29 +53,29 @@ describe('Gesture', () => {
 
       describe.each(PHASES)('%s', (hook) => {
         test('Calls the appropriate hook', () => {
-          gesture.evaluateHook(hook, state);
+          gesture.evaluatePhase(hook, state);
           expect(gesture[hook]).toHaveBeenCalledTimes(1);
         });
 
         test('Passes the state as an argument to the hook', () => {
-          gesture.evaluateHook(hook, state);
+          gesture.evaluatePhase(hook, state);
           expect(gesture[hook]).toHaveBeenCalledWith(state);
         });
 
         test('Does not call the handler if null returned by hook', () => {
-          gesture.evaluateHook(hook, state);
+          gesture.evaluatePhase(hook, state);
           expect(handler).toHaveBeenCalledTimes(0);
         });
 
         test('Calls the handler if non-null value returned by hook', () => {
           gesture[hook].mockReturnValue({ x: 91 });
-          gesture.evaluateHook(hook, state);
+          gesture.evaluatePhase(hook, state);
           expect(handler).toHaveBeenCalledTimes(1);
         });
 
         test('Handler is called with data returned by hook', () => {
           gesture[hook].mockReturnValue({ x: 91 });
-          gesture.evaluateHook(hook, state);
+          gesture.evaluatePhase(hook, state);
           expect(handler.mock.calls[0][0]).toMatchObject({ x: 91 });
         });
       });
