@@ -46,7 +46,7 @@ class PointerData {
      *
      * @type {string}
      */
-    this.type = PHASE[event.type];
+    this.phase = PHASE[event.type];
 
     /**
      * The timestamp of the event in milliseconds elapsed since January 1, 1970,

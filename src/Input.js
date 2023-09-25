@@ -62,11 +62,11 @@ class Input {
   }
 
   /**
-   * The phase of the input: 'start' or 'move' or 'end' or 'cancel'
+   * The phase of the current input: 'start' or 'move' or 'end' or 'cancel'
    *
    * @type {string}
    */
-  get phase() { return this.current.type; }
+  get phase() { return this.current.phase; }
 
   /**
    * The timestamp of the initiating event for this input.
