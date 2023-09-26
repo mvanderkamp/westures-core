@@ -148,7 +148,7 @@ class Gesture {
   /**
    * Add a listener.
    *
-   * @param {string} phase
+   * @param {string} phase - One of 'start', 'move', 'end', or 'cancel'.
    * @param {function} listener
    */
   on(phase, listener) {
@@ -158,7 +158,7 @@ class Gesture {
   /**
    * Remove a listener.
    *
-   * @param {string} phase
+   * @param {string} phase - One of 'start', 'move', 'end', or 'cancel'.
    * @param {function} listener
    */
   off(phase, listener) {
