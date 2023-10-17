@@ -8,10 +8,8 @@
 bower_components/
 coverage
 dist/
-edit.sh
 examples/
 node_modules/
 playground/
 tags
-usage.sh
 yarn-error.log
