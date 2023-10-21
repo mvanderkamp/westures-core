@@ -39,6 +39,7 @@
     "docs": "jsdoc -c .jsdocrc.json",
     "lint": "eslint src test index.js",
     "lint:fix": "eslint --fix src test index.js",
+    "prepare": "npm run build",
     "test": "jest",
     "test:debug": "node inspect $(npm bin)/jest --runInBand"
   },
@@ -66,15 +67,15 @@
     }
   },
   "devDependencies": {
-    "@babel/core": "^7.21.8",
-    "@babel/preset-env": "^7.21.5",
+    "@babel/core": ">=7.23.2",
+    "@babel/preset-env": ">=7.23.2",
     "coveralls": "^3.1.1",
-    "docdash": "^2.0.1",
-    "eslint": "^8.41.0",
-    "jest": "^29.5.0",
-    "jest-environment-jsdom": "^29.5.0",
+    "docdash": "^2.0.2",
+    "eslint": "^8.52.0",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
     "jsdoc": "^4.0.2",
-    "parcel": "^2.8.3",
+    "parcel": "^2.10.0",
     "underscore": "^1.13.6"
   }
 }
