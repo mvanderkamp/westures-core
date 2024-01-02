@@ -153,7 +153,8 @@ describe('Region', () => {
       region = new Region(element);
 
       handler = jest.fn();
-      gesture = new Gesture('one', gesture_element, handler);
+      gesture = new Gesture('one', gesture_element);
+      gesture.on('recognized', handler);
       Object.assign(gesture, {
         start:  jest.fn(),
         move:   jest.fn(),
@@ -163,7 +164,8 @@ describe('Region', () => {
 
       handler2 = jest.fn();
       options = { minInputs: 2 };
-      gesture2 = new Gesture('two', gesture_element2, handler2, options);
+      gesture2 = new Gesture('two', gesture_element2, options);
+      gesture2.on('recognized', handler2);
       Object.assign(gesture2, {
         start:  jest.fn(),
         move:   jest.fn(),

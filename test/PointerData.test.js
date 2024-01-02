@@ -74,8 +74,8 @@ describe('PointerData', () => {
 
     test('Translates the event type into the correct phase', () => {
       mdata = new PointerData(mouseevent, id);
-      expect(mdata.type).toBe('move');
-      expect(tdata.type).toBe('start');
+      expect(mdata.phase).toBe('move');
+      expect(tdata.phase).toBe('start');
     });
 
     test('Records an epoch timestamp', () => {

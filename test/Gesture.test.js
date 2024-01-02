@@ -42,7 +42,8 @@ describe('Gesture', () => {
         handler = jest.fn();
         state = 42;
 
-        gesture = new Gesture('dummy', element, handler);
+        gesture = new Gesture('dummy', element);
+        gesture.on('recognized', handler);
         Object.assign(gesture, {
           start:  jest.fn(),
           move:   jest.fn(),
@@ -91,16 +92,17 @@ describe('Gesture', () => {
         element = document.createElement('div');
         handler = jest.fn();
         state = 42;
-        gesture = new Gesture('dummy', element, handler);
+        gesture = new Gesture('dummy', element);
+        gesture.on('recognized', handler);
       });
 
       describe.each(PHASES)('%s', (hook) => {
         test('Calls the handler with an appropiate object', () => {
           const data = { answer: 42 };
           gesture.emit(hook, state, data);
-          expect(gesture.handler).toHaveBeenCalledTimes(1);
+          expect(handler).toHaveBeenCalledTimes(1);
 
-          const received = gesture.handler.mock.calls[0][0];
+          const received = handler.mock.calls[0][0];
           expect(received.centroid).toBe(state.centroid);
           expect(received.event).toBe(state.event);
           expect(received.phase).toBe(hook);
@@ -121,47 +123,48 @@ describe('Gesture', () => {
         element = document.createElement('div');
         handler = jest.fn();
         state = {
-          active: [],
-          event:  {},
+          activeInputs: [],
+          event:        {},
         };
 
-        gesture = new Gesture('dummy', element, handler);
+        gesture = new Gesture('dummy', element);
+        gesture.on('recognized', handler);
       });
 
       test('Returns true by default if >= 1 active input', () => {
-        state.active.push(1);
+        state.activeInputs.push(1);
         expect(gesture.isEnabled(state)).toBe(true);
         for (let i = 0; i < 100; i++) {
-          state.active.push(i);
+          state.activeInputs.push(i);
         }
         expect(gesture.isEnabled(state)).toBe(true);
       });
 
       test('Returns true if active inputs >= minInputs', () => {
         Object.assign(gesture.options, { minInputs: 2 });
-        state.active = [1, 2];
+        state.activeInputs = [1, 2];
         expect(gesture.isEnabled(state)).toBe(true);
-        state.active.push(34);
+        state.activeInputs.push(34);
         expect(gesture.isEnabled(state)).toBe(true);
       });
 
       test('Returns false if active inputs < minInputs', () => {
         Object.assign(gesture.options, { minInputs: 2 });
-        state.active = [1];
+        state.activeInputs = [1];
         expect(gesture.isEnabled(state)).toBe(false);
       });
 
       test('Returns true if active inputs <= maxInputs', () => {
         Object.assign(gesture.options, { maxInputs: 2 });
-        state.active = [1];
+        state.activeInputs = [1];
         expect(gesture.isEnabled(state)).toBe(true);
-        state.active.push(34);
+        state.activeInputs.push(34);
         expect(gesture.isEnabled(state)).toBe(true);
       });
 
       test('Returns false if active inputs > minInputs', () => {
         Object.assign(gesture.options, { maxInputs: 2 });
-        state.active = [1, 2, 3];
+        state.activeInputs = [1, 2, 3];
         expect(gesture.isEnabled(state)).toBe(false);
       });
 
@@ -169,7 +172,7 @@ describe('Gesture', () => {
         describe.each(STATE_KEYS)('%s', (key) => {
           beforeEach(() => {
             Object.assign(gesture.options, { enableKeys: [key] });
-            state.active = [1];
+            state.activeInputs = [1];
           });
 
           test('Returns true if pressed', () => {
@@ -188,7 +191,7 @@ describe('Gesture', () => {
         describe.each(STATE_KEYS)('%s', (key) => {
           beforeEach(() => {
             Object.assign(gesture.options, { disableKeys: [key] });
-            state.active = [1];
+            state.activeInputs = [1];
           });
 
           test('Returns false if pressed', () => {
@@ -207,7 +210,7 @@ describe('Gesture', () => {
             disableKeys: [STATE_KEYS[0]],
             enableKeys:  [STATE_KEYS[1]],
           });
-          state.active = [1];
+          state.activeInputs = [1];
           state.event[STATE_KEYS[0]] = true;
           state.event[STATE_KEYS[1]] = true;
           expect(gesture.isEnabled(state)).toBe(false);
