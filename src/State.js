@@ -13,10 +13,6 @@ const {
 const Input     = require('./Input.js');
 const Point2D   = require('./Point2D.js');
 
-const symbols = {
-  inputs: Symbol.for('inputs'),
-};
-
 /**
  * Keeps track of currently active and ending input points on the interactive
  * surface.
@@ -50,7 +46,7 @@ class State {
      * @type {Map.<westures-core.Input>}
      * @memberof westure-core.State
      */
-    this[symbols.inputs] = new Map();
+    this.inputMap = new Map();
 
     /**
      * All currently valid inputs, including those that have ended.
@@ -94,8 +90,8 @@ class State {
    * Deletes all inputs that are in the 'end' phase.
    */
   clearEndedInputs() {
-    this[symbols.inputs].forEach((v, k) => {
-      if (v.phase === 'end') this[symbols.inputs].delete(k);
+    this.inputMap.forEach((v, k) => {
+      if (v.phase === 'end') this.inputMap.delete(k);
     });
   }
 
@@ -117,7 +113,7 @@ class State {
    * @return {boolean} True if there are no active inputs. False otherwise.
    */
   hasNoInputs() {
-    return this[symbols.inputs].size === 0;
+    return this.inputMap.size === 0;
   }
 
   /**
@@ -131,7 +127,7 @@ class State {
   updateInput(event, identifier) {
     switch (PHASE[event.type]) {
     case START:
-      this[symbols.inputs].set(
+      this.inputMap.set(
         identifier,
         new Input(event, identifier, this.headless),
       );
@@ -156,8 +152,8 @@ class State {
       }
     case CANCEL:
     case MOVE:
-      if (this[symbols.inputs].has(identifier)) {
-        this[symbols.inputs].get(identifier).update(event);
+      if (this.inputMap.has(identifier)) {
+        this.inputMap.get(identifier).update(event);
       }
       break;
 
@@ -186,7 +182,7 @@ class State {
     } else {
       throw new Error(`Unexpected event type: ${event.type}`);
     }
-    this.inputs = Array.from(this[symbols.inputs].values());
+    this.inputs = Array.from(this.inputMap.values());
     this.active = this.getActiveInputs();
     this.activePoints = this.active.map(i => i.current.point);
     this.centroid = Point2D.centroid(this.activePoints);
