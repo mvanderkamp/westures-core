@@ -190,16 +190,6 @@ class State {
     } else {
       throw new Error(`Unexpected event type: ${event.type}`);
     }
-    this.updateFields(event);
-  }
-
-  /**
-   * Updates the convenience fields.
-   *
-   * @private
-   * @param {Event} event - Event with which to update the convenience fields.
-   */
-  updateFields(event) {
     this.inputs = Array.from(this[symbols.inputs].values());
     this.active = this.getInputsNotInPhase('end');
     this.activePoints = this.active.map(i => i.current.point);
