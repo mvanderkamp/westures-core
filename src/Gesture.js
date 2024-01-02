@@ -84,7 +84,7 @@ class Gesture {
    * @return {boolean} true if enabled, false otherwise.
    */
   isEnabled(state) {
-    const count = state.active.length;
+    const count = state.activeInputs.length;
     const event = state.event;
     const { enableKeys, disableKeys, minInputs, maxInputs } = this.options;
 

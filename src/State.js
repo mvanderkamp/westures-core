@@ -61,11 +61,11 @@ class State {
      *
      * @type {westures-core.Input[]}
      */
-    this.active = [];
+    this.activeInputs = [];
 
     /**
      * The array of latest point data for the currently active inputs, sourced
-     * from this.active.
+     * from this.activeInputs.
      *
      * @type {westures-core.Point2D[]}
      */
@@ -183,8 +183,8 @@ class State {
       throw new Error(`Unexpected event type: ${event.type}`);
     }
     this.inputs = Array.from(this.inputMap.values());
-    this.active = this.getActiveInputs();
-    this.activePoints = this.active.map(i => i.current.point);
+    this.activeInputs = this.getActiveInputs();
+    this.activePoints = this.activeInputs.map(i => i.current.point);
     this.centroid = Point2D.centroid(this.activePoints);
     this.event = event;
   }
