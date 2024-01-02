@@ -185,12 +185,13 @@ class Gesture {
     // with while processing user code.
     const listeners = Array.from(this.listeners.get(phase));
     listeners.forEach(listener => listener({
-      centroid: state.centroid,
-      event:    state.event,
-      gesture:  this,
-      phase:    phase,
-      type:     this.type,
-      target:   this.element,
+      centroid:   state.centroid,
+      event:      state.event,
+      gesture:    this,
+      phase:      phase,
+      type:       this.type,
+      target:     this.element,
+      recognized: data.length > 0,
       ...data,
     }));
   }
