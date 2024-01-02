@@ -67,6 +67,7 @@ class Gesture {
      */
     this.listeners = new Map();
     PHASES.forEach(phase => this.listeners.set(phase, []));
+    this.listeners.set('recognized', []);
 
     /**
      * The options. Can usually be adjusted live, though be careful doing this.
@@ -180,10 +181,13 @@ class Gesture {
    * @param {Object} [data={}] - Any additional data the gesture wishes to emit.
    */
   emit(phase, state, data) {
-    data = data || {};
     // Take a copy of the listeners so to make sure they won't be interfered
     // with while processing user code.
     const listeners = Array.from(this.listeners.get(phase));
+    if (data != null) {
+      listeners.push(...this.listeners.get('recognized'));
+    }
+    data = data || {};
     listeners.forEach(listener => listener({
       centroid:   state.centroid,
       event:      state.event,
