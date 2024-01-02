@@ -110,10 +110,10 @@ class State {
   }
 
   /**
-   * @return {boolean} True if there are no active inputs. False otherwise.
+   * @return {boolean} True if any inputs are being tracked. False otherwise.
    */
-  hasNoInputs() {
-    return this.inputMap.size === 0;
+  hasInputs() {
+    return this.inputMap.size > 0;
   }
 
   /**

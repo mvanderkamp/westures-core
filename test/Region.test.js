@@ -366,7 +366,7 @@ describe('Region', () => {
 
         region.state.updateAllInputs(touchmove);
         region.state.clearEndedInputs();
-        expect(region.state.hasNoInputs()).toBe(false);
+        expect(region.state.hasInputs()).toBe(true);
         expect(() => region.pruneActiveGestures(touchend)).not.toThrow();
 
         expect(region.potentialGestures).toMatchObject(gesture_both_set);
@@ -384,7 +384,7 @@ describe('Region', () => {
 
         region.state.updateAllInputs(touchend);
         region.state.clearEndedInputs();
-        expect(region.state.hasNoInputs()).toBe(false);
+        expect(region.state.hasInputs()).toBe(true);
         expect(() => region.pruneActiveGestures(touchend)).not.toThrow();
 
         expect(region.potentialGestures).toMatchObject(gesture_both_set);
@@ -405,7 +405,7 @@ describe('Region', () => {
           region.state.updateAllInputs(touchend2);
           region.state.updateAllInputs(touchend);
           region.state.clearEndedInputs();
-          expect(region.state.hasNoInputs()).toBe(true);
+          expect(region.state.hasInputs()).toBe(false);
           expect(() => region.pruneActiveGestures(touchend)).not.toThrow();
 
           expect(region.potentialGestures).toMatchObject(emptySet);
@@ -706,13 +706,13 @@ describe('Region', () => {
       });
 
       test('Clears ended inputs after "end" hook and resets active set', () => {
-        expect(region.state.hasNoInputs()).toBe(true);
+        expect(region.state.hasInputs()).toBe(false);
         expect(region.activeGestures).toMatchObject(emptySet);
         region.arbitrate(touchstart);
-        expect(region.state.hasNoInputs()).toBe(false);
+        expect(region.state.hasInputs()).toBe(true);
         expect(region.activeGestures).toMatchObject(gesture_set);
         region.arbitrate(touchend);
-        expect(region.state.hasNoInputs()).toBe(true);
+        expect(region.state.hasInputs()).toBe(false);
         expect(region.activeGestures).toMatchObject(emptySet);
       });
 
@@ -721,14 +721,14 @@ describe('Region', () => {
 
         expect(gesture.start).not.toHaveBeenCalled();
         expect(gesture2.start).not.toHaveBeenCalled();
-        expect(region.state.hasNoInputs()).toBe(true);
+        expect(region.state.hasInputs()).toBe(false);
         expect(region.activeGestures).toMatchObject(emptySet);
 
         expect(() => region.arbitrate(event)).not.toThrow();
 
         expect(gesture.start).not.toHaveBeenCalled();
         expect(gesture2.start).not.toHaveBeenCalled();
-        expect(region.state.hasNoInputs()).toBe(false);
+        expect(region.state.hasInputs()).toBe(true);
         expect(region.activeGestures).toMatchObject(emptySet);
       });
 

@@ -220,29 +220,29 @@ describe('State', () => {
           sendAll(testevents);
           state.clearEndedInputs();
 
-          state[inputSymbol].forEach(i => {
+          state.mappedInputs.forEach(i => {
             expect(i.phase).not.toBe('end');
           });
         });
       });
 
-      describe('hasNoInputs', () => {
+      describe('hasInputs', () => {
         test('Is true if the state has no inputs', () => {
-          expect(state.hasNoInputs()).toBe(true);
+          expect(state.hasInputs()).toBe(false);
         });
 
         test('Is false if the state has any inputs', () => {
           sendAll(startevents);
-          expect(state.hasNoInputs()).toBe(false);
+          expect(state.hasInputs()).toBe(true);
         });
 
         test('Is true again after inputs are cleared', () => {
           sendAll(startevents);
-          expect(state.hasNoInputs()).toBe(false);
+          expect(state.hasInputs()).toBe(true);
 
           sendAll(endevents);
           state.clearEndedInputs();
-          expect(state.hasNoInputs()).toBe(true);
+          expect(state.hasInputs()).toBe(false);
         });
       });
     });
