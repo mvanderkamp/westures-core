@@ -179,53 +179,36 @@ describe('State', () => {
         });
       });
 
-      describe('getInputsInPhase(phase)', () => {
+      describe('getEndedInputs()', () => {
         test('Retrieves the right number of inputs', () => {
           sendAll(startevents);
-          expect(state.getInputsInPhase('start').length)
-            .toBe(startevents.length);
+          expect(state.getEndedInputs().length).toBe(0);
 
           sendAll(testevents);
-          expect(state.getInputsInPhase('start').length)
-            .toBe(startevents.length - testevents.length);
+          expect(state.getEndedInputs().length).toBe(0);
 
           sendAll(moveevents);
-          expect(state.getInputsInPhase('move').length)
-            .toBe(moveevents.length);
+          expect(state.getEndedInputs().length).toBe(0);
 
           sendAll(endevents);
-          expect(state.getInputsInPhase('end').length)
+          expect(state.getEndedInputs().length)
             .toBe(endevents.length);
         });
 
         test('All retrieved inputs are the correct phase', () => {
           sendAll(startevents);
           sendAll(testevents);
-
-          state.getInputsInPhase('start').forEach(s => {
-            expect(s.phase).toBe('start');
-          });
-          state.getInputsInPhase('move').forEach(s => {
-            expect(s.phase).toBe('move');
-          });
-          state.getInputsInPhase('end').forEach(s => {
+          state.getEndedInputs().forEach(s => {
             expect(s.phase).toBe('end');
           });
         });
       });
 
-      describe('getInputsNotInPhase(phase)', () => {
+      describe('getActiveInputs(phase)', () => {
         test('All retrieved inputs are not in the given phase', () => {
           sendAll(startevents);
           sendAll(testevents);
-
-          state.getInputsNotInPhase('start').forEach(s => {
-            expect(s.phase).not.toBe('start');
-          });
-          state.getInputsNotInPhase('move').forEach(s => {
-            expect(s.phase).not.toBe('move');
-          });
-          state.getInputsNotInPhase('end').forEach(s => {
+          state.getActiveInputs().forEach(s => {
             expect(s.phase).not.toBe('end');
           });
         });

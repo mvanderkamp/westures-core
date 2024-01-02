@@ -238,7 +238,7 @@ class Tap extends Gesture {
 
   end(state) {
     if (Date.now() - this.startTime <= TIMEOUT) {
-        return state.getInputsInPhase('end')[0].current.point;
+        return state.getEndedInputs()[0].current.point;
     }
     return null;
   }

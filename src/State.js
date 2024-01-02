@@ -100,21 +100,17 @@ class State {
   }
 
   /**
-   * @param {string} phase - One of 'start', 'move', 'end', or 'cancel'.
-   *
-   * @return {westures-core.Input[]} Inputs in the given phase.
+   * @return {westures-core.Input[]} Ended inputs.
    */
-  getInputsInPhase(phase) {
-    return this.inputs.filter(i => i.phase === phase);
+  getEndedInputs() {
+    return this.inputs.filter(i => i.phase === 'end');
   }
 
   /**
-   * @param {string} phase - One of 'start', 'move', 'end', or 'cancel'.
-   *
-   * @return {westures-core.Input[]} Inputs <b>not</b> in the given phase.
+   * @return {westures-core.Input[]} Active inputs.
    */
-  getInputsNotInPhase(phase) {
-    return this.inputs.filter(i => i.phase !== phase);
+  getActiveInputs() {
+    return this.inputs.filter(i => i.phase !== 'end');
   }
 
   /**
@@ -191,7 +187,7 @@ class State {
       throw new Error(`Unexpected event type: ${event.type}`);
     }
     this.inputs = Array.from(this[symbols.inputs].values());
-    this.active = this.getInputsNotInPhase('end');
+    this.active = this.getActiveInputs();
     this.activePoints = this.active.map(i => i.current.point);
     this.centroid = Point2D.centroid(this.activePoints);
     this.event = event;
