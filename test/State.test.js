@@ -166,6 +166,7 @@ describe('State', () => {
 
           expect(state.inputs).toBeDefined();
           expect(state.active).toBeDefined();
+          expect(state.activePoints).toBeDefined();
           expect(state.centroid).toBeDefined();
           expect(state.event).toBeDefined();
         });

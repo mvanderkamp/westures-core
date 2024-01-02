@@ -64,6 +64,14 @@ class State {
     this.activeInputs = [];
 
     /**
+     * The array of latest point data for the currently active inputs, sourced
+     * from this.activeInputs.
+     *
+     * @type {westures-core.Point2D[]}
+     */
+    this.activePoints = [];
+
+    /**
      * The centroid of the currently active points.
      *
      * @type {westures-core.Point2D}
@@ -176,8 +184,8 @@ class State {
     }
     this.inputs = Array.from(this.inputMap.values());
     this.activeInputs = this.getActiveInputs();
-    const activePoints = this.activeInputs.map(i => i.current.point);
-    this.centroid = Point2D.centroid(activePoints);
+    this.activePoints = this.activeInputs.map(i => i.current.point);
+    this.centroid = Point2D.centroid(this.activePoints);
     this.event = event;
   }
 }
