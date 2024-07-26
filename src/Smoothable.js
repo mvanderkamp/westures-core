@@ -23,7 +23,7 @@ function smoothingIsApplicable(isRequested) {
   if (isRequested) {
     try {
       return window.matchMedia('(pointer: coarse)').matches;
-    } catch (e) {
+    } catch (e) {  // eslint-disable-line
       return true;
     }
   }
