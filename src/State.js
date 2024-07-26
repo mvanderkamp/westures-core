@@ -142,7 +142,7 @@ class State {
       if (!this.headless) {
         try {
           this.element.setPointerCapture(identifier);
-        } catch (e) {
+        } catch (e) {  // eslint-disable-line
           // NOP: Optional operation failed.
         }
       }
@@ -154,7 +154,7 @@ class State {
       if (!this.headless) {
         try {
           this.element.releasePointerCapture(identifier);
-        } catch (e) {
+        } catch (e) {  // eslint-disable-line
           // NOP: Optional operation failed.
         }
       }
