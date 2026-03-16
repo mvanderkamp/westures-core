@@ -74,7 +74,7 @@
     "coveralls-next": "^6.0.1",
     "docdash": "^2.0.2",
     "eslint": "^9.8.0",
-    "globals": "^15.8.0",
+    "globals": "^17.4.0",
     "jest": "^30.3.0",
     "jest-environment-jsdom": "^30.3.0",
     "jsdoc": "^4.0.3",
