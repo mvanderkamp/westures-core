@@ -35,12 +35,12 @@
   "scripts": {
     "build": "parcel build",
     "build:debug": "parcel build --no-optimize",
-    "coveralls": "jest --coverage",
     "docs": "jsdoc -c .jsdocrc.json",
     "lint": "eslint src test index.js",
     "lint:fix": "eslint --fix src test index.js",
     "prepare": "npm run build",
     "test": "jest",
+    "test:coverage": "jest --coverage",
     "test:debug": "node inspect $(npm bin)/jest --runInBand"
   },
   "jest": {
