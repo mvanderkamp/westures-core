@@ -10,20 +10,20 @@ const plugins = [
 
 const outputs = [
   {
-    exports: 'named',
-    file: 'dist/index.cjs',
-    format: 'cjs',
+    exports:   'named',
+    file:      'dist/index.cjs',
+    format:    'cjs',
     sourcemap: true,
   },
   {
-    file: 'dist/index.mjs',
-    format: 'esm',
+    file:      'dist/index.mjs',
+    format:    'esm',
     sourcemap: true,
   },
 ];
 
 export default {
-  input: 'rollup.entry.mjs',
+  input:   'rollup.entry.mjs',
   output: outputs,
   plugins,
 };

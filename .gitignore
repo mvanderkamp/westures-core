@@ -11,4 +11,5 @@ examples/
 node_modules/
 playground/
 tags
+*.tgz
 yarn-error.log
