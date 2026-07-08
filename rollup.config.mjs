@@ -23,7 +23,7 @@ const outputs = [
 ];
 
 export default {
-  input: 'index.js',
+  input: 'rollup.entry.mjs',
   output: outputs,
   plugins,
 };

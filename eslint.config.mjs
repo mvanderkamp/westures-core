@@ -287,4 +287,9 @@ export default [...compat.extends("eslint:recommended"), {
         "yield-star-spacing": "error",
         yoda: ["error", "never"],
     },
+}, {
+    files: ["*.mjs"],
+    languageOptions: {
+        sourceType: "module",
+    },
 }];
