@@ -17,6 +17,6 @@ Makefile
 .*.json
 .cache
 .ignore
-.parcel-cache
 .travis.yml
 .github
+rollup.config.mjs
