@@ -2,7 +2,6 @@
 .DS_Store
 ._*
 .cache/
-.coveralls.yml
 .idea/
 .parcel-cache/
 bower_components/
