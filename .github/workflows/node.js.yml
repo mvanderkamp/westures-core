@@ -34,8 +34,28 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
       - run: npm ci
-      - run: npm run build --if-present
+      - run: npm run lint
+      - run: npm run build
       - run: npm run test:coverage
+      - name: Validate published package
+        shell: bash
+        run: |
+          pack_file="$(npm pack --silent)"
+          temp_dir="$(mktemp -d)"
+
+          cleanup() {
+            rm -rf "$temp_dir" "$pack_file"
+          }
+
+          trap cleanup EXIT
+
+          (
+            cd "$temp_dir"
+            npm init -y >/dev/null 2>&1
+            npm install "$GITHUB_WORKSPACE/$pack_file" >/dev/null 2>&1
+            node -e "const pkg = require('westures-core'); if (!pkg.Region || !pkg.Gesture) { throw new Error('CommonJS package entrypoint is missing exports'); }"
+            node --input-type=module -e "const pkg = await import('westures-core'); const api = pkg.default ?? pkg; if (!api.Region || !api.Gesture) { throw new Error('ESM package entrypoint is missing exports'); }"
+          )
       - name: Upload coverage to Coveralls
         uses: coverallsapp/github-action@v2
         with:

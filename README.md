@@ -19,12 +19,10 @@ Visit this page for an example of the system in action: [Westures Example](
 https://mvanderkamp.github.io/westures-example/).
 
 Westures aims to achieve its goals without using any dependencies, yet maintain
-usability across the main modern browsers. Transpilation may be necessary for
-this last point to be achieved, as the library is written using many of the
-newer features of the JavaScript language. A transpiled bundle is provided, but
-the browser target list is arbitrary and likely includes some bloat. In most
-cases you will be better off performing bundling, transpilation, and
-minification yourself.
+usability across the main modern browsers. The published package includes both
+CommonJS and ESM builds with source maps. If you need more aggressive browser
+targeting or minification, you may still prefer to bundle the library as part
+of your own application build.
 
 Westures is a fork of [ZingTouch](https://github.com/zingchart/zingtouch).
 
@@ -116,6 +114,10 @@ utils     | Helpful utility functions
 
 ```javascript
 const wes = require('westures-core');
+```
+
+```javascript
+import wes from 'westures-core';
 ```
 
 ### Declaring a Region
@@ -316,4 +318,3 @@ If you find any issues, please let me know!
 - [npm](https://www.npmjs.com/package/westures-core)
 - [github](https://github.com/mvanderkamp/westures-core)
 - [documentation](https://mvanderkamp.github.io/westures-core/)
-
