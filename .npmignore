@@ -18,7 +18,6 @@ arkit.*
 .*.json
 .cache
 .ignore
-.coveralls.yml
 .parcel-cache
 .travis.yml
 .github
