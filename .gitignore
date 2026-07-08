@@ -4,7 +4,7 @@
 .cache/
 .idea/
 .parcel-cache/
-bower_components/
+
 coverage
 dist/
 examples/
