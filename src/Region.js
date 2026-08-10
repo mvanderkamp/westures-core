@@ -132,12 +132,9 @@ class Region {
      *  https://developer.mozilla.org/en-US/docs/Web/API/Touch_events
      *  https://developer.mozilla.org/en-US/docs/Web/API/Pointer_events
      */
-    let eventNames = [];
-    if (this.options.preferPointer && window.PointerEvent) {
-      eventNames = POINTER_EVENTS;
-    } else {
-      eventNames = MOUSE_EVENTS.concat(TOUCH_EVENTS);
-    }
+    const eventNames = this.options.preferPointer && window.PointerEvent
+      ? POINTER_EVENTS
+      : MOUSE_EVENTS.concat(TOUCH_EVENTS);
 
     // Bind detected browser events to the region element.
     const arbitrate = this.arbitrate.bind(this);
