@@ -67,8 +67,6 @@
     }
   },
   "devDependencies": {
-    "@babel/core": ">=7.24.9",
-    "@babel/preset-env": ">=7.25.0",
     "@eslint/eslintrc": "^3.3.6",
     "@eslint/js": "^10.0.1",
     "docdash": "^2.0.2",
