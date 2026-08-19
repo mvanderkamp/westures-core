@@ -67,7 +67,6 @@
     }
   },
   "devDependencies": {
-    "@eslint/eslintrc": "^3.3.6",
     "@eslint/js": "^10.0.1",
     "docdash": "^2.0.2",
     "eslint": "^10.8.1",
