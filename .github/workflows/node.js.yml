@@ -31,7 +31,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
-      - run: npm clean-install
+      - run: npm clean-install --ignore-scripts
       - run: npm run build
       - run: npm run lint
       - run: npm test
@@ -50,7 +50,7 @@ jobs:
         with:
           node-version: '22.x'
           cache: 'npm'
-      - run: npm clean-install
+      - run: npm clean-install --ignore-scripts
       - run: npm run build
       - run: npm run test:coverage
       - name: Upload coverage to Coveralls
