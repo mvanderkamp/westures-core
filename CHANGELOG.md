@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.3.1
+## Unreleased
 
 - Add 'contextmenu' to CANCEL_EVENTS
 - Changed docs deployment strategy
