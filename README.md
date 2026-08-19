@@ -67,6 +67,7 @@ region.addGesture(follow);
 - [Nomenclature and Origins](#nomenclature-and-origins)
 - [Changes](#changes)
 - [Issues](#issues)
+- [Contributing](#contributing)
 - [Links](#links)
 
 ## Features
@@ -303,6 +304,11 @@ most recent updates.
 
 If you find any issues, please let me know!
 
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for the development workflow and pull
+request guidelines.
+
 ## Links
 
 ### westures
@@ -316,4 +322,3 @@ If you find any issues, please let me know!
 - [npm](https://www.npmjs.com/package/westures-core)
 - [github](https://github.com/mvanderkamp/westures-core)
 - [documentation](https://mvanderkamp.github.io/westures-core/)
-
