@@ -4,11 +4,9 @@
 [![Coverage Status](https://coveralls.io/repos/github/mvanderkamp/westures-core/badge.svg?branch=main)](https://coveralls.io/github/mvanderkamp/westures-core?branch=main)
 [![Maintainability](https://api.codeclimate.com/v1/badges/a5f4a4745352d6e2520c/maintainability)](https://codeclimate.com/github/mvanderkamp/westures-core/maintainability)
 
-Westures is a robust n-pointer multitouch gesture detection library for
-JavaScript. This means that each gesture is be capable of working seamlessly as
-input points are added and removed, with no limit on the number of input points,
-and with each input point contributing to the gesture.  It is also capable of
-working across a wide range of devices.
+Westures is an n-pointer gesture detection library for JavaScript. Gestures can
+continue as input points are added and removed, with each active input point
+available to the gesture.
 
 This module contains the core functionality of the Westures gesture library for
 JavaScript. It is intended for use as a lighter-weight module to use if you do
@@ -18,13 +16,10 @@ https://mvanderkamp.github.io/westures/) module.
 Visit this page for an example of the system in action: [Westures Example](
 https://mvanderkamp.github.io/westures-example/).
 
-Westures aims to achieve its goals without using any dependencies, yet maintain
-usability across the main modern browsers. Transpilation may be necessary for
-this last point to be achieved, as the library is written using many of the
-newer features of the JavaScript language. A transpiled bundle is provided, but
-the browser target list is arbitrary and likely includes some bloat. In most
-cases you will be better off performing bundling, transpilation, and
-minification yourself.
+Westures has no runtime dependencies. It uses Pointer Events when available and
+otherwise listens to mouse and touch events. The package's CommonJS entry point
+is a bundled build; applications that target older browsers may need to
+transpile it as part of their own build pipeline.
 
 Westures is a fork of [ZingTouch](https://github.com/zingchart/zingtouch).
 
@@ -40,6 +35,10 @@ const region = new wes.Region();
 
 // Define a Gesture subclass
 class Follow extends wes.Gesture {
+  constructor(element, handler, options) {
+    super('follow', element, handler, options);
+  }
+
   move(state) {
     return state.centroid; // Reports the {x, y} of the average input position
   }
@@ -62,6 +61,7 @@ region.addGesture(follow);
 
 - [Features](#features)
 - [Overview](#overview)
+- [Installation](#installation)
 - [Basic Usage](#basic-usage)
 - [Implementing Custom Gestures](#implementing-custom-gestures)
 - [Nomenclature and Origins](#nomenclature-and-origins)
@@ -99,12 +99,26 @@ Region      | Listen for user input events and respond appropriately
 Smoothable  | Datatype which provides inertial smoothing capabilities
 State       | Track inputs within a Region
 
-Additionally, two support files are defined:
+The package also exports its constants and utility functions, including
+`PHASES`, `STATE_KEYS`, `angularDifference`, and `setFilter`.
 
-Name      | Description
---------- | -----------
-constants | Constant values used throughout the engine
-utils     | Helpful utility functions
+## Installation
+
+```sh
+npm install westures-core
+```
+
+The package uses CommonJS:
+
+```javascript
+const wes = require('westures-core');
+```
+
+`Region` requires a browser environment by default. For server-side or test
+use, create it in headless mode and provide events directly to
+`arbitrate(event)`, `cancel(event)`, and `handleKeyboardEvent(event)`. Events
+passed to a headless region must include a `target` so the region can select
+the gesture to evaluate.
 
 ## Basic Usage
 
@@ -112,12 +126,6 @@ utils     | Helpful utility functions
 - [Defining a Gesture Subclass](#defining-a-gesture-subclass)
 - [Instantiating a Gesture](#instantiating-a-gesture)
 - [Adding a Gesture to a Region](#adding-a-gesture-to-a-region)
-
-### Importing the module
-
-```javascript
-const wes = require('westures-core');
-```
 
 ### Declaring a Region
 
@@ -151,6 +159,10 @@ input points. Note that the returned value must be an Object!
 ```javascript
 // Define a Gesture subclass
 class Follow extends wes.Gesture {
+  constructor(element, handler, options) {
+    super('follow', element, handler, options);
+  }
+
   move(state) {
     return state.centroid;
   }
@@ -174,7 +186,7 @@ const element = document.querySelector('#follow');
 ```
 
 And we also need a handler. This function will be called whenever a gesture hook
-returns non-null data. For Follow, this is just the move phase, but the handler
+returns an object. For Follow, this is just the move phase, but the handler
 doesn't need to know that. The data returned by the hook will be available
 inside the handler.
 
@@ -228,18 +240,18 @@ const { Gesture } = require('westures-core');
 const TIMEOUT = 100;
 
 class Tap extends Gesture {
-  constructor() {
-    super('tap');
+  constructor(element, handler, options) {
+    super('tap', element, handler, options);
     this.startTime = null;
   }
 
-  start(state) {
+  start() {
     this.startTime = Date.now();
   }
 
   end(state) {
     if (Date.now() - this.startTime <= TIMEOUT) {
-        return state.getInputsInPhase('end')[0].current.point;
+      return { point: state.getInputsInPhase('end')[0].current.point };
     }
     return null;
   }
@@ -250,7 +262,7 @@ There are problems with this example, and it should probably not be used as an
 actual Tap gesture, it is merely to illustrate the basic idea.
 
 The default hooks for all Gestures simply return null. Data will only be
-forwarded to bound handlers when a non-null value is returned by a hook.
+forwarded to bound handlers when an object is returned by a hook.
 Returned values should be packed inside an object. For example, instead of just
 `return 42;`, a custom hook should do `return { value: 42 };`
 
@@ -270,7 +282,7 @@ called. Those properties are:
 
 Name     | Type     | Value
 -------- | -------- | -----
-centroid | Point2D  | The centroid of the input points.
+centroid | Point2D \| null | The centroid of the active input points.
 event    | Event    | The input event which caused the gesture to be recognized
 phase    | String   | `'start'`, `'move'`, `'end'`, or `'cancel'`
 type     | String   | The name of the gesture as specified by its designer.
@@ -282,7 +294,7 @@ overwritten.
 
 ## Nomenclature and Origins
 
-In my last year of univerisity, I was working on an API for building
+In my last year of university, I was working on an API for building
 multi-device interfaces called "WAMS" (Workspaces Across Multiple Surfaces),
 which included the goal of supporting multi-device gestures.
 
@@ -297,7 +309,7 @@ The name "westures" is a mash-up of "WAMS" and "gestures".
 ## Changes
 
 See the [changelog](
-https://github.com/mvanderkamp/westures-core/blob/master/CHANGELOG.md) for the
+https://github.com/mvanderkamp/westures-core/blob/main/CHANGELOG.md) for the
 most recent updates.
 
 ## Issues
