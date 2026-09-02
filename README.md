@@ -251,7 +251,8 @@ class Tap extends Gesture {
 
   end(state) {
     if (Date.now() - this.startTime <= TIMEOUT) {
-      return { point: state.getInputsInPhase('end')[0].current.point };
+      const point = state.getInputsInPhase('end')[0].current.point;
+      return { centroid: point, ...point };
     }
     return null;
   }
@@ -291,6 +292,18 @@ target   | Element  | The Element that is associated with the recognized gesture
 If data properties returned by a hook have a name collision with one of these
 properties, the value from the hook gets precedent and the default is
 overwritten.
+
+### Ending Inputs
+
+`State.active`, `State.activePoints`, and the default `centroid` represent only
+active inputs. During an `end` hook, this means that inputs ending in the
+current event are excluded; when the final input ends, the default `centroid`
+is `null`.
+
+Gestures based on released inputs should read them with
+`state.getInputsInPhase('end')`, retain any data they need, and return their
+own result. A tap gesture, for example, can compute its own centroid from the
+ending inputs and return it as `centroid`, as in the example above.
 
 ## Nomenclature and Origins
 

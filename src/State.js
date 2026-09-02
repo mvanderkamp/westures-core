@@ -76,11 +76,12 @@ class State {
     this.activePoints = [];
 
     /**
-     * The centroid of the currently active points.
+     * The centroid of the currently active points, or null when there are no
+     * active inputs (such as during the final end event).
      *
-     * @type {westures-core.Point2D}
+     * @type {?westures-core.Point2D}
      */
-    this.centroid = {};
+    this.centroid = null;
 
     /**
      * The latest event that the state processed.
@@ -209,4 +210,3 @@ class State {
 }
 
 module.exports = State;
-

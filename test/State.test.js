@@ -77,6 +77,10 @@ describe('State', () => {
     test('Instantiates the correct type of object', () => {
       expect(new State()).toBeInstanceOf(State);
     });
+
+    test('Initializes the centroid to null', () => {
+      expect(new State().centroid).toBeNull();
+    });
   });
 
   describe('prototype methods', () => {
