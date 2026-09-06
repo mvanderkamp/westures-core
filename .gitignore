@@ -2,6 +2,7 @@
 .DS_Store
 ._*
 .cache/
+.gutctags
 .idea/
 .parcel-cache/
 bower_components/
