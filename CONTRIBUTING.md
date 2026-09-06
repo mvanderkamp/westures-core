@@ -55,6 +55,19 @@ formatting or refactoring changes out of the pull request.
 For bugs, include a regression test when practical. For user-facing API or
 behavior changes, update the README and JSDoc documentation as appropriate.
 
+## Publishing Documentation
+
+Published documentation is generated with `npm run docs` and deployed from the
+generated `docs/` directory by the
+[documentation deployment workflow](./.github/workflows/deploy-documentation.yaml).
+
+To publish the current `deploy-docs` branch, push your changes to that branch.
+For a one-off deployment from another branch, run the **Build and Deploy**
+workflow manually in GitHub Actions and select the branch to deploy. The
+workflow installs dependencies, regenerates the documentation, and publishes
+the resulting `docs/` directory, so do not commit generated documentation just
+to deploy it.
+
 ## Reporting Issues
 
 When reporting a bug, include the Node.js version, browser and version when
