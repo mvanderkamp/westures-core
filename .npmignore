@@ -1,22 +1,18 @@
-# local script files
-edit.sh
-usage.sh
-
-# tag files
-tags
-
-# documentation
+# documentation should not be published to npm!
 docs
 
-# test related
+# test output
 test
 coverage
 
-# production related files
-Makefile
-.*.json
+# development files
 .cache
+.github
+.gutctags
 .ignore
+.jsdocrc.json
 .parcel-cache
 .travis.yml
-.github
+Makefile
+eslint.config.mjs
+tags
