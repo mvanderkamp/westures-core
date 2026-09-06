@@ -1,4 +1,5 @@
 *.swp
+.ignore
 .DS_Store
 ._*
 .cache/
