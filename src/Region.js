@@ -25,6 +25,11 @@ const {
  * Allows the user to specify the control region which will listen for user
  * input events.
  *
+ * @example
+ * const element = document.querySelector('#container');
+ * const region = new Region(element);
+ * region.addGesture(follow); // Where 'follow' is an instantiated Gesture.
+ *
  * @memberof westures-core
  *
  * @param {Element} [element=null] - The element which should listen to input

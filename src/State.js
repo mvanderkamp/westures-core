@@ -19,7 +19,15 @@ const symbols = {
 
 /**
  * Keeps track of currently active and ending input points on the interactive
- * surface.
+ * surface. An instance of this class is passed to each Gesture phase hook
+ * ('start', 'move', 'end', 'cancel') when it is invoked.
+ *
+ * @example
+ * // Inside a Gesture subclass's phase hook:
+ * end(state) {
+ *   const point = state.getInputsInPhase('end')[0].current.point;
+ *   return { centroid: point, ...point };
+ * }
  *
  * @memberof westures-core
  *
@@ -101,6 +109,8 @@ class State {
   }
 
   /**
+   * Retrieves all currently tracked inputs that are in the given phase.
+   *
    * @param {string} phase - One of 'start', 'move', 'end', or 'cancel'.
    *
    * @return {westures-core.Input[]} Inputs in the given phase.
@@ -110,6 +120,8 @@ class State {
   }
 
   /**
+   * Retrieves all currently tracked inputs that are not in the given phase.
+   *
    * @param {string} phase - One of 'start', 'move', 'end', or 'cancel'.
    *
    * @return {westures-core.Input[]} Inputs <b>not</b> in the given phase.
@@ -119,6 +131,8 @@ class State {
   }
 
   /**
+   * Determines whether there are currently any active inputs being tracked.
+   *
    * @return {boolean} True if there are no active inputs. False otherwise.
    */
   hasNoInputs() {
