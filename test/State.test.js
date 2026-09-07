@@ -10,8 +10,6 @@ const MouseEvent = require('./MouseEvent.js');
 const TouchEvent = require('./TouchEvent.js');
 const PointerEvent = require('./PointerEvent.js');
 
-const inputSymbol = Symbol.for('inputs');
-
 const INPUT_CLASSES = { MouseEvent, TouchEvent, PointerEvent };
 const CLASS_STRINGS = ['MouseEvent', 'TouchEvent', 'PointerEvent'];
 
@@ -104,20 +102,20 @@ describe('State', () => {
 
       describe('updateInput', () => {
         test('Instantiates a new input for "start" phase events', () => {
-          expect(state[inputSymbol].get(0)).toBeFalsy();
-          expect(state[inputSymbol].size).toBe(0);
+          expect(state.getInput(0)).toBeFalsy();
+          expect(state.hasNoInputs()).toBe(true);
           expect(() => state.updateInput(startevents[0], 0)).not.toThrow();
-          expect(state[inputSymbol].get(0)).toBeInstanceOf(Input);
-          expect(state[inputSymbol].get(0).phase).toBe('start');
+          expect(state.getInput(0)).toBeInstanceOf(Input);
+          expect(state.getInput(0).phase).toBe('start');
         });
 
         test('Updates an old input for "move" or "end" phase events', () => {
           expect(() => state.updateInput(startevents[0], 0)).not.toThrow();
-          expect(state[inputSymbol].get(0).phase).toBe('start');
+          expect(state.getInput(0).phase).toBe('start');
           expect(() => state.updateInput(moveevents[0], 0)).not.toThrow();
-          expect(state[inputSymbol].get(0).phase).toBe('move');
+          expect(state.getInput(0).phase).toBe('move');
           expect(() => state.updateInput(endevents[0], 0)).not.toThrow();
-          expect(state[inputSymbol].get(0).phase).toBe('end');
+          expect(state.getInput(0).phase).toBe('end');
         });
 
         test('Logs a warning to the console for unrecognized phases', () => {
@@ -133,11 +131,11 @@ describe('State', () => {
 
         test('Skips non-start events for unstarted inputs', () => {
           expect(() => state.updateInput(moveevents[0], 0)).not.toThrow();
-          expect(state[inputSymbol].get(0)).toBeFalsy();
-          expect(state[inputSymbol].size).toBe(0);
+          expect(state.getInput(0)).toBeFalsy();
+          expect(state.hasNoInputs()).toBe(true);
           expect(() => state.updateInput(endevents[0], 0)).not.toThrow();
-          expect(state[inputSymbol].get(0)).toBeFalsy();
-          expect(state[inputSymbol].size).toBe(0);
+          expect(state.getInput(0)).toBeFalsy();
+          expect(state.hasNoInputs()).toBe(true);
         });
       });
 
@@ -148,9 +146,9 @@ describe('State', () => {
           }
 
           for (let i = 0; i < startevents.length; i++) {
-            expect(state[inputSymbol].get(i)).toBeFalsy();
+            expect(state.getInput(i)).toBeFalsy();
             expect(() => doUpdateStarts(i)).not.toThrow();
-            expect(state[inputSymbol].get(i)).toBeInstanceOf(Input);
+            expect(state.getInput(i)).toBeInstanceOf(Input);
           }
         });
 
@@ -159,7 +157,7 @@ describe('State', () => {
           sendAll(testevents);
 
           testevents.forEach(event => {
-            expect(state[inputSymbol].get(event.id).phase)
+            expect(state.getInput(event.id).phase)
               .toBe(PHASE[event.type]);
           });
         });
@@ -178,8 +176,13 @@ describe('State', () => {
         test('Ignores mouse events other than button 0', () => {
           const event = new MouseEvent(1, targetdiv, MouseEvent.start, 42, 43);
           expect(() => state.updateAllInputs(event)).not.toThrow();
-          expect(state[inputSymbol].get(1)).toBeFalsy();
-          expect(state[inputSymbol].size).toBe(0);
+          expect(state.getInput(1)).toBeFalsy();
+          expect(state.hasNoInputs()).toBe(true);
+        });
+
+        test('Throws for unrecognized event types', () => {
+          const event = { type: 'not a type' };
+          expect(() => state.updateAllInputs(event)).toThrow();
         });
       });
 
@@ -241,9 +244,11 @@ describe('State', () => {
           sendAll(testevents);
           state.clearEndedInputs();
 
-          state[inputSymbol].forEach(i => {
-            expect(i.phase).not.toBe('end');
-          });
+          testevents
+            .filter(event => PHASE[event.type] === 'end')
+            .forEach(event => {
+              expect(state.getInput(event.id)).toBeFalsy();
+            });
         });
       });
 
