@@ -84,6 +84,9 @@ class Input {
   get elapsedTime() { return this.current.time - this.initial.time; }
 
   /**
+   * Calculates the total distance traveled by this input, from its initiating
+   * event to its current event.
+   *
    * @return {number} The distance between the initiating event for this input
    *    and its current event.
    */

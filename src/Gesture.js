@@ -7,6 +7,22 @@ let g_id = 0;
  * need to override some or all of the four phase "hooks": start, move, end, and
  * cancel.
  *
+ * @example
+ * // Define a Gesture subclass that reports the centroid of the input points.
+ * class Follow extends Gesture {
+ *   constructor(element, handler, options) {
+ *     super('follow', element, handler, options);
+ *   }
+ *
+ *   move(state) {
+ *     return state.centroid;
+ *   }
+ * }
+ *
+ * const element = document.querySelector('#follow');
+ * const follow = new Follow(element, data => console.log(data.x, data.y));
+ * region.addGesture(follow);
+ *
  * @memberof westures-core
  *
  * @param {string} type - The name of the gesture.
