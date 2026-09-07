@@ -2,6 +2,17 @@
 
 ## Unreleased
 
+- ⚠️ **Breaking:** Now requires an ES2022-compatible environment (private
+  class fields/methods). Added `"engines": { "node": ">=14" }` to
+  `package.json` to reflect this. Consumers bundling with an older
+  Babel/webpack config lacking private-field/private-method support will
+  need to update their toolchain.
+- Replace `Symbol.for('inputs')` in `State` with a true private class field
+  (`#inputsById`), and add a public `getInput(identifier)` accessor for
+  keyed lookup.
+- Replace `Symbol('cascade')`/`Symbol('smooth')` in `Smoothable` with true
+  private class fields/methods (`#cascade`/`#smooth`).
+
 ## 1.3.1
 
 - Add 'contextmenu' to CANCEL_EVENTS
