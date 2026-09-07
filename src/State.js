@@ -13,10 +13,6 @@ const {
 const Input     = require('./Input.js');
 const Point2D   = require('./Point2D.js');
 
-const symbols = {
-  inputs: Symbol.for('inputs'),
-};
-
 /**
  * Keeps track of currently active and ending input points on the interactive
  * surface. An instance of this class is passed to each Gesture phase hook
@@ -36,6 +32,14 @@ const symbols = {
  * "headless" mode.
  */
 class State {
+  /**
+   * Definitive record of the current Input objects, with O(1) lookup by
+   * identifier.
+   *
+   * @type {Map<number, westures-core.Input>}
+   */
+  #inputsById = new Map();
+
   constructor(element, headless = false) {
     /**
      * Keep a reference to the element for the associated region.
@@ -52,16 +56,9 @@ class State {
     this.headless = headless;
 
     /**
-     * Keeps track of the current Input objects.
-     *
-     * @alias [@@inputs]
-     * @type {Map.<westures-core.Input>}
-     * @memberof westure-core.State
-     */
-    this[symbols.inputs] = new Map();
-
-    /**
-     * All currently valid inputs, including those that have ended.
+     * Short-lived snapshot of all currently valid inputs, including those that
+     * have ended. Refreshed via updateFields() on each processed event; may be
+     * stale between calls to updateAllInputs().
      *
      * @type {westures-core.Input[]}
      */
@@ -103,8 +100,8 @@ class State {
    * Deletes all inputs that are in the 'end' phase.
    */
   clearEndedInputs() {
-    this[symbols.inputs].forEach((v, k) => {
-      if (v.phase === 'end') this[symbols.inputs].delete(k);
+    this.#inputsById.forEach((v, k) => {
+      if (v.phase === 'end') this.#inputsById.delete(k);
     });
   }
 
@@ -136,7 +133,19 @@ class State {
    * @return {boolean} True if there are no active inputs. False otherwise.
    */
   hasNoInputs() {
-    return this[symbols.inputs].size === 0;
+    return this.#inputsById.size === 0;
+  }
+
+  /**
+   * Retrieves the currently tracked input with the given identifier, if any.
+   *
+   * @param {number} identifier - The identifier of the input to retrieve.
+   *
+   * @return {westures-core.Input|undefined} The input with the given
+   * identifier, or undefined if no such input is being tracked.
+   */
+  getInput(identifier) {
+    return this.#inputsById.get(identifier);
   }
 
   /**
@@ -150,7 +159,7 @@ class State {
   updateInput(event, identifier) {
     switch (PHASE[event.type]) {
     case START:
-      this[symbols.inputs].set(
+      this.#inputsById.set(
         identifier,
         new Input(event, identifier, this.headless),
       );
@@ -175,8 +184,8 @@ class State {
       }
     case CANCEL:
     case MOVE:
-      if (this[symbols.inputs].has(identifier)) {
-        this[symbols.inputs].get(identifier).update(event);
+      if (this.#inputsById.has(identifier)) {
+        this.#inputsById.get(identifier).update(event);
       }
       break;
 
@@ -215,7 +224,7 @@ class State {
    * @param {Event} event - Event with which to update the convenience fields.
    */
   updateFields(event) {
-    this.inputs = Array.from(this[symbols.inputs].values());
+    this.inputs = Array.from(this.#inputsById.values());
     this.active = this.getInputsNotInPhase('end');
     this.activePoints = this.active.map(i => i.current.point);
     this.centroid = Point2D.centroid(this.activePoints);
