@@ -36,7 +36,7 @@ class State {
    * Definitive record of the current Input objects, with O(1) lookup by
    * identifier.
    *
-   * @type {Map.<westures-core.Input>}
+   * @type {Map<number, westures-core.Input>}
    */
   #inputsById = new Map();
 
@@ -141,7 +141,7 @@ class State {
    *
    * @param {number} identifier - The identifier of the input to retrieve.
    *
-   * @return {?westures-core.Input} The input with the given identifier, or
+   * @return {westures-core.Input|undefined} The input with the given identifier, or
    * undefined if no such input is being tracked.
    */
   getInput(identifier) {

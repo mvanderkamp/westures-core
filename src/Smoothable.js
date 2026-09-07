@@ -57,7 +57,7 @@ class Smoothable {
    * The cascading average of outgoing values.
    *
    * @private
-   * @type {object}
+   * @type {*}
    */
   #cascade;
 
@@ -101,10 +101,10 @@ class Smoothable {
    * Smooth out the outgoing data.
    *
    * @private
-   * @param {object} data - The next batch of data to emit.
+   * @param {*} data - The next batch of data to emit.
    *
-   * @return {?object}
-   */
+   * @return {*} The smoothed out data.
+   *
   #smooth(data) {
     const average = this.average(this.#cascade, data);
     this.#cascade = average;
