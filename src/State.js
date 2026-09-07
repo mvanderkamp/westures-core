@@ -141,8 +141,8 @@ class State {
    *
    * @param {number} identifier - The identifier of the input to retrieve.
    *
-   * @return {westures-core.Input|undefined} The input with the given identifier, or
-   * undefined if no such input is being tracked.
+   * @return {westures-core.Input|undefined} The input with the given
+   * identifier, or undefined if no such input is being tracked.
    */
   getInput(identifier) {
     return this.#inputsById.get(identifier);

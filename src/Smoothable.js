@@ -104,7 +104,7 @@ class Smoothable {
    * @param {*} data - The next batch of data to emit.
    *
    * @return {*} The smoothed out data.
-   *
+   */
   #smooth(data) {
     const average = this.average(this.#cascade, data);
     this.#cascade = average;
@@ -131,4 +131,3 @@ Smoothable.DEFAULTS = {
 };
 
 module.exports = Smoothable;
-
