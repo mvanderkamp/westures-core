@@ -1,8 +1,5 @@
 'use strict';
 
-const cascade = Symbol('cascade');
-const smooth = Symbol('smooth');
-
 /**
  * Determines whether to apply smoothing. Smoothing is on by default but turned
  * off if either:<br>
@@ -56,6 +53,14 @@ function smoothingIsApplicable(isRequested) {
  * @param {*} [options.identity=0] The identity value of this smoothable data.
  */
 class Smoothable {
+  /**
+   * The cascading average of outgoing values.
+   *
+   * @private
+   * @type {object}
+   */
+  #cascade;
+
   constructor(options = {}) {
     const final_options = { ...Smoothable.DEFAULTS, ...options };
 
@@ -69,7 +74,7 @@ class Smoothable {
      */
     this.next = null;
     if (smoothingIsApplicable(final_options.applySmoothing)) {
-      this.next = this[smooth].bind(this);
+      this.next = this.#smooth.bind(this);
     } else {
       this.next = data => data;
     }
@@ -82,35 +87,27 @@ class Smoothable {
      */
     this.identity = final_options.identity;
 
-    /**
-     * The cascading average of outgoing values.
-     *
-     * @memberof westures-core.Smoothable
-     * @alias [@@cascade]
-     * @type {object}
-     */
-    this[cascade] = this.identity;
+    this.#cascade = this.identity;
   }
 
   /**
    * Restart the Smoothable gesture.
    */
   restart() {
-    this[cascade] = this.identity;
+    this.#cascade = this.identity;
   }
 
   /**
    * Smooth out the outgoing data.
    *
-   * @memberof westures-core.Smoothable
-   * @alias [@@smooth]
+   * @private
    * @param {object} data - The next batch of data to emit.
    *
    * @return {?object}
    */
-  [smooth](data) {
-    const average = this.average(this[cascade], data);
-    this[cascade] = average;
+  #smooth(data) {
+    const average = this.average(this.#cascade, data);
+    this.#cascade = average;
     return average;
   }
 
