@@ -32,9 +32,6 @@
   },
   "homepage": "https://mvanderkamp.github.io/westures-core/index.html",
   "license": "MIT",
-  "engines": {
-    "node": ">=14"
-  },
   "scripts": {
     "build": "parcel build",
     "build:debug": "parcel build --no-optimize",

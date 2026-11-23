@@ -9,7 +9,7 @@ export default [js.configs.recommended, {
             ...globals.node,
         },
 
-        ecmaVersion: 2022,
+        ecmaVersion: 2018,
         sourceType: "commonjs",
     },
 
