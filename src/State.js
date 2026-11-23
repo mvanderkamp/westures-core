@@ -56,7 +56,7 @@ class State {
      *
      * @alias [@@inputs]
      * @type {Map.<westures-core.Input>}
-     * @memberof westure-core.State
+     * @memberof westures-core.State
      */
     this[symbols.inputs] = new Map();
 

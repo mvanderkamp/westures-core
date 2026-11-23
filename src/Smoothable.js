@@ -87,7 +87,7 @@ class Smoothable {
      *
      * @memberof westures-core.Smoothable
      * @alias [@@cascade]
-     * @type {object}
+     * @type {*}
      */
     this[cascade] = this.identity;
   }
@@ -104,9 +104,9 @@ class Smoothable {
    *
    * @memberof westures-core.Smoothable
    * @alias [@@smooth]
-   * @param {object} data - The next batch of data to emit.
+   * @param {*} data - The next batch of data to emit.
    *
-   * @return {?object}
+   * @return {?*}
    */
   [smooth](data) {
     const average = this.average(this[cascade], data);
